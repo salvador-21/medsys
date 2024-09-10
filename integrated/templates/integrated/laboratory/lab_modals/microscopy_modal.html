@@ -1,0 +1,1043 @@
+<!-- /////////// Urinalysis Add Result/////////////// -->
+<div class="modal fade" id="res_urinalysis" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-file" aria-hidden="true"></i> |URINALYSIS RESULT</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT DETAILS</h4>
+          <table class="table-bordered w-100 mb-2">
+            <tbody>
+            <tr>
+              <td >NAME: <span class="fw-bolder uaptx"></span></td>
+              <td>CONTROL NO.: <span class="fw-bolder text-danger uctr fs-4">INP-23-000001</span></td>
+            </tr>
+            <tr>
+              <td>ORDER ID: <span class="fw-bolder uorder"></span></td>
+              <td>RECEIVED: <span class="fw-bolder ureceived">10-24-2023</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">WARD: <span class="fw-bolder uward"></span></td>
+            </tr>
+          </tbody>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white mb-3">URINALYSIS RESULT DETAILS</h4>
+            <form id="add_ua_res" >
+                {% csrf_token %}
+              <div class="row">
+
+             <div class="form-group col-4 mb-0">
+              <label class="mb-0" >COLOR:</label>
+              <select class="form-control form-control-sm color" name="color">
+                  <option value="">Select Here</option>
+                  <option value="STRAW">STRAW</option>
+                  <option value="LIGHT YELLOW">LIGHT YELLOW</option>
+                  <option value="YELLOW">YELLOW</option>
+                  <option value="DARK YELLOW">DARK YELLOW</option>
+                  <option value="REDDISH YELLOW">REDDISH YELLOW</option>
+                  <option value="RED">RED</option>
+                  <option value="ORANGE">ORANGE</option>
+                  <option value="AMBER">AMBER</option>
+                  <option value="DARK AMBER">DARK AMBER</option>
+                  <option value="BROWN">BROWN</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >TRANSPARENCY:</label>
+              <select class="form-control form-control-sm transparency" name="transparency">
+                  <option value="">Select Here</option>
+                  <option value="CLEAR">CLEAR</option>
+                  <option value="SL. HAZY">SL. HAZY</option>
+                  <option value="HAZY">HAZY</option>
+                  <option value="TURBID">TURBID</option>
+                  <option value="SL. TURBID">SL. TURBID</option>
+                  <option value="CLOUDY">CLOUDY</option>
+                  <option value="SL. CLOUDY">SL. CLOUDY</option>
+                 
+                  
+                  
+  
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0 ">REACTION:</label>
+              <select class="form-control form-control-sm reaction" name="reaction">
+                  <option value="">Select Here</option>
+                  <option value="ACIDIC">ACIDIC</option>
+                  <option value="NEUTRAL">NEUTRAL</option>
+                  <option value="ALKALINE">ALKALINE</option>
+              </select>
+             </div>
+  
+             <div class="form-group col-6 ">
+              <label class="mb-0 " >PH:</label>
+              <select class="form-control form-control-sm ph"  name="ph">
+                  <option value="">Select Here</option>
+                  <option value="5.0">5.0</option>
+                  <option value="6.0">6.0</option>
+                  <option value="6.5">6.5</option>
+                  <option value="7.0">7.0</option>
+                  <option value="7.5">7.5</option>
+                  <option value="8.0">8.0</option>
+                  <option value="9.0">9.0</option>
+                  
+        
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0 " >SPECIFIC GRAVITY:</label>
+              <select class="form-control form-control-sm gravity"  name="gravity">
+                  <option value="">Select Here</option>
+                  <option value="1.000">1.000</option>
+                  <option value="1.005">1.005</option>
+                  <option value="1.010">1.010</option>
+                  <option value="1.015">1.015</option>
+                  <option value="1.020">1.020</option>
+                  <option value="1.025">1.025</option>
+                  <option value="1.030">1.030</option>
+                  
+              </select>
+             </div>
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">CHEMICAL REACTION</h6>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >PROTIEN:</label>
+              <select class="form-control form-control-sm protein" name="protein">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3 </option>
+                  <option value="+4">+4</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >GLUCOSE:</label>
+              <select class="form-control form-control-sm sugar" name="sugar">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+                  <option value="+4">+4</option>
+                 
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >KETONE:</label>
+              <select class="form-control form-control-sm ketone" name="ketone">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+                  <option value="+4">+4</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >NITRITE:</label>
+              <select class="form-control form-control-sm nitrite" name="nitrite">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="POSITVE">POSITIVE</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >BILIRUBIN:</label>
+              <select class="form-control form-control-sm bilirubin" name="bilirubin">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >UROBILINOGEN:</label>
+              <select class="form-control form-control-sm urobilinogen" name="urobilinogen">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <div class="form-group col-12 ">
+              <label class="mb-0" >LEUKOCYTES:</label>
+              <select class="form-control form-control-sm leukocytes" name="leukocytes">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <h6 class="text-center fw-bolder bg-dark text-white">MANUAL PROCEDURE</h6>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >URINE CHON:</label>
+              <select class="form-control form-control-sm mchon" name="mchon">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >PROTIEN:</label>
+              <select class="form-control form-control-sm protein" name="protein">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">MICROSCOPIC FINDINGS</h6>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >WBC:</label>
+              <input class="form-control form-control-sm wbc" name="wbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >RBC:</label>
+              <input class="form-control form-control-sm rbc" name="rbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >EPITHELIAL CELLS:</label>
+              <select class="form-control form-control-sm epithelial" name="epithelial">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+    
+             <div class="form-group col-4 ">
+              <label class="mb-0" >MUCUS THREADS:</label>
+              <select class="form-control form-control-sm mucus" name="mucus">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+  
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >BACTERIA:</label>
+              <select class="form-control form-control-sm bacteria" name="bacteria">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+                 
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >CALCIUM OXALATE:</label>
+              <select class="form-control form-control-sm calcium" name="calcium">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+                 
+                  
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >URIC ACID:</label>
+              <select class="form-control form-control-sm uric" name="uric">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >AMMONIUM BIURATES:</label>
+              <select class="form-control form-control-sm biurate" name="biurate">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+             <div class="form-group col-12 ">
+              <label class="mb-0" >AMORPHOUS PHOSPHATE/URATES:</label>
+              <select class="form-control form-control-sm phosphate" name="phosphate">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">CAST</h6>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >FINE GRANULAR CAST:</label>
+              <input class="form-control form-control-sm fine" name="fine">
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >COARSE GRANULAR CAST:</label>
+              <input class="form-control form-control-sm coarse" name="coarse">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >HYALINE:</label>
+              <input class="form-control form-control-sm hyaline" name="hyaline">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >WBC CAST:</label>
+              <input class="form-control form-control-sm cwbc" name="cwbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >RBC CAST:</label>
+              <input class="form-control form-control-sm crbc" name="crbc">
+             </div>
+             <!-- <div class="form-group col-4 ">
+              <label class="mb-0" >PREGNANCY TEST:</label>
+              <select class="form-control form-control-sm pregnancy" name="pregnancy">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="POSITIVE">POSITIVE</option>
+              </select>
+             </div> -->
+             <div class="form-group col-4 ">
+              <label class="mb-0" >OTHERS:</label>
+              <input class="form-control form-control-sm others" name="others">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >NOTES:</label>
+              <input class="form-control form-control-sm notes" name="notes">
+              
+             </div>
+             <!-- ///////////// -->
+              </div>
+                
+                <div class="form-group">
+                  <input hidden  class="form-control form-control-sm orderid" name="orderid">
+                  <input hidden  class="form-control form-control-sm proccode" name="proccode">
+                  <input hidden  class="form-control form-control-sm hpercode" name="hpercode">
+                  <input hidden  class="form-control form-control-sm prikey" name="prikey">
+                  <input hidden  class="form-control form-control-sm encc" name="encc">
+                  <input hidden class="form-control form-control-sm stype" name="stype">
+       
+    
+                  </div>
+         
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success " type="submit" form="add_ua_res">Save and Send</button>
+          </div>
+          
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- /////////// Urinalysis Add Result/////////////// -->
+<div class="modal fade" id="res_urinalysis_verify" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-file" aria-hidden="true"></i> |URINALYSIS RESULT VERIFICATION</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT DETAILS</h4>
+          <table class="table-bordered w-100 mb-2">
+            <tbody>
+            <tr>
+              <td >NAME: <span class="fw-bolder vptx"></span></td>
+              <td>CONTROL NO.: <span class="fw-bolder text-danger vctr fs-4">INP-23-000001</span></td>
+            </tr>
+            <tr>
+              <td>ORDER ID: <span class="fw-bolder vorder"></span></td>
+              <td>RECEIVED: <span class="fw-bolder vreceived">10-24-2023</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">WARD: <span class="fw-bolder vward"></span></td>
+            </tr>
+          </tbody>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white mb-3">--- URINALYSIS RESULT VERIFICATION ---</h4>
+            <form id="verify_ua_res" >
+                {% csrf_token %}
+              <div class="row">
+  <!-- /////////// -->
+             <div class="form-group col-4 mb-0">
+              <label class="mb-0" >COLOR:</label>
+              <select class="form-control form-control-sm vcolor" name="vcolor">
+                  <option value="">Select Here</option>
+                  <option value="STRAW">STRAW</option>
+                  <option value="LIGHT YELLOW">LIGHT YELLOW</option>
+                  <option value="YELLOW">YELLOW</option>
+                  <option value="DARK YELLOW">DARK YELLOW</option>
+                  <option value="REDDISH YELLOW">REDDISH YELLOW</option>
+                  <option value="RED">RED</option>
+                  <option value="ORANGE">ORANGE</option>
+                  <option value="AMBER">AMBER</option>
+                  <option value="DARK AMBER">DARK AMBER</option>
+                  <option value="BROWN">BROWN</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >TRANSPARENCY:</label>
+              <select class="form-control form-control-sm vtransparency" name="vtransparency">
+                  <option value="">Select Here</option>
+                  <option value="CLEAR">CLEAR</option>
+                  <option value="SL. HAZY">SL. HAZY</option>
+                  <option value="HAZY">HAZY</option>
+                  <option value="TURBID">TURBID</option>
+                  <option value="SL. TURBID">SL. TURBID</option>
+                  <option value="CLOUDY">CLOUDY</option>
+                  <option value="SL. CLOUDY">SL. CLOUDY</option>
+                 
+                  
+                  
+  
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0 ">REACTION:</label>
+              <select class="form-control form-control-sm vreaction" name="vreaction">
+                  <option value="">Select Here</option>
+                  <option value="ACIDIC">ACIDIC</option>
+                  <option value="NEUTRAL">NEUTRAL</option>
+                  <option value="ALKALINE">ALKALINE</option>
+              </select>
+             </div>
+  
+             <div class="form-group col-6 ">
+              <label class="mb-0 " >PH:</label>
+              <select class="form-control form-control-sm vph"  name="vph">
+                  <option value="">Select Here</option>
+                  <option value="5.0">5.0</option>
+                  <option value="6.0">6.0</option>
+                  <option value="6.5">6.5</option>
+                  <option value="7.0">7.0</option>
+                  <option value="7.5">7.5</option>
+                  <option value="8.0">8.0</option>
+                  <option value="9.0">9.0</option>
+                  
+        
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0 " >SPECIFIC GRAVITY:</label>
+              <select class="form-control form-control-sm vgravity"  name="vgravity">
+                  <option value="">Select Here</option>
+                  <option value="1.000">1.000</option>
+                  <option value="1.005">1.005</option>
+                  <option value="1.010">1.010</option>
+                  <option value="1.015">1.015</option>
+                  <option value="1.020">1.020</option>
+                  <option value="1.025">1.025</option>
+                  <option value="1.030">1.030</option>
+                  
+              </select>
+             </div>
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">CHEMICAL REACTION</h6>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >PROTIEN:</label>
+              <select class="form-control form-control-sm vprotein" name="vprotein">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3 </option>
+                  <option value="+4">+4</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >GLUCOSE:</label>
+              <select class="form-control form-control-sm vsugar" name="vsugar">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+                  <option value="+4">+4</option>
+                 
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >KETONE:</label>
+              <select class="form-control form-control-sm vketone" name="vketone">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+                  <option value="+4">+4</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >NITRITE:</label>
+              <select class="form-control form-control-sm vnitrite" name="vnitrite">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="POSITVE">POSITIVE</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >BILIRUBIN:</label>
+              <select class="form-control form-control-sm vbilirubin" name="vbilirubin">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >UROBILINOGEN:</label>
+              <select class="form-control form-control-sm vurobilinogen" name="vurobilinogen">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <div class="form-group col-12 ">
+              <label class="mb-0" >LEUKOCYTES:</label>
+              <select class="form-control form-control-sm vleukocytes" name="vleukocytes">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <h6 class="text-center fw-bolder bg-dark text-white">MANUAL PROCEDURE</h6>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >URINE CHON:</label>
+              <select class="form-control form-control-sm vmchon" name="vmchon">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >PROTIEN:</label>
+              <select class="form-control form-control-sm vmlprotein" name="vmlprotein">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="TRACE">TRACE</option>
+                  <option value="+1">+1</option>
+                  <option value="+2">+2</option>
+                  <option value="+3">+3</option>
+              </select>
+             </div>
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">MICROSCOPIC FINDINGS</h6>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >WBC:</label>
+              <input class="form-control form-control-sm vwbc" name="vwbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >RBC:</label>
+              <input class="form-control form-control-sm vrbc" name="vrbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >EPITHELIAL CELLS:</label>
+              <select class="form-control form-control-sm vepithelial" name="vepithelial">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+    
+             <div class="form-group col-4 ">
+              <label class="mb-0" >MUCUS THREADS:</label>
+              <select class="form-control form-control-sm vmucus" name="vmucus">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+  
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >BACTERIA:</label>
+              <select class="form-control form-control-sm vbacteria" name="vbacteria">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+                 
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >CALCIUM OXALATE:</label>
+              <select class="form-control form-control-sm vcalcium" name="vcalcium">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+                 
+                  
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >URIC ACID:</label>
+              <select class="form-control form-control-sm vuric" name="vuric">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >AMMONIUM BIURATES:</label>
+              <select class="form-control form-control-sm vbiurate" name="vbiurate">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+             <div class="form-group col-12 ">
+              <label class="mb-0" >AMORPHOUS PHOSPHATE/URATES:</label>
+              <select class="form-control form-control-sm vphosphate" name="vphosphate">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">CAST</h6>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >FINE GRANULAR CAST:</label>
+              <input class="form-control form-control-sm vfine" name="vfine" autocomplete="off">
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >COARSE GRANULAR CAST:</label>
+              <input class="form-control form-control-sm vcoarse" name="vcoarse">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >HYALINE:</label>
+              <input class="form-control form-control-sm vhyaline" name="vhyaline">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >WBC CAST:</label>
+              <input class="form-control form-control-sm vcwbc" name="vcwbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >RBC CAST:</label>
+              <input class="form-control form-control-sm vcrbc" name="vcrbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >PREGNANCY TEST:</label>
+              <select class="form-control form-control-sm vpregnancy" name="vpregnancy">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="POSITIVE">POSITIVE</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >OTHERS:</label>
+              <input class="form-control form-control-sm vothers" name="vothers">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >NOTES:</label>
+              <input class="form-control form-control-sm vnotes" name="vnotes">
+              
+             </div>
+  
+  
+             <div class="form-group col-12 ">
+              <label class="mb-0" >PERFORMED BY:</label>
+              <input readonly class="form-control form-control-sm vpeformby"  name="vpeformby">
+              
+             </div>
+             <!-- ///////////// -->
+              </div>
+                
+                <div class="form-group">
+                  <input hidden  class="form-control form-control-sm action" name="action">
+                  <input hidden  class="form-control form-control-sm vperformby_id" name="vperformby_id">
+                  <input hidden  class="form-control form-control-sm vorderid" name="vorderid">
+                  <input hidden  class="form-control form-control-sm vproccode" name="vproccode">
+                  <input hidden  class="form-control form-control-sm vhpercode" name="vhpercode">
+                  <input hidden  class="form-control form-control-sm vprikey" name="vprikey">
+                  <input hidden  class="form-control form-control-sm vencc" name="vencc">
+                  <input hidden  class="form-control form-control-sm stype" name="stype">
+       
+    
+                  </div>
+         
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success " type="submit" form="verify_ua_res">Verify and Send</button>
+          </div>
+          
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ////////////////////// -->
+
+
+  <!-- //////////////////// PREGNANCY TEST FORM-->
+<div class="modal fade" id="preg_res_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> PREGNANCY TEST RESULT</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder preg_hosno"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder preg_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder preg_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder preg_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder preg_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder preg_ward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder preg_dob">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder preg_ctr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">--PREGNANCY TEST RESULT DETAILS--</h4>
+            <form id="preg_frm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="disc-type">PREGNANCY RESULT:</label>
+                    <select class="form-control" style="width:100%" id="preg_result" name="preg_result">
+                        <option value="">Please choose</option>
+                        <option value="NEGATIVE">NEGATIVE</option>
+                        <option value="POSITIVE">POSITIVE</option>
+                       
+                    </select>
+                </div>
+  
+                <div class="form-group">
+                  <input type="text" hidden class="form-control preg_performBy" name="preg_performBy">
+                  <input type="text" hidden class="form-control preg_performById" name="preg_performById">
+                  <input type="text" hidden class="form-control action" name="action">
+                    <input type="text" hidden class="form-control orderid" name="orderid">
+                    <input type="text" hidden class="form-control proccode" name="proccode">
+                    <input type="text" hidden class="form-control prikey" name="prikey">
+                    <input type="text" hidden class="form-control encc" name="encc">
+                    <input class="form-control form-control-sm hpercode" hidden name="hpercode">
+  
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="preg_frm">Submit</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- /////////// Fecalysis Add Result/////////////// -->
+<div class="modal fade" id="res_fecalysis" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-file" aria-hidden="true"></i> | FECALYSIS RESULT</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+          <h3 class="text-center fw-bolder bg-dark text-white mb-3 fa_title">--- FECALYSIS RESULT ---</h3>
+          <table class="table-bordered w-100 mb-2">
+            <tbody>
+            <tr>
+              <td >NAME: <span class="fw-bolder fptx"></span></td>
+              <td>CONTROL NO.: <span class="fw-bolder text-danger uctr fs-4"></span></td>
+            </tr>
+            <tr>
+              <td>ORDER ID: <span class="fw-bolder uorder"></span></td>
+              <td>RECEIVED: <span class="fw-bolder ureceived">10-24-2023</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">WARD: <span class="fw-bolder uward"></span></td>
+            </tr>
+          </tbody>
+          </table>
+          <h6 class="text-center fw-bolder bg-dark text-white">GROSS</h6>
+            <form id="fecalysis_frm" >
+                {% csrf_token %}
+              <div class="row">
+  <!-- /////////// -->
+             <div class="form-group col-4 mb-0">
+              <label class="mb-0" >COLOR:</label>
+              <select class="form-control form-control-sm color" name="color">
+                  <option value="">Select Here</option>
+                  <option value="BROWN">BROWN</option>
+                  <option value="LIGHT BROWN">LIGHT BROWN</option>
+                  <option value="DARK BROWN">DARK BROWN</option>
+                  <option value="REDDISH BROWN">REDDISH BROWN</option>
+                  <option value="YELLOW">YELLOW</option>
+                  <option value="LIGHT YELLOW">LIGHT YELLOW</option>
+                  <option value="YELLOWISH BROWN">YELLOWISH BROWN</option>
+                  <option value="YELLOWISH GREEN">YELLOWISH GREEN</option>
+                  <option value="GREEN">GREEN</option>
+                  <option value="GRAY">GRAY</option>
+                  <option value="RED">RED</option>
+                  <option value="BLACK">BLACK</option>
+              </select>
+             </div>
+             <div class="form-group col-4">
+              <label class="mb-0" >CONSISTENCY:</label>
+              <select class="form-control form-control-sm consistency" name="consistency">
+                  <option value="">Select Here</option>
+                  <option value="SOFT">SOFT</option>
+                  <option value="FORMED">FORMDED</option>
+                  <option value="SEMI FORMED">SEMI FORMED</option>
+                  <option value="MUCOID">MUCOID</option>
+                  <option value="MUSHY">MUSHY</option>
+                  <option value="WATERY">WATERY</option>
+              </select>
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >OCCULT BLOOD:</label>
+              <select class="form-control form-control-sm occult_blood" name="occult_blood">
+                  <option value="">Select Here</option>
+                  <option value="NEGATIVE">NEGATIVE</option>
+                  <option value="POSITIVE">POSITIVE</option>
+              </select>
+             </div>
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">MICROSCOPIC</h6>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >RBC:</label>
+              <input class="form-control form-control-sm rcb" name="rcb">
+               
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >WBC:</label>
+              <input class="form-control form-control-sm wbc" name="wbc">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >YEAST CELLS:</label>
+              <select class="form-control form-control-sm yeast_cell" name="yeast_cell">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >BACTERIA:</label>
+              <select class="form-control form-control-sm bacteria" name="bacteria">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >FAT GLOBULES:</label>
+              <select class="form-control form-control-sm fat_globules" name="fat_globules">
+                  <option value="">Select Here</option>
+                  <option value="RARE">RARE</option>
+                  <option value="FEW">FEW</option>
+                  <option value="MODERATE">MODERATE</option>
+                  <option value="MANY">MANY</option>
+              </select>
+             </div>
+             
+  
+             <h6 class="text-center fw-bolder bg-dark text-white">PARASITES</h6>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >ASCARIS LUMBRICOIDES:</label>
+              <input class="form-control form-control-sm ascaris" name="ascaris">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >HOOKWORM:</label>
+              <input class="form-control form-control-sm hookworm" name="hookworm">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >ENTAMOEBA HISTO CYST:</label>
+              <input class="form-control form-control-sm histo" name="histo">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >ENTAMOEBA COLI CYST:</label>
+              <input class="form-control form-control-sm coli" name="coli">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >TRICHURIS TRICHURA:</label>
+              <input class="form-control form-control-sm trichuris" name="trichuris">
+             </div>
+             <div class="form-group col-4 ">
+              <label class="mb-0" >ENTEROBIUS VERMICULARIS:</label>
+              <input class="form-control form-control-sm vermi" name="vermi">
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >OTHERS:</label>
+              <select class="form-control form-control-sm other" name="other">
+                  <option value="">Select Here</option>
+                  <option value="NO OVA PARASITE SEEN">NO OVA PARASITE SEEN</option>
+              </select>
+             </div>
+             <div class="form-group col-6 ">
+              <label class="mb-0" >NOTE:</label>
+              <input class="form-control form-control-sm note" name="note"> 
+             </div>
+  
+             <div class="form-group col-12 perform_field" hidden>
+              <label class="mb-0" >PERFORMED BY:</label>
+              <input class="form-control form-control-sm performBy" readonly name="performBy">
+              <input class="form-control form-control-sm performById" name="performById"> 
+             </div>
+             
+             
+             
+             <!-- ///////////// -->
+              </div>
+              <div class="form-group">
+                <input hidden class="form-control form-control-sm action" id="action" name="action">
+                <input hidden class="form-control form-control-sm orderid" name="orderid">
+                <input hidden class="form-control form-control-sm hpercode" name="hpercode">
+                <input hidden class="form-control form-control-sm proccode" name="proccode">
+                <input hidden class="form-control form-control-sm encc" name="encc">
+                <input hidden class="form-control form-control-sm prikey" name="prikey">
+                <input hidden class="form-control form-control-sm stype" name="stype">
+  
+                </div>
+                
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary"readonly id="fecal_btn" type="submit" form="fecalysis_frm">Submit</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- //////////////////// OCCULT BLOOD TEST FORM-->
+<div class="modal fade" id="occult_res_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> OCCULT BLOOD TEST RESULT</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+    
+            <tr>
+              <td colspan=""> PATIENT: <span class="fs-6 fw-bolder optx"> CECILIO, SALVADOR BALONCIO</span></td>
+              <td colspan=""> HOSPITAL NO.: <span class="fs-6 fw-bolder ohospno"> 230000000000001</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder oward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder orec">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder octr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white occ_title">--OCCULT BLOOD TEST RESULT DETAILS--</h4>
+            <form id="occult_frm">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="disc-type">OCCULT BLOOD RESULT:</label>
+                  <select class="form-control occult_results" style="width:100%" id="occult_results" name="occult_results">
+                      <option value="">Please choose</option>
+                      <option value="NEGATIVE">NEGATIVE</option>
+                      <option value="POSITIVE">POSITIVE</option>
+                     
+                  </select>
+              </div>
+              <div class="form-group perform_field" hidden>
+                <input type="text" class="form-control performBy" readonly name="performBy">
+                <input type="text" class="form-control performById" readonly name="performById">
+                </div>
+  
+                <div class="form-group">
+                  <input hidden type="text" class="form-control action" name="action">
+                  <input hidden type="text" class="form-control orderid" name="orderid">
+                  <input hidden type="text" class="form-control proccode" name="proccode">
+                  <input hidden type="text" class="form-control prikey" name="prikey">
+                  <input hidden type="text" class="form-control encc" name="encc">
+                  <input hidden class="form-control form-control-sm hpercode" name="hpercode">
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="occult_frm">Submit</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ////////////////////// -->
+
+

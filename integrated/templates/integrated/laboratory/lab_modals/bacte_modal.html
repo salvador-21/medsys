@@ -1,0 +1,228 @@
+<div class="modal fade" id="kitform" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">KIT DETAILS</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="kit_frm" action="#" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="disc-type">Kit Name:</label>
+                    <select class="form-control" style="width:100%" id="kitname" name="kitname">
+                        <option value="">Please choose</option>
+                       
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control kit_id" name="kit_id" readonly>
+                    <label for="disc-type">Lot No.:</label>
+                    <input type="text" class="form-control lot_no" name="lot_no" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="disc-type">Expiry Date:</label>
+                    <input type="text" class="form-control expiry_date" name="expiry_date" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="disc-type">Status:</label>
+                    <input type="text" class="form-control status" name="status" readonly>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control modality" name="modality" readonly>
+                </div>
+                
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary addkit" type="button">Add Kit</button>
+            <button class="btn btn-success" type="submit" form="kit_frm">Use Kit</button>
+
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- add kit form -->
+
+  <div class="modal fade" id="addkitform" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">KIT ADDING FORM</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="addkit_frm" action="#" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="disc-type">Kit Name:</label>
+                    <input type="text" class="form-control kit_name" name="kit_name" required>
+                    <!-- <select class="form-control" style="width:100%" id="kitname" name="kitname">
+                        <option value="">Please choose</option>
+                       
+                    </select> -->
+                </div>
+                <div class="form-group">
+                    <label for="disc-type">Lot No.:</label>
+                    <input type="text" class="form-control lot_no" name="lot_no" required >
+                </div>
+                <div class="form-group">
+                    <label for="disc-type">Expiry Date:</label>
+                    <input type="date" class="form-control expiry_date" name="expiry_date" required >
+                </div>
+                <!-- <div class="form-group">
+                    <input type="text" value="BACTI" class="form-control modality" name="modality" readonly >
+                </div> -->
+                <div class="input-group mb-3 ">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text  fw-bolder">MODALITY</span>
+                  </div>
+                  <!-- <input type="text" class="form-control" name="rdt_result" id="rdt_result" placeholder="Rapid Test Result"> -->
+                  <select class="form-control fs-4 fw-bolder" required name="modality" id="modality">
+                      <option value="">Please Select Result</option>
+                      <option value="BACTI">BACTI</option>
+                      <option value="SEROLOGY">SEROLOGY</option>
+                  </select>
+              </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="addkit_frm">Add Kit</button>
+
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- resut form rapid test -->
+  <div class="modal fade" id="bacte_result_form" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> COVID-19 RAPID ANTIGEN TEST</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan=""> HOSPITAL NO.: <span class="fs-6 fw-bolder rdt_hosno"> 230000000000001</span></td>
+              <td colspan="2"> CONTROL NO.: <span class="fs-4 text-danger fw-bolder rdt_ctr ">OP23-000001</span></td>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-5 fw-bolder rdt_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder rdt_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder rdt_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder rdt_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder rdt_ward">OPD</span></td>
+              <td colspan="2"> Date of Birth: <span class=" fw-bolder rdt_dob"></span></td>
+            </tr>
+           
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">--COVID-19 RAPID TEST RESULT--</h4>
+            <form id="rapid_frm">
+                {% csrf_token %}
+                <div class="input-group mb-3 ">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text fs-4 fw-bolder">TEST TYPE</span>
+                  </div>
+                  <!-- <input type="text" class="form-control" name="rdt_result" id="rdt_result" placeholder="Rapid Test Result"> -->
+                  <select class="form-control fs-4 fw-bolder" required name="r_type" id="r_type">
+                      <option value="">Please Select Result</option>
+                      <option value="COVID-19 RAPID ANTIGEN TEST">COVID-19 RAPID ANTIGEN TEST</option>
+                      <option value="COVID-19 RAPID ANITBODY TEST">COVID-19 RAPID ANITBODY TEST</option>
+                  </select>
+              </div>
+                <div class="input-group mb-3 ">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text fs-4 fw-bolder">RESULT</span>
+                    </div>
+                    <!-- <input type="text" class="form-control" name="rdt_result" id="rdt_result" placeholder="Rapid Test Result"> -->
+                    <select class="form-control fs-4 fw-bolder" required name="rdt_result" id="rdt_result">
+                        <option value="">Please Select Result</option>
+                        <option value="POSITIVE">POSITIVE</option>
+                        <option value="NEGATIVE">NEGATIVE</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text fw-bolder">KIT USED:</span>
+                    </div>
+                    <input type="text" class="form-control" readonly name="rdt_kit" id="rdt_kit" >
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text fw-bolder">LOT NO.:</span>
+                    </div>
+                    <input type="text" class="form-control" readonly name="rdt_lotno" id="rdt_lotno">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text fw-bolder">EXPIRY DATE:</span>
+                    </div>
+                    <input type="text" class="form-control" readonly name="rdt_expiry" id="rdt_expiry" >
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text fw-bolder">REMARKS:</span>
+                  </div>
+                  <input type="text" class="form-control"  name="rdt_remarks" id="rdt_remarks" >
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text fw-bolder">CONTACT NO.:</span>
+                </div>
+                <input type="text" class="form-control"  name="rdt_contact" id="rdt_contact" >
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text fw-bolder">PERFORMED BY:</span>
+                </div>
+                <input type="text" readonly class="form-control rdt_performBy" name="rdt_performBy">
+              </div>
+  
+                <div class="form-group">
+                  <input type="hidden" class="form-control rdt_performById" name="rdt_performById">
+                    <input type="hidden" class="form-control rdt_action" name="rdt_action">
+                    <input type="hidden" class="form-control rdt_age" name="rdt_age">
+                    <input type="hidden" class="form-control rdt_ward" name="rdt_ward">
+                    <input type="hidden" class="form-control rdt_orderid" name="rdt_orderid">
+                    <input type="hidden" class="form-control rdt_prikey" name="rdt_prikey">
+                    <input type="hidden" class="form-control rdt_procode" name="rdt_procode">
+                    <input type="hidden" class="form-control rdt_licno" name="rdt_licno">
+                    <input type="hidden" class="form-control rdt_encc" name="rdt_encc">
+                    <input type="hidden" class="form-control form-control-sm rdt_hpercode" name="rdt_hpercode">
+                    <input type="hidden" class="form-control form-control-sm rdt_key" name="rdt_key">
+                    <input type="hidden" class="form-control form-control-sm rdt_type" name="rdt_type">
+  
+                  </div>
+            
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button type="submit"  class="btn btn-success" form="rapid_frm" >Submit to Verify!</button>
+          </div>
+        </form>    
+        </div>
+      </div>
+    </div>
+  </div>

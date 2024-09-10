@@ -1,0 +1,384 @@
+
+  <!-- //////////////////// CBC FORM-->
+<div class="modal fade" id="immuno_modal" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> IMMUNOSEROLOGY</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+        <table class="mb-2 table table-bordered w-100 p-2">
+          <tr>
+            <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder im_hosno"> 230000000000001</span></td></tr>
+          <tr>
+          <tr>
+            <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder im_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+          <tr>
+            <td> GENDER: <span class=" fw-bolder im_gender">MALE</span></td>
+            <td> AGE: <span class=" fw-bolder im_age">123</span></td>
+            <td> CIVIL STATUS: <span class=" fw-bolder im_stat">SINGLE</span></td>
+          </tr>
+          <tr>
+            <td> WARD: <span class=" fw-bolder im_ward">OPD</span></td>
+            <td colspan="2"> REQUESTED: <span class=" fw-bolder im_received">07/21/1990</span></td>
+          </tr>
+          <tr>
+            <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder im_ctr">OP23-000001</span></td>
+          </tr>
+        </table>
+        <h4 class="text-center fw-bolder bg-dark text-white">--IMMUNOSEROLOGY RESULT DETAILS--</h4>
+        <form id="immuno_frm">
+
+         <table class="table table-bordered">
+          <tbody id="immun_tbl">
+            
+            <tr class="bg-secondary text-white fs-5 text-center" >
+              <td colspan="4" style="padding: 0px;margin: 0px;">IMMUNOLOGY</td>
+            </tr>
+
+            <tr class="rheu_tr" hidden>
+            <td><p class="fs-5 fw-bolder">Rheumatoid Factor</p></td>
+            <td>
+                <input type="text" step="any" class="form-control" id="rheu" name="rheu" placeholder="Rheumatoid Factor">
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="rheu_unit" name="rheu_uni" value="IU/mL">
+            
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="rheu_range" name="rheu_range" value="< 8.0">
+            </td>
+          </tr>
+
+          <tr class="aso_tr" hidden>
+          <td><p class="fs-5 fw-bolder">ASO Titer</p></td>
+          <td>
+              <input type="text" step="any" class="form-control" id="aso" name="aso" placeholder="ASO Titer">
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="aso_unit" name="aso_uni" value="IU/mL">
+          
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="aso_range" name="aso_range" value="< 200">
+          </td>
+        </tr>
+
+        <tr class="crp_tr" hidden>
+        <td><p class="fs-5 fw-bolder">CRP</p></td>
+          <td>
+              <input type="text" step="any" class="form-control" id="crp" name="crp" placeholder="CRP">
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="crp_unit" name="crp_uni" value="ug/mL">
+          
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="crp_range" name="crp_range" value="< 10">
+          </td>
+        </tr>
+
+        <tr class="procal_tr" hidden>
+          <td><p class="fs-5 fw-bolder">Procalcitonin</p></td>
+            <td>
+                <input type="text" step="any" class="form-control" id="procal" name="procal" placeholder="Procalcitonin">
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="procal_unit" name="procal_uni" value="ng/mL">
+            
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="procal_range" name="procal_range" value="< 0.5">
+            </td>
+          </tr>
+
+          </tbody>
+         </table>
+
+         <table class="table table-bordered">
+          <tbody id="cardiac_tbl">
+             
+          <tr class="bg-secondary text-white fs-5 text-center" style="padding: 0px;">
+            <td colspan="4" style="padding: 0px;margin: 0px;">CARDIAC MARKERS</td>
+          </tr>
+
+          <tr class="tropinin_tr" hidden>
+          <td><p class="fs-5 fw-bolder">Tropinin I</p></td>
+          <td>
+              <input type="text" step="any" class="form-control" id="tropinin" name="tropinin" placeholder="Tropinin I">
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="tropinin_unit" name="tropinin_uni" value="ng/mL">
+          
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="tropinin_range" name="tropinin_range" value="0 - 0.120">
+          </td>
+        </tr>
+
+        <tr class="ckmb_tr" hidden>
+        <td><p class="fs-5 fw-bolder">CK-MB</p></td>
+        <td>
+            <input type="text" step="any" class="form-control" id="ckmb" name="ckmb" placeholder="CK-MB">
+        </td>
+        <td>
+          <input type="text"  class="form-control" id="ckmb_unit" name="ckmb_uni" value="ng/mL">
+        
+        </td>
+        <td>
+          <input type="text"  class="form-control" id="ckmb_range" name="ckmb_range" value="0 - 24">
+        </td>
+      </tr>
+
+      <tr class="probnp_tr" hidden>
+      <td><p class="fs-5 fw-bolder">Pro - BNP</p></td>
+        <td>
+            <input type="text" step="any" class="form-control" id="probnp" name="probnp" placeholder="Pro-BNP">
+        </td>
+        <td>
+          <input type="text"  class="form-control" id="probnp_unit" name="probnp_uni" value="pg/mL">
+        
+        </td>
+        <td>
+          <input type="text"  class="form-control" id="probnp_range" name="probnp_range" value="< 75y/o = 0-300">
+        </td>
+      </tr>
+          </tbody>
+         </table>
+
+
+         <table class="table table-bordered">
+          <tbody id="tumor_tbl">
+            
+            <tr class="bg-secondary text-white fs-5 text-center" style="padding: 0px;">
+              <td colspan="4" style="padding: 0px;margin: 0px;">TUMOR MARKER</td>
+            </tr>
+
+            <tr class="psa_tr" hidden>
+            <td><p class="fs-5 fw-bolder">PSA</p></td>
+            <td>
+                <input type="text" step="any" class="form-control" id="psa" name="psa" placeholder="PSA ">
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="psa_unit" name="psa_uni" value="ng/mL">
+            
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="psa_range" name="psa_range" value="0-4">
+            </td>
+          </tr>
+
+          <tr class="cea_tr" hidden>
+          <td><p class="fs-5 fw-bolder">CEA</p></td>
+          <td>
+              <input type="number" step="any" class="form-control" id="cea" name="cea" placeholder="CEA">
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="cea_unit" name="cea_uni" value="ng/mL">
+          
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="cea_range" name="cea_range" value="< 5.0">
+          </td>
+        </tr>
+
+        <tr class="ca125_tr" hidden>
+        <td><p class="fs-5 fw-bolder">CA-125</p></td>
+          <td>
+              <input type="text" step="any" class="form-control" id="ca125" name="ca125" placeholder="CA-125">
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="ca125_unit" name="ca125_uni" value="U/mL">
+          
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="ca125_range" name="ca125_range" value="0-35">
+          </td>
+        </tr>
+          </tbody>
+         </table>
+
+         <table class="table table-bordered">
+          <tbody id="thyroid_tbl">
+            <tr class="bg-secondary text-white fs-5 text-center" style="padding: 0px;">
+              <td colspan="4" style="padding: 0px;margin: 0px;">THYROID FUNCTION</td>
+            </tr>
+      
+            <tr class="tsh_tr" hidden>
+            <td><p class="fs-5 fw-bolder">TSH</p></td>
+            <td>
+                <input type="text" step="any" class="form-control" id="tsh" name="tsh" placeholder="TSH ">
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="tsh_unit" name="ptshuni" value="μIU/mL">
+            
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="tsh_range" name="tsh_range" value="0.3-4.5">
+            </td>
+          </tr>
+      
+          <tr class="t3_tr" hidden>
+          <td><p class="fs-5 fw-bolder">T3</p></td>
+          <td>
+              <input type="text" step="any" class="form-control" id="t3" name="t3" placeholder="T3">
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="t3_unit" name="t3_uni" value="nmol/L">
+          
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="t3_range" name="t3_range" value="1.23-3.08">
+          </td>
+        </tr>
+      
+        <tr class="t4_tr" hidden>
+        <td><p class="fs-5 fw-bolder">T4</p></td>
+          <td>
+              <input type="text" step="any" class="form-control" id="t4" name="t4" placeholder="T4">
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="t4_unit" name="t4_uni" value="nmol/L">
+          
+          </td>
+          <td>
+            <input type="text"  class="form-control" id="t4_range" name="t4_range" value="57.9-150.6">
+          </td>
+        </tr>
+      
+        <tr class="ft3_tr" hidden>
+          <td><p class="fs-5 fw-bolder">FT3</p></td>
+            <td>
+                <input type="text" step="any" class="form-control" id="ft3" name="ft3" placeholder="FT3">
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="ft3_unit" name="ft3_uni" value="pg/mL">
+            
+            </td>
+            <td>
+              <input type="text"  class="form-control" id="ft3_range" name="ft3_range" value="2.0-4.2">
+            </td>
+          </tr>
+      
+          <tr class="ft4_tr" hidden>
+            <td><p class="fs-5 fw-bolder">FT4</p></td>
+              <td>
+                  <input type="text" step="any" class="form-control" id="ft4" name="ft4" placeholder="FT4">
+              </td>
+              <td>
+                <input type="text"  class="form-control" id="ft4_unit" name="ft4_uni" value="μIU/mL">
+              
+              </td>
+              <td>
+                <input type="text"  class="form-control" id="ft4_range" name="ft4_range" value="8.9-17.2">
+              </td>
+            </tr>
+          </tbody>
+         </table>
+         <table>
+          <tbody>
+            <tr>
+              <input type="text" step="any" class="form-control" id="notes" name="notes" placeholder="Notes">
+            </tr>
+          </tbody>
+         </table>
+
+         <div class="row">
+          <div class="input-group mb-3 w-100">
+            <div class="input-group-prepend ">
+              <span class="input-group-text"><b>Perfomed By<b></span>
+            </div>
+            <input type="text" class="form-control" id="perform" name="perform" readonly >
+            
+            </div>
+         </div>
+         <input type="text" hidden class="form-control" id="perform_id" name="perform_id" readonly >
+         <input type="text" hidden class="form-control action"  name="action">
+         <input type="text" hidden class="form-control i_encc" placeholder="Enccode" name="i_encc">
+         <input type="text" hidden class="form-control i_orderid" placeholder="Order Id" name="i_orderid">
+         <input type="text" hidden class="form-control i_hpercode" placeholder="Hpercode" name="i_hpercode">
+         <input type="text" hidden class="form-control i_ctr" placeholder="Hpercode" name="i_ctr">
+         <input type="text" hidden class="form-control i_key" placeholder="key" name="i_key">
+
+        
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-group">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-success" type="submit" form="immuno_frm">Submit</button>
+        </div>
+        
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+<!-- to process -->
+<div class="modal fade" id="immun_toprocess" tabindex="-1" role="dialog"  data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> IMMUNOSEROLOGY</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+        <table class="mb-2 table-bordered w-100 p-2">
+          <tr>
+            <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder immu_hosno"> 230000000000001</span></td></tr>
+          <tr>
+          <tr>
+            <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder immu_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+          <tr>
+            <td> GENDER: <span class=" fw-bolder immu_gender">MALE</span></td>
+            <td> AGE: <span class=" fw-bolder immu_age">123</span></td>
+            <td> CIVIL STATUS: <span class=" fw-bolder immu_stat">SINGLE</span></td>
+          </tr>
+          <tr>
+            <td> WARD: <span class=" fw-bolder sero_ward">OPD</span></td>
+            <td colspan="2"> REQUESTED: <span class=" fw-bolder immu_date">07/21/1990</span></td>
+          </tr>
+          <tr>
+            <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder immu_ctr">OP23-000001</span></td>
+          </tr>
+        </table>
+        <h4 class="text-center fw-bolder bg-dark text-white">-- PENDING IMMUNOSEROLOGY TEST --</h4>
+        <div class="input-group mb-3">
+
+          <table class="table table-bordered">
+              <thead>
+                <th>Tests</th>
+                <th>Modality</th>
+                <th>Status</th>
+              </thead>
+              <tbody id="pending_immuntest">
+                
+              </tbody>
+
+          </table>
+          
+      </div>
+      <form id="immunToprocess">
+        <input type="text" hidden class="form-control tp_encc" name="'tp_encc"  id="tp_encc">
+        <input type="text" hidden class="form-control tp_orderid" name="'tp_orderid" id="tp_orderid" >
+      </form>
+      
+      
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-group">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-success" type="submit" form="immunToprocess">Submit To Process</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

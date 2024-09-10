@@ -1,0 +1,317 @@
+<DOCTYPE html>
+    {% load static %}
+    <head>
+        <title>SEROLOGY - {{ptx.patlast}} - {{ptx.patfirst}} - {{ test.verify_date}}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <style>
+    body {
+        margin: 0;
+        padding: 0;
+        /* background-color: #FAFAFA; */
+        font: 12pt "Times New Roman";
+    }
+    * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    .page {
+        width: 21cm;
+        min-height: 29.7cm;
+        /* padding: 2cm; */
+        margin: 1cm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 5px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .subpage {
+        padding: 1cm;
+        /* padding: 10px; */
+        /* border: 5px red solid; */
+        height: 256mm;
+        background-image:url("{% static 'integrated/img/lab-bg.png'%}") ;
+        /* outline: 1cm #FFEAEA solid; */
+        background-repeat: no-repeat; background-size: cover; background-position: center center;
+    }
+    
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    @media print {
+        .page {
+            margin: 0;
+            border: initial;
+            border-radius: initial;
+            width: initial;
+            min-height: initial;
+            box-shadow: initial;
+            background: initial;
+            page-break-after: always;
+        }
+    }
+    .ptx_data td {
+  border: .5px solid rgb(196, 192, 192);
+  border-collapse: collapse;
+  padding: 4px;
+}
+.result_data td {
+  border: .5px solid rgb(196, 192, 192);
+  border-collapse: collapse;
+  padding: 5px;
+  
+}
+.staff_data td {
+  border: .5px solid rgb(196, 192, 192);
+  border-collapse: collapse;
+}
+
+        </style>
+    </head>
+    <body>
+ 
+        <div class="book">
+            <div class="page">
+                <div class="subpage">
+                 <div class="header" style="height: 100px;">
+                    <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
+                        <tr>
+                        <td><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="{% static 'integrated/img/doh.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td style="text-align: center;padding: 0px;">
+                          <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
+                          <span class="fw-bolder" style="font-size: 12px;">Formerly( Bicol Sanitarium )</span><br>
+                          <span style="font-size: 10px;">San Pedro, Cabusao, Camarines Sur</span><br>
+                          <span style="font-size: 10px;">Telephone Nos.: (054) 473-2244; 472-4422, 881-1033, 881-1761</span><br>
+                          <span style="font-size: 10px;">Email Address: bicolsan@yahoo.com; brghgmc@gmail.com</span>
+                        </td>
+                        </tr>
+                    </table>
+                   
+                 </div>
+       
+                 <div class="content" style="height: 950px;padding: 0px;margin: 0px;">
+                    <h4 class="text-center fw-bolder mb-4" >SEROLOGY</h4>
+                    <table class="w-100 ptx_data mb-2" >
+                        
+                        <tr>
+                            <td class="fw-bolder col-1" align="right" style="font-size: 12px;">PATIENT:</td>
+                            <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patlast}}, {{ptx.patfirst}}</span></td>
+                            <td class="fw-bolder col-2" align="right" style="font-size: 12px;">RESULT DATE:</td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ test.verify_date}}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bolder col-1" align="right" style="font-size: 12px;">HOSP NO.:</td>
+                            <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.hpercode}}</span></td>
+                            <td class="fw-bolder col-2" align="right" style="font-size: 12px;">CONTROL NO.:</td>
+                            <td class="col-4" style="font-size: 16px;"><span class="fw-bolder text-danger">{{ test.control_no}}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bolder col-1" align="right" style="font-size: 12px;">GENDER:</td>
+                            <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patsex}}</span></td>
+                            <td class="fw-bolder col-2" align="right" style="font-size: 12px;">WARD:</td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ward}}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bolder col-1" align="right" style="font-size: 12px;">AGE:</td>
+                            <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patage}}</span></td>
+                            <td class="fw-bolder col-2" align="right" style="font-size: 12px;">PHYSICIAN:</td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{doctor}}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bolder col-1" align="right" style="font-size: 12px;">DOB:</td>
+                            <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.birthdate}}</span></td>
+                        </tr>
+                     
+                        <tr>
+                            <td class="fw-bolder col-1" align="right" style="font-size: 12px;">Notes:</td>
+                            <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder text-danger">{{test.note}}</span></td>
+                        </tr>
+                       
+                    </table>
+
+                    <table class="w-100 result_data mb-2 table table-striped">
+                        <tr class="bg-secondary text-white">
+                            <td colspan="6" class=" fw-bolder" align="center" >RAPID TEST KITS</td>
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="fw-bolder" align="center" >Tests</td>
+                                <td class="fw-bolder" align="center" >Result</td>
+                                <td class="" align="center" >Kit Used</td>
+                                <td class="" align="center" >Lot Number</td>
+                                <td class="" align="center" >Expiry Date</td>
+                      
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="col-2 fw-bolder" align="center" >HbsAg</td>
+                            <td class="col-2 fw-bolder" align="center"><span class=""> 
+                                {% if test.hbsag == '' %}
+                                --------
+                                {% else %}
+                                {{test.hbsag}}
+                            {% endif%} </span></td>
+                            <td class="col-2 " align="center">{{test.hbsag_kit}}</td>
+                            <td class="col-2 " align="center" >{{test.hbsag_lot}}</td>
+                            <td class="col-2 " align="center" >{{test.hbsag_exp}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="col-2 fw-bolder" align="center" >Syphilis Test</td>
+                            <td class="col-2 fw-bolder" align="center"><span class="">
+                                {% if test.syph == '' %}
+                                ---------
+                                {% else %}
+                                {{test.syph}}
+                                {% endif %}
+                            </span></td>
+                            <td class="col-2 " align="center">{{test.syph_kit}}</td>
+                            <td class="col-2 " align="center" >{{test.syph_lot}}</td>
+                            <td class="col-2 " align="center" >{{test.syph_exp}}</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2" style="vertical-align : middle;text-align:center;" class="mx-auto fw-bolder"  >Anti-HAV</td>
+                            <td class="col-2 fw-bolder" align="center" >IgM</td>
+                            <td class="col-2 fw-bolder" align="center"><span class="">
+                                {% if test.hav_igm == '' %}
+                                -------
+                                {% else %}
+                                {{test.hav_igm}}
+                                {% endif%}
+                            </span></td>
+                            <td class="col-2" align="center">{{test.hav_igm_kit}}</td>
+                            <td class="col-2 " align="center" >{{test.hav_igm_lot}}</td>
+                            <td class="col-2 " align="center" >{{test.hav_igm_exp}}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-2 fw-bolder" align="center" >IgG</td>
+                            <td class="col-2 fw-bolder" align="center"><span class="">
+                                {% if test.hav_igg == ''%}
+                                --------
+                                {% else %}
+                                {{test.hav_igg}}
+                                {% endif%}
+                            </span></td>
+                            <td class="col-2 " align="center">{{test.hav_igg_kit}}</td>
+                            <td class="col-2 " align="center" >{{test.hav_igg_lot}}</td>
+                            <td class="col-2 " align="center" >{{test.hav_igg_exp}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="col-2 fw-bolder" align="center" >Hbs Antibody</td>
+                            <td class="col-2 fw-bolder" align="center"><span class="">
+                                {% if test.hbhs == '' %}
+                                --------
+                                {% else %}
+                                {{test.hbhs}}
+                                {% endif %}
+                            </span></td>
+                            <td class="col-2 " align="center">{{test.hbhs_kit}}</td>
+                            <td class="col-2 " align="center" >{{test.hbhs_lot}}</td>
+                            <td class="col-2 " align="center" >{{test.hbhs_exp}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="col-2 fw-bolder" align="center" >Anti HCV</td>
+                            <td class="col-2 fw-bolder" align="center"><span class="">
+                                {% if test.hcv == '' %}
+                                --------
+                                {% else %}
+                                {{test.hcv}}
+                                {% endif %}
+                            </span></td>
+                            <td class="col-2 " align="center">{{test.hcv_kit}}</td>
+                            <td class="col-2 " align="center" >{{test.hcv_lot}}</td>
+                            <td class="col-2 " align="center" >{{test.hcv_exp}}</td>
+                        </tr>
+                        
+                    </table>
+
+                    <table class="w-100 result_data mb-2 table table-striped">
+                        <tr class="bg-secondary text-white">
+                            <td colspan="6" class=" fw-bolder" align="center" >ECLIA</td>
+                            
+                        </tr>
+                        <tr>
+                            <td  class="fw-bolder" align="center" >Tests</td>
+                                <td  colspan="2" class="fw-bolder" align="center" >Result</td>
+                                <td class="fw-bolder" align="center" >References</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center" >Hbs Antibody</td>
+                            <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center"><span class="">----------</span></td>
+                            <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center">----------</td>
+                           
+                        </tr>
+                        <tr>
+        
+                            <td class="col-2 fw-bolder" align="center">&#8805; 12 mIU/mL (Reactive)</td>
+                        </tr>
+                        <tr>
+        
+                            <td class="col-2 fw-bolder" align="center"> &#8805; < 8 mIU/mL (NonReactive) </td>
+                        </tr>
+                        <tr>
+        
+                            <td class="col-2 fw-bolder" align="center">&#8805; 8 mIU/mL but &#8804; 12 mIU/mL (Borderline)</td>
+                        </tr>
+                        
+                    </table>
+
+                    <table class="w-100 staff_data" style="margin-top: 50px;">
+                        <tr class="bg-secondary text-white fw-bolder">
+                            <td>Perfomed By:</td>
+                            <td>Verified By:</td>
+                            <td>Approved By:</td>
+                        </tr>
+                        <tr class="text-center" style="height: 100px;">
+                            <td >
+                                <p style="margin-bottom: 50px;"></p>
+                                <p class="fw-bolder mb-0">{{ test.perform_by_name}}</p>
+                                <p>Lic. No. -------</p>
+                            </td>
+                            <td style="padding: 0px;">
+                                <p style="margin-bottom: 50px;"></p>
+                                <p class="fw-bolder mb-0">{{test.verified_by_name}}</p>
+                                <p>Lic. No.-------</p>
+                            </td>
+                            <td>
+                                <p style="margin-bottom: 50px;"></p>
+                                <p class="fw-bolder mb-0">RAYMUNDO B. IBARRIENTOS, MD.</p>
+                                <p>Lic. No. 0078995</p>
+                            </td>
+                        </tr>
+                        <tr class="text-center fw-bolder">
+                            <td>Medical Technologist</td>
+                            <td>Medical Technologist</td>
+                            <td>Pathologist</td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="footer" style="height: 20px;">
+                    <table style="font-size: 12px;width: 100%;border-top: 4px solid rgb(14, 14, 187);font-style: italic;">
+                        <tr>
+                            <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
+                            <td width="20%" align="center"><span>Rev 8</span></td>
+                            <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
+                            <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                        </tr>
+                    </table>
+
+                </div>
+               
+            </div>
+           
+        </div>
+        
+
+        
+        <script>
+
+            // ///////////////
+        
+            // /////////////////////////
+    
+      </script>
+
+    </body>
+</html>

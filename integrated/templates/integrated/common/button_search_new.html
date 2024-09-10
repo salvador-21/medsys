@@ -1,0 +1,29 @@
+<div class="btn btn-group">
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#searchModal">Patient Search</button>
+    <button class="btn btn-danger rfid-modal" type="button" data-toggle="modal" data-target="#rfidSearchModal">RFID Patient Search</button>
+    {% if page == "New Patient Record" %}
+    <button class="btn btn-success" type="submit" form="new-patient-form">Add Patient</button>
+    {% elif page == "Out-Patient" %}
+    <button class="btn btn-success" type="submit" form="patient-details-form">Save Record</button>
+    {%if no and no != 't'%}
+    <a class="btn btn-primary" type="button" href="{% url 'rfid' no %}">RFID</a>
+    {%endif%}
+    {% elif page == "Consultations" %}
+        {% if enctr %}
+        <a href="{% url 'opdrecord' enctr %}" target="_blank" type="button" class="btn btn-success"><i class="fa fa-print"></i> OPD Record</a>
+        <a href="#" target="_blank" type="button" class="btn btn-danger" data-toggle="modal" data-target="#certModal"><i class="fa fa-print"></i> Medical Certificate</a>
+        {% endif %}
+    {% else %}
+    <a class="btn btn-success" type="button" href="{% url 'newpatient' %}">New Patient</a>
+    {% endif %}
+    {% if no %}
+    <a href="{% url 'consultations' no %}" class="btn btn-danger" type="button">Consultations</a>
+    {% endif %}
+    {% if page == 'Emergency Room' and no != 't' %}
+    <a href="{% url 'erlog' no %}" class="btn btn-warning" type="button">Log Patient</a>
+    {% endif %}
+    {% if page == 'Dialysis' and no != 't' %}
+    <a href="{% url 'dialysisEnrollment' no %}" class="btn btn-primary" type="button">Enroll Patient</a>
+    {%endif%}
+    
+</div>

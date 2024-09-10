@@ -1,0 +1,224 @@
+<!-- Sidebar -->
+{%load static%}
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon">
+        <img src="{% static 'integrated/img/brghgmclogo.png'%}" height="40">
+        </div>
+        <div class="sidebar-brand-text mx-3">iHomis</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+    
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item {%if page == 'Dashboard'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'index' %}">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Dashboard</span></a>
+    </li>
+
+    {% if user_level == 1  or user_level == 12 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Health Information
+    </div>
+
+    <li class="nav-item {%if page == 'HIM'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'him' %}">
+        <i class="fa fa-address-card"></i>
+        <span>Health Information Management</span></a>
+    </li>
+
+    <li class="nav-item {%if page == 'Out-Patient'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'opd' %}">
+        <i class="fa fa-h-square"></i>
+        <span>Out-Patient</span></a>
+    </li>
+
+    <li class="nav-item {%if page == 'Emergency Room'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'er' %}">
+        <i class="fa fa-ambulance"></i>
+        <span>Emergency</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="index.html">
+        <i class="fa fa-heartbeat"></i>
+        <span>Admission</span></a>
+    </li>
+    
+    {% endif %}
+    {% if user_level == 1 or user_level == 3 or user_level == 4 or user_level == 5 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Revenue Center
+    </div>
+    {% if user_level == 1 or user_level == 3 %}
+    <li class="nav-item {%if page == 'Laboratory'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'laboratory' %}">
+        <i class="fa fa-medkit"></i>
+        <span>Laboratory</span></a>
+    </li>
+    {% endif %}
+    {% if user_level == 1 or user_level == 4 %}
+    <li class="nav-item {%if page == 'Radiology'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'radiology' %}">
+        <i class="fa fa-medkit"></i>
+        <span>Radiology</span></a>
+    </li>
+    {% endif %}
+    {% if user_level == 1 or user_level == 5 %}
+    <li class="nav-item {%if page == 'Pharmacy'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'pharmacy' %}">
+        <i class="fa fa-medkit"></i>
+        <span>Pharmacy</span></a>
+    </li>
+    {% endif %}
+    {% endif %}
+    {% if user_level == 1 or user_level == 15 or user_level == 16 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Finance
+    </div>
+    {% if user_level == 1 or user_level == 15 %}
+    <li class="nav-item {%if page == 'Billing'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'billing' %}">
+        <i class="fa fa-id-card"></i>
+        <span>Billing</span></a>
+    </li>
+    <li class="nav-item {%if page == 'Billing'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'maipreport' %}">
+        <i class="fa fa-id-card"></i>
+        <span>MAIP Report</span></a>
+    </li>
+    {% endif %}
+    {% if user_level == 1 or user_level == 16 %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'cashier' %}">
+        <i class="fa fa-credit-card"></i>
+        <span>Cashiering</span></a>
+    </li>
+    {% endif %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Discounts & Financial Support
+    </div>
+
+    <li class="nav-item {%if page == 'Patient Discount'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'discounts' %}">
+        <i class="fa fa-star"></i>
+        <span>Discounts & Support</span></a>
+    </li>
+    {% if user_level == 1 or user_level == 15 %}
+    <li class="nav-item {%if page == 'Social Service'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'socialservice' %}">
+        <i class="fa fa-star"></i>
+        <span>Social Service</span></a>
+    </li>
+    {% endif %}
+    {% endif %}
+    {% if user_level == 1  or user_level == 14 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Doctor's Corner
+    </div>
+
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+        <i class="fa fa-user-md"></i>
+        <span>Patients</span></a>
+    </li>
+    {% endif %}
+    {% if user_level == 1 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Dietary
+    </div>
+
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+        <i class="fa fa-user"></i>
+        <span>Patients</span></a>
+    </li>
+    {% endif %}
+    {% if user_level == 1 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Dialysis
+    </div>
+
+    <li class="nav-item {%if page == 'Dialysis'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'dialysis'%}">
+        <i class="fa fa-user"></i>
+        <span>Patients</span></a>
+    </li>
+
+    <li class="nav-item {%if page == 'Dialysis Log'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'dialysislog'%}">
+        <i class="fa fa-user"></i>
+        <span>Log</span></a>
+    </li>
+    {% endif %}
+    {% if user_level == 1 or user_level == 2 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Nurse's Corner
+    </div>
+
+    <li class="nav-item {%if page == 'E-Nurse'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'enurse' %}">
+        <i class="fa fa-heart"></i>
+        <span>E-Nurse</span></a>
+    </li>
+
+    <li class="nav-item {%if page == 'E-Nurse'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'nurseassignment' %}">
+        <i class="fa fa-heart"></i>
+        <span>Nurse Assignment</span></a>
+    </li>
+    {% endif %}
+    {% if user_level == 1 or user_level == 18 or user_level == 12 or user_level == 2 or user_level == 15 %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Reports
+    </div>
+
+    <li class="nav-item {%if page == 'Reports'%}active{%endif%}">
+        <a class="nav-link" href="{% url 'reports' %}">
+        <i class="fa fa-heart"></i>
+        <span>Hospital Reports</span></a>
+    </li>
+    {% endif %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->

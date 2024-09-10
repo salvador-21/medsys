@@ -1,0 +1,29 @@
+<!-- Search Modal-->
+<div class="modal fade" id="rfidSearchModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Patient Search Via RFID</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+                <form id="search-rfid-form" action="{% url 'lookuprfid' page %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" name="rfid" id="rfid" placeholder="Please place rfid to the reader">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" type="submit" form="search-form">Search</button>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Out-Patient</h1>
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="#" data-toggle="modal" data-target="#searchModal"><img src="{%static 'integrated/img/prehomis.png'%}" height="200" width="200" class="rounded mx-auto d-block"></a>
+                    <div class="text-center">Pre-Homis</div>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="{% url 'opdtriage' %}"><img src="{%static 'integrated/img/assessment.png'%}" height="200" width="200" class="rounded mx-auto d-block"></a>
+                    <div class="text-center">Triage</div>
+                </div>
+
+                <div class="col-md-4">
+                    <a href="#"><img src="{%static 'integrated/img/printing.png'%}" height="200" width="200" class="rounded mx-auto d-block"></a>
+                    <div class="text-center">Printing</div>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/opd/search_modal.html' %}
+  {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

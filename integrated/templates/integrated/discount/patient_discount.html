@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %} 
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Patient Discount</h1>
+                <div class="btn btn-group float-right">
+                  <a class="btn btn-success" type="button" href="{% url 'bill' enctr %}">Patient Bill</a>
+                  <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#discountModal">Add Hospital Discount</button>
+                  <button class="btn btn-success" type="button" data-toggle="modal" data-target="#pfdiscountModal">Add PF Discount</button>
+                </div>
+                
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+              <div class="container-fluid">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                        <tr>
+                            <td>PATIENT NAME: <b>{{header.patient.0.patlast}}, {{header.patient.0.patfirst}} {{header.patient.0.patmiddle}} {% if header.patient.0.patsuffix %}{{header.patient.0.patsuffix}}{% endif %}</b></td>
+                            <td>AGE: <b>{{header.age}}</b></td>
+                            <td>Birthdate: <b>{{header.patient.0.bday}}</b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">ADDRESS: <b>{{header.address}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>DATE ADMITTED: <b>{{header.details.0.date_admitted}}</b></td>
+                            <td>DATE DISCHARGED: {% if header.details.0.date_discharged %} <b>{{ header.details.0.date_discharged }}</b> {% endif %}</td>
+                            <td>HOSPITAL NO: <b>{{header.patient.0.hpercode}}</b></td>
+                        </tr>
+                        
+                        <tr>
+                          <td>MSS CLASS: {% if header.mss.0.mssdesc %}{{header.mss.0.mssdesc}}{% endif %}</td>
+                          <td>PHILHEALTH: {% if header.member_type.0.typedesc %}<b>{{header.member_type.0.typedesc}}</b>{% endif %}</td>
+                          <td>PHILHEALTH #: {% if header.member_type.0.phicnum %}<b>{{header.member_type.0.phicnum}}</b>{% endif %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-sm">
+                  <thead>
+                    <tr style='text-align:center'>
+                      <th>PARTICULARS</th>
+                      <th>ACTUAL CHARGES</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="2" style="background-color: grey; color:white;"><b>HOSPITAL CHARGES</b></td>
+                    </tr>
+                    {% if header.rnb %}
+                    <tr>
+                      <td>Room and Board</td>
+                      <td style='text-align:right'>{{header.rnb|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.meds %}
+                    <tr>
+                      <td>Drugs and Medicines</td>
+                      <td style='text-align:right'>{{header.meds|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.medsup %}
+                    <tr>
+                      <td>Medical Supplies</td>
+                      <td style='text-align:right'>{{header.medsup|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.lab %}
+                    <tr>
+                      <td>Laboratory</td>
+                      <td style='text-align:right'>{{header.lab|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.rad %}
+                    <tr>
+                      <td>Xray/Ultrasound/2D Echo</td>
+                      <td style='text-align:right'>{{header.rad|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.mrict %}
+                    <tr>
+                      <td>CT Scan/MRI</td>
+                      <td style='text-align:right'>{{header.mrict|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.er %}
+                    <tr>
+                      <td>ER Fee</td>
+                      <td style='text-align:right'></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.ordr %}
+                    <tr>
+                      <td>OR/DR Fee</td>
+                      <td style='text-align:right'>{{header.ordr|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.nursing %}
+                    <tr>
+                      <td>Nursing Care Procedure</td>
+                      <td style='text-align:right'>{{header.nursing|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif%}
+                    {% if header.ecg %}
+                    <tr>
+                      <td>ECG</td>
+                      <td style='text-align:right'></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.pt %}
+                    <tr>
+                      <td>Physical Theraphy</td>
+                      <td style='text-align:right'></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.dialysis %}
+                    <tr>
+                      <td>Hemodialysis</td>
+                      <td style='text-align:right'></td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td style='text-align: right;'><b>Total:</b></td>
+                      <td style='text-align:right'><b>{{summ|stringformat:".2f"|intcomma}}</b></td>
+                    </tr>
+                    <tr>
+                      <td colspan="2" style="background-color: grey; color:white;"><b>DISCOUNTS</b></td>
+                    </tr>
+                    {% if header.philhealth.0.amthosp1 %}
+                    <tr style='color:red'>
+                      <td>Philhealth Case Rate</td>
+                      <td style='text-align:right'>{{header.philhealth.0.amthosp1|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if header.disc %}
+                    {% for i in header.disc %}
+                    <tr style='color:red'>
+                      <td>{{i.discdesc}} (by: {{i.encoder}}) <span class="badge badge-dark float-right"><a href="{% url 'delete_discount' enctr i.discikey %}" style="color: white;" type="button">Delete</a></span></td>
+                      <td style='text-align:right'>{{i.pdamt}}%</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    {% if header.othdisc %}
+                    {% for i in header.othdisc %}
+                    <tr style='color:red'>
+                      <td>{{i.disccode}} (by: {{i.encoder}}) <span class="badge badge-dark float-right"><a href="{% url 'delete_discount' enctr i.disccode %}" style="color: white" type="button">Delete</a></span></td>
+                      <td style='text-align:right'>{{i.amount|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    {% if header.pdaf %}
+                    {% for i in header.pdaf %}
+                    <tr style='color:red'>
+                      <td>{{i.funddesc}} (by: {{i.encoder}}) <span class="badge badge-dark float-right"><a href="{% url 'delete_discount' enctr i.fundcode %}" style="color: white" type="button">Delete</a></span></td>
+                      <td style='text-align:right'>{{i.amount|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                    <tr style="color:red">
+                      <td style='text-align: right;'><b>Balance:</b></td>
+                      <td style='text-align:right'><b>{{bal|stringformat:".2f"|intcomma}}</b></td>
+                    </tr>
+                    {% if header.prof %}
+                    <tr>
+                      <td colspan="2" style="background-color: grey; color:white;"><b>PROFESSIONAL FEE</b></td>
+                    </tr>
+                    {% for i in header.prof %}
+                    <tr>
+                      <td>{{i.physician}}  </td>
+                      <td style='text-align:right'>{{i.pfamt|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                      <td style='text-align: right;'><b>Total:</b></td>
+                      <td style='text-align:right'><b>{{prof_summ|stringformat:".2f"|intcomma}}</b></td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td colspan="2" style="background-color: grey; color:white;"><b>DISCOUNTS</b></td>
+                    </tr>
+                    {% if header.philhealth.0.amthosp1 %}
+                    <tr style='color:red'>
+                      <td>Philhealth Case Rate</td>
+                      <td style='text-align:right'>{{header.philhealth.0.amtpf1|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if prof %}
+                    {% for x in prof %}
+                    {% if x.pfsenior %}
+                    <tr style='color:red'>
+                      <td>SR/PWD Discount <span class="badge badge-dark float-right"><a href="{% url 'delpfdisc' enctr x.licno 'SR'%}" style="color: white" type="button">Delete</a></span></td>
+                      <td style='text-align:right'>{{x.pfsenior|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif%}
+                    {% if x.pfdisc %}
+                    <tr style='color:red'>
+                      <td>QFS <span class="badge badge-dark float-right"><a href="{% url 'delpfdisc' enctr x.licno 'QFS' %}" style="color: white" type="button">Delete</a></span></td>
+                      <td style='text-align:right'>{{x.pfdisc|stringformat:".2f"|intcomma}}</td>
+                    </tr>
+                    {% endif%}
+                    {% endfor %}
+                    {% endif %}
+                    <tr style="color:red">
+                      <td style='text-align: right;'><b>Balance:</b></td>
+                      <td style='text-align:right'><b>{{prof_bal|stringformat:".2f"|intcomma}}</b></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/discount_modal.html' with disc_type=header.disc_type fs_type=header.fs_type enctr=enctr hpercode=header.patient.0.hpercode %}
+  {% include 'integrated/common/pf_discount_modal.html' with fs_type=header.fs_type prof=header.prof enctr=enctr hpercode=header.patient.0.hpercode %}
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

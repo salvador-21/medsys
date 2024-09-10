@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %} 
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Patient Bill [{{toecode}}]</h1>
+                <div class="btn btn-group float-right">
+                  <a href="{% url 'charges' encounter %}" class="btn btn-primary" type="button">Charges</a>
+                  <a href="{% url 'caserate' encounter %}" class="btn btn-success" type="button">Case Rate</a>
+                  <a href="{% url 'proffee' encounter %}" class="btn btn-primary" type="button">Professional Fee</a>
+                  <a href="{% url 'diagnosis' encounter %}" class="btn btn-danger" type="button">Diagnosis</a>
+                  <a href="{% url 'patient_discount' encounter %}" class="btn btn-warning" type="button">Discount</a>
+                  {%if tscode == '020' or tscode == '027'%}
+                  <a href="{% url 'printdialysispatientbill' encounter %}" target="_blank" class="btn btn-primary" type="button">Print Bill</a>
+                  <a href="{% url 'dialysisbill' encounter %}" target="_blank" class="btn btn-success" type="button">Print Detailed Bill</a>
+                  {%else%}
+                  <a href="{% url 'printbill' encounter %}" target="_blank" class="btn btn-primary" type="button">Print Bill</a>
+                  <a href="{% url 'printdetailedbill' encounter %}" target="_blank" class="btn btn-success" type="button">Print Detailed Bill</a>
+                  {%endif%}
+        
+                  <a href="{% url 'billingdetailedbillexcel' encounter %}" target="_blank" class="btn btn-danger" type="button">Export Detailed Bill</a>
+                  <!-- <a href="{% url 'printdetailedbill' encounter %}" target="_blank" class="btn btn-success" type="button">Print Detailed Bill</a> -->
+                </div>
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+              <div class="container-fluid">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                        <tr>
+                            <td>PATIENT NAME: <b>{{header.patient.0.patlast}}, {{header.patient.0.patfirst}} {{header.patient.0.patmiddle}} {% if header.patient.0.patsuffix %}{{header.patient.0.patsuffix}}{% endif %}</b></td>
+                            <td>AGE: <b>{{header.age}}</b></td>
+                            <td>DATE: <b>{% now "F d, Y H:i " %}</b></td>
+                        </tr>
+                        <tr>
+                            <td>ADDRESS: <b>{{header.address}}</b></td>
+                            <td>Birthdate: <b>{{header.patient.0.bday}}</b></td>
+                            {% if toecode == 'IN-PATIENT' %}
+                            <td>No. of Days: 
+                              <b>
+                                {% if header.details.0.date_discharged %}
+                                  {{header.details.0.no_day}}
+                                {% else %}
+                                  {% if header.details.0.no_days is not None %}{{header.details.0.no_days}}{% endif %}
+                                {% endif %}
+                              </b>
+                            </td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td>FINAL DIAGNOSIS:
+                              {%for i in header.diagnosis%}
+                                {% if i.primediag == 'Y'%}
+                                  <b>{{i.diagtext}}</b>
+                                {% endif %}
+                              {% endfor %}
+                            </td>
+                            <td>DATE ADMITTED: <b>{{header.details.0.date_admitted}}</b></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>DATE DISCHARGED: {% if header.details.0.date_discharged %} <b>{{ header.details.0.date_discharged }}</b> {% endif %}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                          <td>OTHER DIAGNOSIS:
+                            {% for i in header.diagnosis %}
+                              <ul>
+                              {% if i.tdcode == 'OTHER' %}
+                                <li>{{i.diagtext}}</li>
+                              {% endif %}
+                              </ul>
+                            {% endfor %}
+                          </td>
+                          <td>1ST CASE RATE:<b>{% if header.philhealth.0.firstcase %}{{header.philhealth.0.firstcase}} {% endif %}</b></td>
+                          <td>HOSPITAL NO: <b>{{header.patient.0.hpercode}}</b></td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>2ND CASE RATE: {% if header.philhealth.0.secondcase %} {{header.philhealth.0.secondcase}} {% endif %}</td>
+                          {% if toecode == 'IN-PATIENT' %}
+                          <td>WARD:{% if header.room_assign.0.wardname %} <b>{{header.room_assign.0.wardname}}</b> {% endif %}</td>
+                          {% else %}
+                          <td></td>
+                          {% endif %}
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>MSS CLASS: {% if header.mss.0.mssdesc %}{{header.mss.0.mssdesc}}{% endif %}</td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          {% if toecode == 'IN-PATIENT' %}
+                          <td>ATTENDING PHYSICIAN:
+                            {% for i in header.diagnosis %}
+                            {% if i.primediag == 'Y'%}
+                              <b>{{i.physician}}</b>
+                            {% endif %}
+                            {% endfor %}
+                          </td>
+                          {% else %}
+                          <td>PHYSICIAN:
+                            {% for i in header.diagnosis %}
+                            {% if i.primediag == 'Y'%}
+                              <b>{{i.physician}}</b>
+                            {% endif %}
+                            {% endfor %}
+                          </td>
+                          {% endif %}
+                          <td>PHILHEALTH: {% if header.member_type.0.typedesc %}<b>{{header.member_type.0.typedesc}}</b>{% endif %}</td>
+                          <td>PHILHEALTH #: {% if header.member_type.0.phicnum %}<b>{{header.member_type.0.phicnum}}</b>{% endif %}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-sm">
+                  <thead>
+                    <tr style='text-align:center'>
+                      <th>PARTICULARS</th>
+                      <th>ACTUAL CHARGES</th>
+                      <th>SC/PWD/GOV'T</th>
+                      <th colspan="2">PHILHEALTH</th>
+                      <th>PCSO</th>
+                      <th>MAIP</th>
+                      <th>OP-SCPF</th>
+                      <th>QFS</th>
+                      <th>OUT OF POCKET</th>
+                    </tr><tr style='text-align:center'>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th class="small font-weight-bold">1ST CASE</th>
+                      <th class="small font-weight-bold">2ND CASE</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="10" style="background-color: grey; color:white;"><b>HOSPITAL CHARGES</b></td>
+                    </tr>
+                    {% if header.rnb %}
+                    <tr>
+                      <td>Room and Board</td>
+                      <td style='text-align:right'>{{header.rnb|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.meds %}
+                    <tr>
+                      <td>Drugs and Medicines</td>
+                      <td style='text-align:right'>{{header.meds|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.medsup %}
+                    <tr>
+                      <td>Medical Supplies</td>
+                      <td style='text-align:right'>{{header.medsup|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.lab %}
+                    <tr>
+                      <td>Laboratory</td>
+                      <td style='text-align:right'>{{header.lab|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.rad %}
+                    <tr>
+                      <td>Xray/Ultrasound/2D Echo</td>
+                      <td style='text-align:right'>{{header.rad|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.mrict %}
+                    <tr>
+                      <td>CT Scan/MRI</td>
+                      <td style='text-align:right'>{{header.mrict|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.er %}
+                    <tr>
+                      <td>ER Fee</td>
+                      <td style='text-align:right'>{{header.er|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.ordr %}
+                    <tr>
+                      <td>OR/DR Fee</td>
+                      <td style='text-align:right'>{{header.ordr|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.nursing %}
+                    <tr>
+                      <td>Nursing Care Procedure</td>
+                      <td style='text-align:right'>{{header.nursing|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif%}
+                    {% if header.ecg %}
+                    <tr>
+                      <td>ECG</td>
+                      <td style='text-align:right'>{{header.ecg|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.pt %}
+                    <tr>
+                      <td>Physical Theraphy</td>
+                      <td style='text-align:right'>{{header.pt|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.dialysis %}
+                    <tr>
+                      <td>Hemodialysis</td>
+                      <td style='text-align:right'>{{header.dialysis|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.abtc %}
+                    <tr>
+                      <td>ABTC</td>
+                      <td style='text-align:right'>{{header.abtc.0.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.nbs %}
+                    <tr>
+                      <td>New Born Screening</td>
+                      <td style='text-align:right'>{{header.nbs.0.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.nbh %}
+                    <tr>
+                      <td>New Born Hearing Test</td>
+                      <td style='text-align:right'>{{header.nbh.0.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if header.amb %}
+                    <tr>
+                      <td>Ambulance Fee</td>
+                      <td style='text-align:right'>{{header.amb.0.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td style='text-align: right;'><b>Summary:</b></td>
+                      <td style='text-align:right'><b>{{hosp_summ|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{sc_pwd|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{caseone|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{casetwo|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{pcso|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{maip|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{op|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{qfs|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{bal|stringformat:".2f"|intcomma}}</b></td>
+                    </tr>
+                    
+                    {% if header.prof %}
+                    <tr>
+                      <td colspan="10" style="background-color: grey; color:white;"><b>PROFESSIONAL FEE</b></td>
+                    </tr>
+                    {% for i in header.prof %}
+                    <tr>
+                      <td>{{i.physician}}</td>
+                      <td style='text-align:right'>{{i.pfamt|stringformat:".2f"|intcomma}}</td>
+                      <td style='text-align:right'>{% if i.pfsenior %}{{i.pfsenior|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</td>
+                      <td style='text-align:right'>{% if i.caseonepf %}{{i.caseonepf|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</td>
+                      <td style='text-align:right'>{% if i.casetwopf %}{{i.casetwopf|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</td>
+                      <td style='text-align:right'>0.00</td>
+                      <td style='text-align:right'>0.00</td>
+                      <td style='text-align:right'>0.00</td>
+                      <td style='text-align:right'>{% if i.pfdisc %}{{i.pfdisc|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</td>
+                      <td style='text-align:right'>{% if i.balance %}{{i.balance|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                      <td style='text-align: right;'><b>Summary:</b></td>
+                      <td style='text-align:right'><b>{{prof_summary|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{% if prof_sc %}{{prof_sc|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</b></td>
+                      <td style='text-align:right'><b>{{caseonepf|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{casetwopf|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>0.00</b></td>
+                      <td style='text-align:right'><b>0.00</b></td>
+                      <td style='text-align:right'><b>0.00</b></td>
+                      <td style='text-align:right'><b>{% if prof_qfs %}{{prof_qfs|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</b></td>
+                      <td style='text-align:right'><b>{% if prof_sum_bal %}{{prof_sum_bal|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</b></td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td colspan="10" style="background-color: grey; color:white;"><b>SUMMARY OF CHARGES</b></td>
+                    </tr>
+                    <tr>
+                      <td style='text-align: right;'><b>Hospital Charges:</b></td>
+                      <td style='text-align:right'><b>{{hosp_summ|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{sc_pwd|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{%if header.philhealth.0.amthosp1 %}{{header.philhealth.0.amthosp1|stringformat:".2f"|intcomma}}{%else%}0.00{%endif%}</b></td>
+                      <td style='text-align:right'><b>{%if header.philhealth.0.amthosp2 %}{{header.philhealth.0.amthosp2|stringformat:".2f"|intcomma}}{%else%}0.00{%endif%}</b></td>
+                      <td style='text-align:right'><b>{{pcso|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{maip|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{op|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{qfs|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{bal|stringformat:".2f"|intcomma}}</b></td>
+                    </tr>
+                    <tr>
+                      <td style='text-align: right;'><b>Professional Fees:</b></td>
+                      <td style='text-align:right'><b>{{prof_summary|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{% if prof_sc %}{{prof_sc|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</b></td>
+                      <td style='text-align:right'><b>{{caseonepf|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>{{casetwopf|stringformat:".2f"|intcomma}}</b></td>
+                      <td style='text-align:right'><b>0.00</b></td>
+                      <td style='text-align:right'><b>0.00</b></td>
+                      <td style='text-align:right'><b>0.00</b></td>
+                      <td style='text-align:right'><b>{% if prof_qfs %}{{prof_qfs|add:qfs|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</b></td>
+                      <td style='text-align:right'><b>{% if prof_sum_bal %}{{prof_sum_bal|stringformat:".2f"|intcomma}}{%else%}0.00{% endif %}</b></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <hr>
+            <form action="{% url 'bill' encounter %}" method="POST">
+              {% csrf_token %}
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">SOA:</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" id="soa_no" value="{%if other_info.0.soa_no %}{{other_info.0.soa_no}} {% endif %}" name="soa_no" placeholder="No.">
+                </div>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" id="soa_date" name="soa_date" value="{%if other_info.0.soa_date %}{{other_info.0.soa_date}} {% endif %}" placeholder="MM/DD/YYYY">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Conforme:</label>
+                <div class="col-sm-2">
+                  <select class="form-control" id="conforme" name="conforme">
+                    <option {% if other_info.0.conforme_type == 'PATIENT' %} selected {% endif %} value="PATIENT">Patient</option>
+                    <option {% if other_info.0.conforme_type == 'PHIC' %} selected {% endif %} value="PHIC">Philhealth Member</option>
+                    <option {% if other_info.0.conforme_type == 'REP' %} selected {% endif %} value="REP">Authorized Representative</option>
+                  </select>
+                </div>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" id="conforme_name" name="conforme_name" value="{%if other_info.0.soa_no %}{{other_info.0.conforme_name}} {% else %} {{header.patient.0.patfirst}} {%if header.patient.0.patmiddle %}{{header.patient.0.patmiddle|make_list|first}}.{%endif%} {{header.patient.0.patlast}} {% if header.patient.0.patsuffix %}{{header.patient.0.patsuffix}}{% endif %} {% endif %}" placeholder="Name">
+                </div>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" id="conforme_date" name="conforme_date" value="{%if other_info.0.conforme_date_signed %}{{other_info.0.conforme_date_signed}} {% endif %}" placeholder="MM/DD/YYYY">
+                </div>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control" id="conforme_contact" name="conforme_contact" value="{%if other_info.0.conforme_contact %}{{other_info.0.conforme_contact}} {% endif %}" placeholder="Contact No">
+                </div>
+              </div>
+
+              {% if other_info.0.conforme_type == 'REP' or other_info.0.conforme_type == '' %}
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Relation to Patient:</label>
+                <div class="col-sm-4">
+                  <select class="form-control" id="relation" name="relation">
+                    <option value='' {%if other_info.0.fsoarelto == ''%}selected{%endif%}></option>
+                    <option value='1' {%if other_info.0.fsoarelto == '1'%}selected{%endif%}>Spouse</option>
+                    <option value='2' {%if other_info.0.fsoarelto == '2'%}selected{%endif%}>Child</option>
+                    <option value='3' {%if other_info.0.fsoarelto == '3'%}selected{%endif%}>Parent</option>
+                    <option value='4' {%if other_info.0.fsoarelto == '4'%}selected{%endif%}>Sibling</option>
+                    <option value='5' {%if other_info.0.fsoarelto == '5'%}selected{%endif%}>Other</option>
+                    <option value='6' {%if other_info.0.fsoarelto == '6'%}selected{%endif%}>Member</option>
+                  </select>
+                </div>
+              </div>
+              {% endif %}
+              
+              
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-success">Save</button>
+                </div>
+              </div>
+            </form>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

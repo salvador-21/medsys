@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">ER Turn Around Time Report</h1>
+                <form name="form" action="{% url 'er-tat-report' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="date" name="start"/>
+                  <input type="date" name="end"/>
+                  <button type="submit">Generate</button>
+                </form>
+            </div>
+          <!-- Content Row -->
+            {%if list%}
+            <div class="row" style="overflow: auto">
+              <div class="container-fluid">
+              <table class="table table-hover"  style="cursor: pointer;">
+                  <thead>
+                      <tr>
+                            <th>Date</th>
+                            <th>Hospital No.</th>
+                            <th>Name of Patient</th>
+                            <th>Time Arrive</th>
+                            <th>Time Seen</th>
+                            <th>Disposition Time</th>
+                            <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {%for i in list%}
+                    <tr>
+                        <td>{{i.erdate}}</td>
+                        <td>{{i.hpercode}}</td>
+                        <td>{{i.patlast}}, {{i.patfirst}} {{i.patmiddle}}</td>
+                        <td>{{i.timearrive}}</td>
+                        <td>{{i.timeseen}}</td>
+                        <td>{{i.disposition_time}}</td>
+                        <td><a href="{% url 'erlogdetails' i.hpercode i.enccode %}">view</a></td>
+                    </tr>
+                   
+                    {%endfor%}
+                  </tbody>
+              </table>
+              </div>
+            </div>
+            {%endif%}
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

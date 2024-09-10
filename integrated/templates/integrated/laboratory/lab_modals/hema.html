@@ -1,0 +1,397 @@
+
+
+<!-- //////////////////// PREGNANCY TEST FORM-->
+<div class="modal fade" id="hema_result" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> PREGNANCY TEST RESULT</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder preg_hosno"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder preg_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder preg_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder preg_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder preg_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder preg_ward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder preg_dob">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder preg_ctr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">--PREGNANCY TEST RESULT DETAILS--</h4>
+            <form id="preg_frm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="disc-type">PREGNANCY RESULT:</label>
+                    <select class="form-control" style="width:100%" id="preg_result" name="preg_result">
+                        <option value="">Please choose</option>
+                        <option value="NEGATIVE">NEGATIVE</option>
+                        <option value="POSITIVE">POSITIVE</option>
+                       
+                    </select>
+                </div>
+  
+                <div class="form-group">
+                    <input type="text" class="form-control orderid" name="orderid">
+                    <input type="text" class="form-control proccode" name="proccode">
+                    <input type="text" class="form-control prikey" name="prikey">
+                    <input type="text" class="form-control encc" name="encc">
+                    <input class="form-control form-control-sm hpercode" name="hpercode">
+  
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="preg_frm">Submit</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- BLOOD TYPING -->
+  
+
+<!-- //////////////////// BT FORM-->
+<div class="modal fade" id="hema_bloodtyping" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> BLOOD TYPING</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder preg_hosno"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder preg_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder preg_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder preg_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder preg_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder preg_ward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder preg_dob">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder preg_ctr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">--BLOOD TYPING RESULT DETAILS--</h4>
+            <form id="preg_frm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="disc-type">BLOOD TYPING RESULT:</label>
+                    <select class="form-control" style="width:100%" id="blood_type" name="blood_type">
+                        <option value="">Please choose</option>
+                        <option value="NEGATIVE">A+</option>
+                        <option value="POSITIVE">A-</option>
+                        <option value="NEGATIVE">B+</option>
+                        <option value="POSITIVE">B-</option>
+                        <option value="NEGATIVE">AB+</option>
+                        <option value="POSITIVE">AB-</option>
+                       
+                    </select>
+                </div>
+  
+                <div class="form-group">
+                    <input type="text" class="form-control orderid" name="hema_orderid">
+                    <input type="text" class="form-control proccode" name="hema_proccode">
+                    <input type="text" class="form-control prikey" name="hema_prikey">
+                    <input type="text" class="form-control encc" name="hema_encc">
+                    <input class="form-control form-control-sm hema_hpercode" name="hema_hpercode">
+  
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="preg_frm">Submit</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- /////////////// -->
+  <!-- //////////////////// CBC FORM-->
+<div class="modal fade" id="hema_cbc" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> CBC (Complete Blood Count)</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+        <table class="mb-2 table-bordered w-100 p-2">
+          <tr>
+            <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder cbc_hosno"> 230000000000001</span></td></tr>
+          <tr>
+          <tr>
+            <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder cbc_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+          <tr>
+            <td> GENDER: <span class=" fw-bolder cbc_gender">MALE</span></td>
+            <td> AGE: <span class=" fw-bolder cbc_age">123</span></td>
+            <td> CIVIL STATUS: <span class=" fw-bolder cbc_stat">SINGLE</span></td>
+          </tr>
+          <tr>
+            <td> WARD: <span class=" fw-bolder cbc_ward">OPD</span></td>
+            <td colspan="2"> REQUESTED: <span class=" fw-bolder cbc_received">07/21/1990</span></td>
+          </tr>
+          <tr>
+            <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder cbc_ctr">OP23-000001</span></td>
+          </tr>
+        </table>
+        <h4 class="text-center fw-bolder bg-dark text-white">--CBC (Complete Blood Count) RESULT DETAILS--</h4>
+        <form id="cbc_frm">
+         <table class="table table-bordered">
+          <thead>
+            <th>DESCRIPTION</th>
+            <th>RESULT (SL UNITS)</th>
+            <th>NORMAL VALUES (SI UNITS)</th>
+          </thead>
+          <tbody>
+            <tr>
+            <td><p class="fs-5 fw-bolder">Hemoglobin</p></td>
+            <td>
+              <div class="input-group mb-3">
+            
+                <input type="text" class="form-control" id="hema_search" placeholder="Search Patient">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><b>10<sup>6</sup>/μL<b></span>
+                </div>
+            </div>
+            </td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ////////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">Hematocrit</p></td>
+            <td><input type="text" class="form-control" placeholder="Hematocrit"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">RBC Count</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">MVC</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">MCH</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">MCHC</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">WBC Count</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">Differential Count</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">Poly Neutrophils</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder"> -Neutrophils</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder"> -Lymphocytes</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder"> -Monocytes</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder"> -Eosinophil</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder"> -Basophils</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">Platelet Count</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">Blood Group</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">Reticulocytes</p></td>
+            <td><input type="text" class="form-control" placeholder="Hemoglobin"></td>
+            <td>
+              <select class="form-control" style="width:100%" id="#" name="#">
+                <option value="">Please choose</option>
+                <option value="NEGATIVE">120 - 140 g/l</option>
+            </select>
+            </td>
+          </tr>
+          <!-- ///////////// -->
+          <tr>
+            <td><p class="fs-5 fw-bolder">NOTES</p></td>
+            <td colspan="2"><input type="text" class="form-control" placeholder="Notes"></td>
+          </tr>
+          <!-- ///////////// -->
+          </tbody>
+         </table>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-group">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+          <button class="btn btn-success" type="submit" form="cbc_frm">Submit</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,154 @@
+
+<!-- //////////////////// CHEM FORM-->
+<div class="modal fade" id="chemistry" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> CLINICAL CHEMISTRY</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan=""> HOSPITAL NO.: <span class="fs-6 fw-bolder chem_hosno"> 230000000000001</span></td>
+              <td colspan="2"> CONTROL NO.: <span class="fs-4 text-danger fw-bolder chem_ctr">OP23-000001</span></td>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-5 fw-bolder chem_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder chem_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder chem_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder chem_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder chem_ward">OPD</span></td>
+              <td colspan="2"> Date of Birth: <span class=" fw-bolder chem_dob"></span></td>
+            </tr>
+            <tr>
+              <td colspan="2"> LAST MEAL.: <span class="fs-6 text-danger fw-bolder chem_lm">------</span></td>
+              <td colspan=""> EXTRACTION TIME.: <span class="fs-6 text-danger fw-bolder chem_xt"></span></td>
+              
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">--CHEMISTRY RESULT DETAILS--</h4>
+            <form id="chem_frm">
+                {% csrf_token %}
+                <table class="table-bordered w-100 table-striped mb-4">
+                    <thead class="bg-info text-white">
+                        <th class="text-center">TEST</th>
+                        <th class="text-center">RESULT</th>
+                        <th class="text-center">NORMAL VALUES</th>
+                    </thead>
+                    <tbody id="chem_req">
+                       
+
+                    </tbody>
+                </table>
+  
+                <div class="form-group">
+                  <input type="text"  hidden class="form-control chem_perform_by"  name="chem_perform_by">
+                  <input type="text"  hidden  class="form-control chem_perform_by_id" name="chem_perform_by_id">
+                    <input type="text"  hidden class="form-control chem_lastmeal" name="chem_lastmeal">
+                    <input type="text"  hidden class="form-control chem_ext_time" name="chem_ext_time">
+
+                    <input type="text" hidden  class="form-control chem_action" name="chem_action">
+                    <input type="text"  hidden class="form-control chem_orderid" name="chem_orderid">
+                    <!-- <input type="text" class="form-control chem_proccode" name="chem_proccode"> -->
+                    <input type="text"  hidden  class="form-control chem_prikey" name="chem_prikey">
+                    <input type="text"  hidden class="form-control chem_encc" name="chem_encc">
+                    <input hidden class="form-control form-control-sm chem_hpercode" name="chem_hpercode">
+  
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="chem_frm">Submit</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ///////////////////////////  -->
+  <div class="modal fade" id="chem_to_process" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> CLINICAL CHEMISTRY</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan=""> HOSPITAL NO.: <span class="fs-6 fw-bolder pchem_hosno"> 230000000000001</span></td>
+              <td colspan="2"> CONTROL NO.: <span class="fs-4 text-danger fw-bolder pchem_ctr">OP23-000001</span></td>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-5 fw-bolder pchem_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder pchem_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder pchem_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder pchem_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder pchem_ward">OPD</span></td>
+              <td colspan="2"> Date of Birth: <span class=" fw-bolder pchem_dob"></span></td>
+            </tr>
+            <tr>
+              <td colspan="2"> LAST MEAL.: <span class="fs-6 text-danger fw-bolder chem_lm">------</span></td>
+              <td colspan=""> EXTRACTION TIME.: <span class="fs-6 text-danger fw-bolder chem_xt"></span></td>
+              
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">--CHEMISTRY REQUEST DETAILS--</h4>
+            <form id="chem_frm">
+                {% csrf_token %}
+                <table class="table-bordered w-100 table-striped mb-4">
+                    <thead class="bg-info text-white">
+                      <th class="text-center">#</th>
+                        <th class="text-center">TEST</th>
+                        <th class="text-center">STATUS</th>
+                    </thead>
+                    <tbody id="chem_test_view">
+                       
+
+                    </tbody>
+                </table>
+  
+                <div class="form-group">
+                  <input type="text" hidden  class="form-control chem_perform_by" name="chem_perform_by">
+                  <input type="text" hidden class="form-control chem_perform_by_id" name="chem_perform_by_id">
+                    <input type="text" hidden class="form-control pchem_lastmeal" name="pchem_lastmeal">
+                    <input type="text" hidden class="form-control pchem_ext_time" name="pchem_ext_time">
+
+                    <input type="text" hidden class="form-control pchem_action" name="pchem_action">
+                    <input type="text" hidden class="form-control pchem_orderid" name="pchem_orderid">
+                    <!-- <input type="text" class="form-control chem_proccode" name="chem_proccode"> -->
+                    <input type="text" hidden class="form-control pchem_prikey" name="pchem_prikey">
+                    <input type="text" hidden class="form-control pchem_encc" name="pchem_encc">
+                    <input hidden class="form-control form-control-sm pchem_hpercode" name="pchem_hpercode">
+  
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success btn_process" >Submit to Process!</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /////////////// -->

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/lab_head.html' with page=page %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="grey-bg container-fluid">
+          <section id="minimal-statistics">
+            <div class="row">
+              <div class="col-12 mt-3 mb-1">
+                <h4 class="text-uppercase">Main Laboratory</h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-3 col-sm-6 col-12"> 
+                <div class="card main_link">
+                  <a  href="{% url 'lab_opd' %}" style="text-decoration: none;color: grey;">      
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="align-self-center">
+                          <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                          <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                        </div>
+                        <div class="media-body text-right">
+                          <h3><i class="fa-solid fa-user"></i> 278</h3>
+                          <span class="fw-bolder h5">OPD EXTRACTION</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_reception' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="align-self-center">
+                          <i class="fa-solid fa-phone-volume font-large-2 warning float-left"></i>
+                          <!-- <i class="fa fa-phone-square font-large-2 float-left warning" aria-hidden="true"></i> -->
+                        </div>
+                        <div class="media-body text-right">
+                          <h3><i class="fa fa-address-card"></i></h3>
+                          <span class="fw-bolder h5">RECEPTION</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  
+                  <a  href="{% url 'lab_microscopy'  %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="align-self-center">
+                          <!-- <i class="icon-graph success font-large-2 float-left"></i> -->
+                          <i class="fa-solid fa-microscope font-large-2 float-left success"></i>
+                        </div>
+                        <div class="media-body text-right">
+                          <h3><i class="fa-solid fa-user"></i> 64</h3>
+                          <span class="fw-bolder h5">MICROSCOPY</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_chemistry' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="align-self-center">
+                          <i class="fa-solid fa-atom danger font-large-2 float-left"></i>
+                        </div>
+                        <div class="media-body text-right">
+                          <h3><i class="fa-solid fa-user"></i> 423</h3>
+                          <span class="fw-bolder h5">CHEMISTRY</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+            </div>
+          
+            <div class="row">
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_bacteriology' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="warning"><i class="fa-solid fa-user"></i> 267</h3>
+                          <span class="h5 fw-bolder">COVID-19 RAPID TEST</span>
+                        </div>
+                        <div class="align-self-center">
+                          <!-- <i class="icon-pie-chart warning font-large-2 float-right"></i> -->
+                          <i class="fa-solid fa-vial-virus font-large-2 float-right warning"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_hematology' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="danger"><i class="fa-solid fa-user"></i> 278</h3>
+                          <span class="h5 fw-bolder">HEMATOLOGY</span>
+                        </div>
+                        <div class="align-self-center">
+                          <!-- <i class="icon-rocket danger font-large-2 float-right"></i> -->
+                          <i class="fa-solid fa-vial danger font-large-2 float-right"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_serology' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="success"><i class="fa-solid fa-user"></i> 156</h3>
+                          <span class="h5 fw-bolder">SEROLOGY</span>
+                        </div>
+                        <div class="align-self-center">
+                          <!-- <i class="icon-user success font-large-2 float-right"></i> -->
+                          <i class="fa-solid fa-flask-vial font-large-2 float-right success"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+
+            
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_immuno' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="primary"><i class="fa-solid fa-user"></i> 423</h3>
+                          <span class="h5 fw-bolder">IMMUNO SEROLOGY</span>
+                        </div>
+                        <div class="align-self-center">
+                          <!-- <i class="icon-support primary font-large-2 float-right"></i> -->
+                          <i class="fa-solid fa-viruses font-large-2 float-right primary"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+            </div>
+          
+            <div class="row" >
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_kit' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="danger"><i class="fa-solid fa-list"></i></h3>
+                          <span class="h5 fw-bolder">LABORATORY KITS</span>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="icon-rocket danger font-large-2 float-right"></i>
+                        </div>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="{% url 'lab_microbiology' %}" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="danger">423</h3>
+                          <span class="h5 fw-bolder">BACTERIOLOGY</span>
+                        </div>
+                        <div class="align-self-center">
+                          <!-- <i class="icon-direction danger font-large-2 float-right"></i> -->
+                          <i class='fas fa-biohazard danger font-large-2 float-right'></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="#" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="warning"><i class="fa-solid fa-users"></i></h3>
+                          <span class="h5 fw-bolder">USER SETTING</span>
+                        </div>
+                        <div class="align-self-center">
+                          <i class="fa-solid fa-cogs warning font-large-2 float-right"></i>
+                        </div>
+                      </div>
+                     
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+          
+              <div class="col-xl-3 col-sm-6 col-12">
+                <div class="card main_link">
+                  <a  href="#" style="text-decoration: none;color: grey;">
+                  <div class="card-content">
+                    <div class="card-body">
+                      <div class="media d-flex">
+                        <div class="media-body text-left">
+                          <h3 class="success"><i class="fa-solid fa-list"></i></h3>
+                          <span class="h5 fw-bolder">REPORTS</span>
+                        </div>
+                        <div class="align-self-center">
+                          <i class="icon-calendar success font-large-2 float-right"></i>
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </a>
+              </div>
+              
+            </div>
+          </section>
+          
+          
+        </div>
+       
+        <!-- end page Content -->
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/opd/search_modal.html' %}
+  {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

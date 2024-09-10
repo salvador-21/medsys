@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %} 
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Patient Case Rate</h1>
+                <div class="btn-group">
+                  <a class="btn btn-success" type="button" href="{% url 'bill' encounter %}">Patient Bill</a>
+                  <button class="btn btn-success" type="button" data-toggle="modal" data-target="#caserateModal">Add 1st Case</button>
+                  <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#caserateModal2">Add 2nd Case</button>
+                </div>
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+                <div class="container-fluid">
+                    <h4><b>Name: {{patient.0.patfirst}} {{patient.0.patmiddle}} {{patient.0.patlast}} {%if patient.0.patsuffix is not None %}{{patient.0.patsuffix}} {%endif%}</b></h4>
+                    {% if msg %}<h5 style='align-items: center; color:red'>{{msg}}</h5>{% endif %}
+                </div>
+                  {% if patient_case_rate %}
+                    {% for i in patient_case_rate %}
+                    {% if i.firstcase is not None %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title"><b>{{i.firstcase}}</b><p style='color:red'>(First Case Rate)</p></h5>
+                              <p class="card-text">{{i.fcasedesc}}</p>
+                              <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th>Hospital Fee</th>
+                                    <th>Professional Fee</th>
+                                    <th>Total</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>{{i.amthosp1|stringformat:".2f"|intcomma}}</td>
+                                    <td>{{i.amtpf1|stringformat:".2f"|intcomma}}</td>
+                                    <td>{{i.amt1|stringformat:".2f"|intcomma}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <a href="{% url 'deletecaserate' encounter 'F' %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if i.secondcase is not None %}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title"><b>{{i.secondcase}}</b> <p style='color:red'>(Second Case Rate)</p></h5>
+                              <p class="card-text">{{i.scasedesc}}</p>
+                              <table class="table table-hover">
+                                <thead>
+                                  <tr>
+                                    <th>Hospital Fee</th>
+                                    <th>Professional Fee</th>
+                                    <th>Total</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>{{i.amthosp2|stringformat:".2f"|intcomma}}</td>
+                                    <td>{{i.amtpf2|stringformat:".2f"|intcomma}}</td>
+                                    <td>{{i.amt2|stringformat:".2f"|intcomma}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <a href="{% url 'deletecaserate' encounter 'S' %}" class="btn btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                 {% endif %}
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/add_case_rate_modal.html' with first_case_rate=first_case_rate encounter=encounter %}
+  {% include 'integrated/common/add_case_rate_modal_2.html' with second_case_rate=second_case_rate encounter=encounter %}
+  {% include 'integrated/common/scripts.html' with page=page %}
+  <script>
+    $(document).ready(function(){
+      $("#case_rate").select2();
+      $("#case_rate2").select2();
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800"> <i class="fa-solid fa-user"></i> | PATIENT INFORMATION </h1>
+                <div class="btn btn-group">
+                  {% if ptype == 'OPD'%}
+                  <a href="{% url 'lab_opd' %}" class="btn btn-secondary text-white" type="button"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                  {% else%}
+                  <a href="{% url 'lab_reception' %}" class="btn btn-secondary text-white" type="button"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                  {% endif%}
+                  <a href="{% url 'laboratory'%}" class="btn btn-secondary text-white" type="button"><i class="fa-solid fa-home"></i> Home</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="container-fluid">
+            
+              <table class="table table-bordered w-100 mb-3">
+                {% for p in patient %}
+                <tr>
+                  <td><span class="fw-bolder">FULLNAME:</span> {{p.patlast}}, {{p.patfirst}}  {{p.patmiddle}}</td>
+                  <td><span class="fw-bolder">AGE:</span> {{p.patage}}</td>
+                  <td><span class="fw-bolder">DATE & TIME REQUESTED:</span> {{p.encdate}}</td>
+                </tr>
+                <tr>
+                  <td><span class="fw-bolder">GENDER:</span> {% if p.patsex == 'F'%}FEMALE{%else%}MALE{%endif%}</td>
+                  <td><span class="fw-bolder">STATUS:</span> {% if p.patcstat == 'S'%}SINGLE{% elif p.patcstat == 'M'%}MARRIED{%else%}{%endif%}</td>
+                  <td><span class="fw-bolder">HOSPITAL NO.:</span> {{p.hpercode}}</td>
+                </tr>
+                <tr>
+                  <td colspan="2"><span class="fw-bolder">ADDRESS:</span> {{p.patbplace}}</td>
+                  <td><span class="fw-bolder">WARD:</span> {% if ptype == 'OPD'%}{{ptype}}{%elif ptype == 'ER'%} {{ptype}} {%else%}{{p.wardname}}{%endif%}</td>
+                 
+                </tr>
+                <tr>
+                  <td><span class="fw-bolder">DATE & TIME COLLECTION:</span>TBA</td>
+                  <td><span class="fw-bolder">DATE & TIME RECEIVED:</span> {{p.encdate}} </td>
+                  <td><span class="fw-bolder">RECEIVED BY:</span> {{receiver}}</td>
+                </tr>
+                <tr>
+                  <td colspan="2"><span class="fw-bolder">DIAGNOSIS:</span> {{p.received_by}}</td>
+                  <td ><span class="fw-bolder">CONTROL NO:</span> <span class="fs-4 text-danger fw-bolder"> {{ctr_no}}</span> </td>
+                </tr>
+                {% endfor %}
+              </table>
+
+              <h1 class="h4 mb-0 text-gray-800"><i class="fa-solid fa-flask-vial "></i> | LABORATORY REQUEST</h1>
+                <div class="input-group mb-3 col-12">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
+                    </div>
+                    <input type="text" class="form-control" id="search" placeholder="Search Patient">
+                    <a href="{% url 'lab_request_confirm_all' enctr orderid %}" onclick="return confirm('Accept All Doctors Order?')" class="btn btn-primary float-right text-white " ><i  class="fa-solid fa-recycle "></i> ACCEPT ALL</a>
+                    <a href="{% url 'chargeslip' enctr orderid %}" target="_blank" class="btn btn-success float-right text-white"><i  class="fa-solid fa-print "></i> ChargeSlip</a>
+                    <a href="{% url 'generate_ctr' enctr orderid ptype %}" onclick="return confirm('Generate Control No.?')" class="btn btn-danger float-right text-white {% if ctr_no is not none%} disabled{%endif%}"><i  class="fa-solid fa-file "></i> Control No.</a>
+                    <!-- <a href="{% url 'generate_ctr' enctr orderid ptype %}" onclick="return confirm('Generate Control No.?')" class="btn btn-danger float-right text-white "><i  class="fa-solid fa-file "></i> Control No.</a> -->
+                </div>
+                
+                <table class="table table-hover" id="tbl-pending" style="cursor: pointer;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>CODE</th>
+                            <th>DESCRIPTION</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                      {% for i in list_%}
+
+                      
+                        <tr>
+                          <td>{{i.pcchrgcod}} - {{i.control_no}}</td>
+                          <td class="fw-bolder">{{ i.uomcode}}</td>
+                          <td class="fw-bolder">{{ i.procdesc}}</td>
+                          <td>{{i.pchrgup}}</td>
+                          <td>{% if i.status == 'PENDING' %}
+              
+                            <span class="badge bg-primary">{{i.status}}</span>
+                            {% elif i.status == 'COMPLETED'%}
+                            <span class="badge bg-success">{{i.status}}</span>
+                            {% elif i.status ==   'RELEASED'%}
+                            <span class="badge bg-danger">{{i.status}}</span>
+                            {%else%}
+                            <span class="badge bg-secondary">{{i.status}}</span>
+                            
+                            {%endif%}
+                          </td>
+                          <td class="text-center">
+                            {% if i.control_no is none%}
+                            
+                            {%else%}
+                            {% if i.status is none %}
+                            
+                            <a class="btn btn-sm btn-success" onclick="return confirm('Accept {{i.procdesc }} Test?')" href="{% url 'lab_request_confirmation' i.prikey i.enccode orderid %}">Accept</a>
+                            <a class="btn btn-sm btn-danger" onclick="return confirm('Reject {{i.procdesc}} Test?')" href="{% url 'lab_request_reject' i.prikey i.enccode orderid %}">Reject</a>
+                            {% else %}
+                            <a class="btn btn-sm btn-secondary" onclick="return confirm('Undo {{i.procdesc }} Test?')" href="{% url 'lab_request_undo' i.prikey i.enccode orderid %}">Undo</a>
+                            <!-- <a class="btn btn-sm btn-secondary" disabled="true" href="#"><i class="fa-solid fa-paper-plane"></i> Undo</a> -->
+                            {%endif%}
+                            {% endif%}
+                            {{i.status}}
+                          </td>
+                        </tr>
+                       {% endfor%}
+        
+                    </tbody>
+                </table>
+
+                <!-- {{list_}} -->
+
+                <!-- //////////////// -->
+    
+    
+  
+<!-- /////////////////// -->
+              </div>
+            </div>
+        </div>
+        
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/laboratory/lab_modals/labmodal.html' with page=page %}
+      {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+  {% include 'integrated/laboratory/scripts/labscript.html' %}
+</body>
+
+</html>

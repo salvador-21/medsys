@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/lab_head.html' with page=page %}
+{% include 'integrated/common/head.html' with page=page %}
+<style>
+  @keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   80% { transform: rotate(0deg); }
+   85% { transform: rotate(5deg); }
+   95% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
+/* ///////////////////////// */
+
+/* ///////////////////////// */
+</style>
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-microscope"></i> | HEMATOLOGY - RESULT</h1>
+                <div class="btn btn-group">
+                  <a href="{% url 'laboratory' %}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
+                  <a href="#" class="btn btn-secondary text-white" type="button" data-toggle="modal" data-target="#res_upload"><i class="fa-solid fa-upload"></i> Upload</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="container-fluid row">
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card opd_btn text-white bg-dark" id="PENDING" >
+                      <div class="card-content "  >
+                        <div class="card-body pending "  >
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span class="owaiting">0</span></h3>
+                              <span class="fw-bolder h5">WAITING</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+               
+                  </div>
+                  <div class="col-xl-3 col-sm-6 col-12">  
+                    <div class="card opd_btn "  id="RECEIVED" >
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <!-- <i class='fas fa-calendar-alt'></i> -->
+                              <i class="fas fa-id-card-alt font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span class="oreceived">0</span></h3>
+                              <span class="fw-bolder h5">ONPROCESS</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card opd_btn "  id="COMPLETED">
+                      <!-- <a  href="{% url 'lab_opd' %}" style="text-decoration: none;color: rgb(253, 250, 250);">       -->
+                      <div class="card-content ">
+                        <div class="card-body">
+                          <div class="media d-flex ">
+                            <div class="align-self-center">
+                              <i class="fa fa-calendar-check font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span id="ccompleted" class="badge badge-danger ccompleted"> 0 </span></h3>
+                              <span class="fw-bolder h5">COMPLETED</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- </a> -->
+                  </div>
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card opd_btn "  id="RELEASED">    
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span id="ccompleted" class="creleased"> 0 </span></h3>
+                              <span class="fw-bolder h5">RELEASED</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+               <!-- Nav tabs -->
+      <!-- /////////////// -->
+      <h1 class="h3 mb-2 text-gray-800"><i class="fa-solid fa-users"></i> | <span id="r_display">OPD</span> REQUEST</h1>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
+        </div>
+        <input type="text" class="form-control" id="opd_search" placeholder="Search Patient">
+    </div>
+    
+    <table class="table table-hover table-striped" id="tbl-pending" style="cursor: pointer;">
+        <thead>
+            <tr>
+                <th>CONTROL NO</th>
+                <th>Request Date/Time</th>
+                <th>Patient Name</th>
+                <th>Ward</th>
+                <th>Lab Test</th>
+                <th>Requesting Doctor</th>
+                <th>Status</th>
+      
+            </tr>
+        </thead>
+        
+        <tbody id="opd_request_tbl">
+
+        </tbody>
+    </table>
+    <div class="loader" hidden="true"></div>
+    <!-- ////////////////////// -->
+  
+
+        
+        <!-- {{req.patfirst}} -->
+        
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      <audio id="sound" >
+        <source src="{% static 'integrated/laboratory/notification.mp3'%}" type="audio/ogg" allow="autoplay">
+       </audio>
+         
+      {% include 'integrated/laboratory/lab_modals/opd_modal.html' with page=page %}
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- //////////////////////// modal upload -->
+  <div class="modal fade" id="opd_viewRequest"  data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | Patient Information</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+    <div class="modal-body">
+  <h4 class="text-center fw-bolder bg-dark text-white">REQUEST DETAILS</h4>
+  <table class="table-bordered table w-100 mb-2">
+    <tbody>
+      <tr>
+        <td colspan="2"> HOSPITAL NO.: <span class="fw-bolder o_hosno"> </span></td>
+        <td colspan="2">WARD: <span class="fw-bolder o_ward"></span></td>
+      </tr>
+    <tr>
+      <td colspan="2">NAME: <span class="fw-bolder o_ptx"> </span></td>
+      <td colspan="2">CONTROL NO.: <span class="fw-bolder text-danger o_ctr fs-4">INP-23-000001</span></td>
+    </tr>
+    <tr>
+      <td>DOB: <span class="fw-bolder o_dob">-----</span></td>
+      <td>AGE: <span class="fw-bolder o_age">------</span></td>
+      <td>GENDER: <span class="fw-bolder o_gender">-------</span></td>
+      <td>CIVIL STAT: <span class="fw-bolder o_stat">------</span></td>
+    </tr>
+    <tr>
+      <td colspan="2"><label class="fw-bolder">EXTRACTION TIME:</label><input type="time" class="form-control o_exttime"></td>
+      <td colspan="2"><label class="fw-bolder">LAST MEAL:</label><input type="datetime-local" class="form-control o_lastmeal"></td>
+    </tr>
+  </tbody>
+  </table>
+  
+  <div class="btn btn-group mx-auto" id="btn_option">
+    
+    
+</div>
+<h4 class="text-center fw-bolder bg-dark text-white mb-3">LABORATORY TEST</h4>
+<!-- ////////////////////////// -->
+  <input type="text" class="form-control" id="view_request_search" placeholder="Search">
+
+
+                
+
+<!-- ///////////////////////// -->
+  <table class="table table-hover" id="tbl-onprocess" style="cursor: pointer;">
+    <thead>
+        <tr>
+            <th><input type="checkbox" class="chk_all" id="chk_all" name="chk_all"></th>
+            <th>Received</th>
+            <th>Laboratory Name</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody id="request_tbl">
+      <tr>
+        <td>1</td>
+        <td></td>
+        <td ><span class="fs-5 fw-bolder ">Urinalysis</span> </td>
+        <td>1125</td>
+        <td><span class="badge bg-dark">No Sample</span></td>
+        <td><button class="btn btn-primary btn-sm">Accept</button></td>
+        <td><button class="btn btn-dark btn-sm">Endorse</button></td>
+      </tr>
+    
+
+    </tbody>
+    </table>
+    
+    <div class="loader" style="
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #0a90a1;
+      margin: 60px auto;
+      width: 200px;
+      height: 200px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+    
+    
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }"></div>
+
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+            <!-- <button class="btn btn-success" type="submit" form="case2-form">Update</button> -->
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- /////////////// OPD CHARGE MODAL -->
+  <div class="modal fade" id="res_upload"  data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | Laboratory Charge</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+    <div class="modal-body">
+<h4 class="text-center fw-bolder bg-dark text-white mb-3">RESULT UPLOAD</h4>
+<!-- ////////////////////////// -->
+<form id="upload_frm" method="POST">
+    {% csrf_token%}
+        <span class=" fw-bolder">RESULT:</span>
+     
+  <div class="input-group mb-3">
+
+    <input type="file" class="form-control"  name="up_result" id="up_result">
+</div>
+ 
+<div class="input-group mb-3" id="up_response">
+  
+</div>
+</form>
+
+<!-- ///////////////////////// -->
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <!-- <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button> -->
+            <button class="btn btn-success" type="submit" form="upload_frm">Upload!</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- //////////////////////// -->
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+  <script src="{% static 'integrated/laboratory/js/moment.js' %}"></script>
+  <script src="{% static 'integrated/laboratory/js/upload.js' %}"></script>
+  <script src="{% static 'integrated/laboratory/js/get_age.js' %}"></script>
+ 
+</body>
+
+</html>

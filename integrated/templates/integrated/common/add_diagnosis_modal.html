@@ -1,0 +1,56 @@
+<!-- Discount Modal-->
+<div class="modal fade" id="diagnosisModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Diagnosis</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="diag-form" action="{% url 'diagnosis' enctr %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="disc-type">Type of Diagnosis:</label>
+                  <select class="form-control" id="diag-type" name="diag-type">
+                      <option value="ADMDX">Admitting</option>
+                      <option value="CLIDI">Clinical</option>
+                      <option value="FINDX">Final</option>
+                      <option value="WODIA">Interim</option>
+                      <option value="OTHER">Other</option>
+                      <option value="WORDX">Working</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                    <label>Diagnosis</label>
+                    <textarea class="form-control" name="diagnosis"></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Physician</label>
+                  <select class="form-control" name="physician">
+                    {% for i in list %}
+                    <option value='{{i.licno}}'>{{i.name}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                    <label>Primary Diagnosis</label>
+                    <select class="form-control" name="primary">
+                        <option value='Y'>Yes</option>
+                        <option value='N' selected>No</option>
+                    </select>
+                  </div>
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea class="form-control" name="remarks"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" type="submit" form="diag-form">Add</button>
+        </div>
+      </div>
+    </div>
+</div>

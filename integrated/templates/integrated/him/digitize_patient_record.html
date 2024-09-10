@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Health Information Management</h1>
+            </div>
+          <!-- Content Row -->
+          <div class="container-fluid col-md-12">
+            <div class="card text-center">
+                <div class="card-header" style="background-color: #3d925f; color:#fff; font-size:larger;">
+                  Digitize Patient Record
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p class="float-left">Hospital Number: {{details.0.hpercode}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p class="float-left">Date of Consulation: {{details.0.encdate|date:'F d, Y'}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p class="float-left">Name: {{details.0.patfirst}} {%if details.0.patmiddle %}{{details.0.patmiddle}}{%endif%} {{details.0.patlast}} {%if details.0.patsuffix %}{{details.0.patsuffix}}.{%endif%}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <p class="float-left">Type of Encounter: {{details.0.toecode}}</p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <iframe src="http://173.10.6.66:9999/{{link_url}}" height="1000" width="300" title="Iframe Example"></iframe>
+                  </div>
+                </div>
+                <div class="card-footer right">
+                  <a href="{% url 'digitizepatient' details.0.hpercode %}" type="button" class="btn btn-default float-left">Back</a>
+                  <a href="{% url 'uploadrecord' enctr %}" type="button" form="digitizer" class="btn btn-danger float-right">Re-upload</a>
+                </div>
+              </div>
+
+          </div>
+          
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/opd/search_modal.html' %}
+  {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+  {% include 'integrated/common/scripts.html' %}
+  <script src="{% static 'integrated/js/upload.js'%}"></script>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+<div class="btn btn-group">
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#searchModal">Patient Search</button>
+    <button class="btn btn-success" type="submit" form="patient-details-form">Save Record</button>
+    {% if no %}
+    <a class="btn btn-primary" href="{% url 'opdlog' no %}" type="button">Log Patient</a>
+    <a href="{% url 'consultations' no %}" class="btn btn-danger" type="button">Consultations</a>
+    {% endif %}
+</div>

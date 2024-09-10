@@ -1,0 +1,58 @@
+{% load humanize %} 
+{% load static %}
+<div id="load">
+<ul class="list-group">
+    {% if list %}
+    {% for i in list %}
+    <li class="list-group-item">&nbsp;
+        {% if i.status == '1' %}
+        <text style='text-decoration: line-through;'>{{i.prescription}}</text> <span style="cursor:pointer" class="fa fa-undo undo float-right" name="{{i.uid}}"></span>
+        {% else %}
+        <input class="form-check-input meds" type="checkbox" value="{{i.uid}}">{{i.prescription}}
+        {% endif %}
+    </li>
+    {% endfor %}
+    {% else %}
+    <li class="list-group-item text-center">No Prescription</li>
+    {% endif %}
+</ul>
+</div>
+
+<script>
+$(document).ready(function(){
+    $("#release").on("click", function(){
+        var arr = $("input:checked").map(function(){
+            return $(this).val()
+        })
+
+        $.ajax({
+            type: "GET",
+            data: {'arr': arr.get()},
+            url: "releasemeds",
+            success: function(data){
+                let enctr = "{{enctr}}"
+                $("#load").load("/" + enctr + "/loadPrescription")
+            },
+            error: function(error){
+                console.log(error)
+            }
+        })
+    })
+
+    $(".undo").on("click", function(){
+        var uid = $(this).attr("name")
+        $.ajax({
+            type: "GET",
+            data: {'uid': uid},
+            url: "undomeds",
+            success: function(data){
+                let enctr = "{{enctr}}"
+                $("#load").load("/" + enctr + "/loadPrescription")
+            },
+            error: function(error){
+                console.log(error)
+            }
+        })
+    })
+})
+</script>

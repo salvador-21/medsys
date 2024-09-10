@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">New Patient</h1>
+                {% include 'integrated/common/button_search_new.html' %}
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+                <div class="container-fluid">
+                    <form id="new-patient-form" action="{% url 'newpatient' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                              <label for="lastname">Last Name:</label>
+                              <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                              <label for="firstname">First Name:</label>
+                              <input type="text" class="form-control" id="firstname" name="firstname" placeholder="First Name" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="middlename">Middle Name:</label>
+                                <input type="text" class="form-control" id="middlename" name="middlename" placeholder="Middle Name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                              <label for="suffix">Suffix:</label>
+                              <select class="form-control" id="suffix" name="suffix">
+                                <option value=""></option>
+                                <option value="SR">SR</option>
+                                <option value="JR">JR</option>
+                                <option value="I">I</option>
+                                <option value="II">II</option>
+                                <option value="III">III</option>
+                                <option value="IV">IV</option>
+                                <option value="V">V</option>
+                                <option value="VI">VII</option>
+                                <option value="VII">VII</option>
+                                <option value="VIII">VII</option>
+                                <option value="IX">IX</option>
+                                <option value="X">X</option>
+                              </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="sex">Sex:</label>
+                              <select class="form-control" id="sex" name="sex">
+                                <option value="M">MALE</option>
+                                <option value="F">FEMALE</option>
+                              </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="birthdate">Date of Birth:</label>
+                                <input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="M/D/Y" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="birthplace">Birth Place:</label>
+                                <input type="text" class="form-control" id="birthplace" name="birthplace" placeholder="Birth Place">
+                            </div>
+                        </div>
+                        <hr>
+                        <p>Patient Address</p>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                              <label for="street">Street #:</label>
+                              <input type="text" class="form-control" id="street" name="street" placeholder="street (if none just type '-')" required>
+                            </div>
+                            <div class="form-group col-md-3">
+                              <label for="province">Province:</label>
+                              <select class="form-control" id="province" name="province" required>
+                                {% for prov in province %}
+                                  {% if prov.provcode == '0517' %}
+                                    <option value='{{prov.provcode}}' selected>{{prov.provname}}</option>
+                                  {% else %}
+                                    <option value='{{prov.provcode}}'>{{prov.provname}}</option>
+                                  {% endif %}
+                                {% endfor %}
+                              </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="municipality">Municipality:</label>
+                                <select class="form-control" id="municipality" name="municipality" required>
+                                  {% for mun in municipality %}
+                                    {% if mun.ctycode == '051718' %}
+                                      <option value={{mun.ctycode}} selected>{{mun.ctyname}}</option>
+                                    {% else %}
+                                      <option value={{mun.ctycode}}>{{mun.ctyname}}</option>
+                                    {% endif %}
+                                  {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="barangay">Barangay:</label>
+                                <select class="form-control" id="barangay" name="barangay" required>
+                                  {% for brgy in barangay %}
+                                    <option value='{{brgy.bgycode}}'>{{brgy.bgyname}}</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                              <label for="nickname">Nick Name:</label>
+                              <input type="text" class="form-control" id="nickname" name="nickname" placeholder="Palayaw" required>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="civilstatus">Civil Status:</label>
+                                <select class="form-control" id="civilstatus" name="civilstatus" required>
+                                    <option value='C'>Child</option>
+                                    <option value='D'>Divorsed</option>
+                                    <option value='M'>Married</option>
+                                    <option value='X'>Separated</option>
+                                    <option value='S'>Single</option>
+                                    <option value='W'>Window/Widower</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="employment">Employment Status:</label>
+                                <select class="form-control" id="employment" name="employment" required>
+                                    <option value="EMPLO">Employed</option>
+                                    <option value="UNEMP">Unemployed</option>
+                                    <option value="SELFE">Self-employed</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="nationality">Nationality:</label>
+                                <select class="form-control" id="nationality" name="nationality" required>
+                                    <option value="FIL">Filipino</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="religion">Religion:</label>
+                                <select class="form-control" id="religion" name="religion" required>
+                                    {% for rel in religion %}
+                                    <option value="{{rel.relcode}}">{{rel.reldesc}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="contactno">Contact #:</label>
+                                <input type="number" class="form-control" id="contactno" name="contactno" placeholder="Contact #" required>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="occupation">Occupation:</label>
+                                <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Occupation">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/search_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+  <script>
+    $(document).ready(function(){
+      $("#province").on("change", function(){
+        $("#municipality").empty()
+        $("#barangay").empty()
+        let province = $(this).val()
+        $.ajax({
+            url: "/getMunicipality",
+            type: "GET",
+            dataType: 'json',
+            data: {province: province},
+            success: function(result){
+                $("#municipality").append($("<option>", {value: '', text: 'Please Select'}))
+                for(let i = 0; i < result.length; i++){
+                  $("#municipality").append($("<option>", {value: result[i]['ctycode'], text: result[i]['ctyname']}))
+                }
+            }
+        })
+      })
+
+      $("#municipality").on("change", function(){
+        $("#barangay").empty()
+        let municipality = $(this).val()
+        $.ajax({
+          url: "/getBarangay",
+          type: "GET",
+          dataType: "json",
+          data: {municipality: municipality},
+          success: function(result){
+            for (let i = 0; i < result.length; i++){
+              $("#barangay").append($("<option>", {value: result[i]['bgycode'], text: result[i]['bgyname']}))
+            }
+          }
+        })
+      })
+    })
+  </script>
+</body>
+
+</html>

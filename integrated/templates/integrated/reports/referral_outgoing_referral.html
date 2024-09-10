@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Outgoing Referral Report</h1>
+                <form name="form" action="{% url 'reoutgoing' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="date" name="start"/>
+                  <input type="date" name="end"/>
+                  <button type="submit">Generate</button>
+                </form>
+            </div>
+          <!-- Content Row -->
+            {%if list%}
+            <div class="row" style="overflow: auto">
+                <h5>Patient Count: {{list|length}}</h5>
+              <div class="container-fluid">
+              <table class="table table-hover"  style="cursor: pointer;">
+                  <thead>
+                      <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Name of Patient</th>
+                            <th>Address</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Impression</th>
+                            <th>Diagnosis</th>
+                            <th>Outcome of Referral</th>
+                            <th>Remarks</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for i in list %}
+                      <tr>
+                        <td>{{i.date|date:"SHORT_DATE_FORMAT"}}</td>
+                        <td>{{i.time|date:"h:i a"}}</td>
+                        <td>{{i.patient_name}}</td>
+                        <td>{{i.patstr}} {{i.bgyname}} {{i.ctyname}} {{i.provname}}</td>
+                        <td>{{i.patage}}</td>
+                        <td>{{i.patsex}}</td>
+                        <td>{{i.history}}</td>
+                        <td>{{i.diagtext}}</td>
+                        <td>{{i.dispcode}}</td>
+                        <td>{%if i.remarks is not None %}{{i.remarks}}{%endif%}</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              </div>
+            </div>
+            {%endif%}
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

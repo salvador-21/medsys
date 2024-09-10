@@ -1,0 +1,37 @@
+{% load humanize %} 
+{% load static %}
+<div id="load">
+<ul class="list-group">
+    {% if charges %}
+    {% for i in charges %}
+    <li class="list-group-item">
+      {{i.procdesc}}
+      <a href="#"><span style="float:right">&nbsp;&nbsp;<i class="fa fa-times del" name="{{i.docointkey}}" id="{{enctr}}"></i></span></a>
+      <text style="float:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</text>
+    </li>
+    {% endfor %}
+    {% else %}
+    <li class="list-group-item text-center">No Charges</li>
+    {% endif %}
+</ul>
+</div>
+<script>
+    $(document).ready(function(){
+    $(".del").on("click", function(){
+        let intkey = $(this).attr("name")
+        let enctr = $(this).attr("id")
+        $.ajax({
+            type: "GET",
+            data: {intkey: intkey, enctr: enctr},
+            url: "../delLabCharges",
+            success: function(data) {
+                $("#total").text(parseFloat(data).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+                $("#load").load("/" + enctr + "/loadpatientlabcharges")
+            },
+            error: function(error){
+                console.log(error)
+            }
+        })
+    })
+})
+</script>

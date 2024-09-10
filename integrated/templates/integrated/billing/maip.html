@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Billing MAIP Report</h1>
+                <form name="form" action="{% url 'maipreport' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="date" name="start"/>
+                  <input type="date" name="end"/>
+                  <select name="type">
+                    <option value="ADM">In-Patient</option>
+                    <option value="OPD">Out-Patient</option>
+                    <option value="ER">Emergency Patient</option>
+                  </select>
+                  <button type="submit">Generate</button>
+                  <button type="button" name="export" id="export">Export</button>
+                </form>
+            </div>
+          <!-- Content Row -->
+            {%if report%}
+            <div class="row" style="overflow: auto">
+              <div class="container-fluid">
+              <table class="table table-hover"  style="cursor: pointer;">
+                  <thead>
+                      <tr>
+                          <th>Date</th>
+                          <th>Name of Patient</th>
+                          <th>Homis No.</th>
+                          <th>Philhealth No.</th>
+                          <th>Date of Birth</th>
+                          <th>Age</th>
+                          <th>Address</th>
+                          <th>Contact No</th>
+                          <th>Diagnosis</th>
+                          <th>Point of Entry</th>
+                          <th>Classification</th>
+                          <th>MSS Classification</th>
+                          <th>Income</th>
+                          <th>MAIP Code</th>
+                          <th>Total Professional Fee Charges with Philhealth Deducations</th>
+                          <th>Total Actual Charges</th>
+                          <th>Total Actual Charges with Professional Fee</th>
+                          <th>Drugs & Medicines</th>
+                          <th>Medical Supply</th>
+                          <th>Laboratory</th>
+                          <th>Xray/Ultrasound/2D Echo</th>
+                          <th>CT Scan</th>
+                          <th>Dental</th>
+                          <th>OR/DR/ER</th>
+                          <th>Nursing Care Procedures</th>
+                          <th>ECG</th>
+                          <th>Physical Therapy</th>
+                          <th>Others(Newborn Screening, Hearing Test)</th>
+                          <th>OPD Bill</th>
+                          <th>Hemodialysis</th>
+                          <th>Total Actual Approved Assistance through MAIP</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for i in report %}
+                      <tr>
+                          <td>{{i.date}}</td>
+                          <td>{{i.name}}</td>
+                          <td>{{i.hpercode}}</td>
+                          <td>{{i.phicnum}}</td>
+                          <td>{{i.birthdate}}</td>
+                          <td>{{i.age}}</td>
+                          <td>{{i.address}}</td>
+                          <td></td>
+                          <td>{{i.diagnosis}}</td>
+                          <td>{{i.poe}}</td>
+                          <td>{{i.tacode}}</td>
+                          <td>{{i.mss}}</td>
+                          <td></td>
+                          <td></td>
+                          <td>{{prof_fee}}</td>
+                          <td>{{i.actual_charges}}</td>
+                          <td>{{i.prof_plus_actual}}</td>
+                          <td>{{i.drugs_meds}}</td>
+                          <td>{{i.med_supp}}</td>
+                          <td>{{i.lab}}</td>
+                          <td>{{i.rad}}</td>
+                          <td>{{i.ct}}</td>
+                          <td></td>
+                          <td>{{i.ordr}}</td>
+                          <td>{{i.nursing}}</td>
+                          <td>{{i.ecg}}</td>
+                          <td>{{i.pt}}</td>
+                          <td>{{i.others}}</td>
+                          <td></td>
+                          <td>{{i.hemodialysis}}</td>
+                          <td>{{i.maip}}</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+              </div>
+            </div>
+            {%endif%}
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/search_modal.html' with page=page %}
+      {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+  <script>
+    $("#export").click(function(){
+      $(this).removeAttr("type").attr("type", "submit");
+      form.action = '/maipexcel'
+    })
+  </script>
+</body>
+
+</html>

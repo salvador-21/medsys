@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %} 
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Radiology</h1>
+                <h4>{{patient_details.0.patlast}}, {{patient_details.0.patfirst}} {{patient_details.0.patmiddle}} ({{patient_details.0.hpercode}})</h4>
+                {% include 'integrated/common/radiology_button.html' with page=page %}
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+                <h4 class="text-center">Examination Results</h4>
+                
+                <form action="{% url 'radresult' docintkey enctr %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                      <label class="col-sm-2 col-form-label">X-RAY NO:</label>
+                      <div class="col-sm-2">
+                        <input type="text" name="xray_no" class="form-control" placeholder="X-RAY NO." value="{% if result.0.xray_no %}{{result.0.xray_no}}{% endif %}">
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">DATE:</label>
+                        <div class="col-sm-2">
+                          <input type="text" name="date" class="form-control" placeholder="MM/DD/YYYY" value="{% if result.0.report_date %}{{result.0.report_date}}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">HOMIS NO:</label>
+                        <div class="col-sm-2">
+                          <input type="text" name="homis_no" class="form-control" placeholder="HOMIS NO" value="{{patient_details.0.hpercode}}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">NAME:</label>
+                        <div class="col-sm-9">
+                          <input type="text" name="name" class="form-control" placeholder="NAME" value="{{patient_details.0.patlast}}, {{patient_details.0.patfirst}} {{patient_details.0.patmiddle}}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">AGE:</label>
+                        <div class="col-sm-1">
+                          <input type="text" name="age" class="form-control" placeholder="AGE" value="{{age}}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">SEX:</label>
+                        <div class="col-sm-2">
+                            {% if patient_details.0.patsex == 'M' %}
+                                <input type="text" name="sex" class="form-control" placeholder="SEX" value="MALE" readonly>
+                            {% elif patient_details.0.patsex == 'F' %}
+                                <input type="text" name="sex" class="form-control" placeholder="SEX" value="FEMALE" readonly>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">STATUS:</label>
+                        <div class="col-sm-3">
+                            {% if patient_details.0.patcstat == 'C'%}
+                            <input type="text" name="status" class="form-control" value="CHILD" placeholder="STATUS" readonly>
+                            {% elif patient_details.0.patcstat == 'D' %}
+                            <input type="text" name="status" class="form-control" value="DIVORSED" placeholder="STATUS" readonly>
+                            {% elif patient_details.0.patcstat == 'M' %}
+                            <input type="text" name="status" class="form-control" value="MARRIED" placeholder="STATUS" readonly>
+                            {% elif patient_details.0.patcstat == 'X' %}
+                            <input type="text" name="status" class="form-control" value="SEPARATED" placeholder="STATUS" readonly>
+                            {% elif patient_details.0.patcstat == 'S' %}
+                            <input type="text" name="status" class="form-control" value="SINGLE" placeholder="STATUS" readonly>
+                            {% elif patient_details.0.patcstat == 'W' %}
+                            <input type="text" name="status" class="form-control" value="WIDOW/WIDOWER" placeholder="STATUS" readonly>
+                            {% else %}
+                            <input type="text" name="status" class="form-control" value="N/A" placeholder="STATUS" readonly>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">TYPE:</label>
+                        <div class="col-sm-3">
+                            {% if patient_details.0.toecode == 'ADM' %}
+                                <input type="text" name="type" class="form-control" placeholder="TYPE" value="IN-PATIENT">
+                            {% elif patient_details.0.toecode == 'OPD' or patient_details.0.toecode == 'OPDAD'%}
+                                <input type="text" name="type" class="form-control" placeholder="TYPE" value="OPD">
+                            {% elif patient_details.0.toecode == 'ER' or patient_details.0.toecode == 'ERAD'%}
+                                <input type="text" name="type" class="form-control" placeholder="TYPE" value="ER">
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">EXAMINATION PERFORMED:</label>
+                        <div class="col-sm-9">
+                          <input type="text" name="examination" class="form-control" placeholder="EXAMINATION" value="{% if result.0.procdesc %}{{result.0.procdesc}}{% else %}{{charges.0.procdesc}}{% endif %}">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">FINDINGS:</label>
+                        <div class="col-sm-9">
+                          <textarea class="form-control" name="notes" rows="7" cols="80">{% if result.0.notes %}{{result.0.notes}}{% endif %}
+                          </textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">RADIOLOGIST:</label>
+                        <div class="col-sm-9">
+                          <select class="form-control" name="radiologist">
+                              <option value="COLLAO" {% if result.0.radiologist == 'COLLAO'%}selected {% endif %}>MAHGN R. COLLAO, MD, FPCR</option>
+                          </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="btn-group">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <a target="_blank" href="{% url 'printradresult' docintkey enctr %}" type="button" class="btn btn-primary">Print</a>
+                      </div>
+                    </div>
+                  </form>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/rad_search_modal.html' %}
+  {% include 'integrated/common/scripts.html' with page=page %}
+</body>
+
+</html>

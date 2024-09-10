@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %} 
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Billing</h1>
+                <h4>{{patient_details.0.patlast}}, {{patient_details.0.patfirst}} {{patient_details.0.patmiddle}} ({{patient_details.0.hpercode}})</h4>
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+       
+                <div class="col-md-6" style="overflow:auto;height: 70vh;">
+                  <div class="sticky-top bg-primary text-white">
+                    <h5 class="text-center">Items</h5>
+                  </div>
+                    <div class="form-group">
+                      <input type="text" class="form-control" id="search" placeholder="Search...">
+                    </div>
+                    <ul class="list-group" id="mlist" style='cursor: pointer;'>
+                        {% if items %}
+                        <h5>Radiology</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'RADIO'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>Laboratory</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'LABOR'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>Nursing Care Procedure</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'SERVS' or i.costcenter == 'WARD'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>OR Procedure</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'PROCE'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>OR Fees</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'OR'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>Physical Therapy</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'PT'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>Dialysis</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'DIALS'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>OPD Fees</h5>
+                        {% for i in items.hproc %}
+                          {%if i.costcenter == 'OPD'%}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}" title="{{i.procrate}}">&nbsp;
+                            {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                          {%endif%}
+                        {% endfor %}
+                        <hr>
+                        <h5>Drugs & Medicine</h5>
+                        {% for i in items.pharma %}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.dmdcomb}}" alt="{{enctr}}" title="{{i.dmselprice}}">&nbsp;
+                            {{i.gendesc}} {{i.details}} {%if i.brandname %}- {{i.brandname}}{%endif%}<text style="float:right">{{i.dmselprice|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                        {% endfor %}
+                        <hr>
+                        <h5>Medical Supplies</h5>
+                        {% for i in items.cssr %}
+                          <li id="ilist" class="list-group-item sel-item" name="{{i.cl2comb}}" alt="{{enctr}}" title="{{i.cl2retprc}}">&nbsp;
+                            {{i.cl2desc}}<text style="float:right">{{i.cl2retprc|stringformat:".2f"|intcomma}}</text>
+                          </li>
+                        {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="col-md-6 chrgs" style="overflow:auto;height: 70vh;">
+                  <div class="sticky-top bg-danger text-white">
+                    <h5 class="text-center">Charges</h5>
+                  </div>
+                    <br>
+                    <div id="load">
+                      <ul class="list-group">
+                        {% for i in charges.hproc %}
+                        <li class="list-group-item">
+                          {{i.details}}
+                          <a href="#"><span style="float:right">&nbsp;&nbsp;<i class="fa fa-times del" name="{{i.docointkey}}" id="{{enctr}}"></i></span></a>
+                          <text style="float:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</text>
+                        </li>
+                        {% endfor %}
+
+                        {% for i in charges.pharma %}
+                        <li class="list-group-item">
+                          {{i.details}}
+                          <a href="#"><span style="float:right">&nbsp;&nbsp;<i class="fa fa-times del" name="{{i.docointkey}}" id="{{enctr}}"></i></span></a>
+                          <text style="float:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</text>
+                        </li>
+                        {% endfor %}
+                        {% for i in charges.cssr %}
+                        <li class="list-group-item">
+                          {{i.details}}
+                          <a href="#"><span style="float:right">&nbsp;&nbsp;<i class="fa fa-times del" name="{{i.docointkey}}" id="{{enctr}}"></i></span></a>
+                          <text style="float:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</text>
+                        </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                  <br>
+                  <a href="{% url 'charges' enctr%}" type="button" class="btn btn-success">Done</a>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' with page=page %}
+</body>
+
+</html>

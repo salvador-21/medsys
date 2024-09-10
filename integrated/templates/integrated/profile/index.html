@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Profile</h1>
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+                <div class="container-fluid">
+                    <form action="#" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                          <label class="col-sm-1 col-form-label">Name:</label>
+                          <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" value="{{name}}" disabled> 
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-1 col-form-label">User Id:</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" name="userid" value="{{userid}}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-1 col-form-label">Position:</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" name="position" value="{{position}}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-1 col-form-label">User Level:</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" name="level" value="{{user_level}}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-1 col-form-label">Contact No.:</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" id="contact" name="contact" value="{{contactno}}" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-1 col-form-label">Email Address:</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" id="email" name="email" value="{{email}}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-primary edit" type="button">Edit</button>
+                            <button class="btn btn-success update" type="submit">Update</button>
+                            <a href="{% url 'changepw' %}" class="btn btn-danger" type="button">Change Password</a>
+                        </div>
+                      </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' with page=page %}
+</body>
+
+</html>

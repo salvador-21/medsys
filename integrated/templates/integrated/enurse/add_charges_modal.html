@@ -1,0 +1,43 @@
+<!-- Logout Modal-->
+<div class="modal fade" id="chargesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Charges</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <form id="chargeForm" action="{% url 'nursecharges' enctr %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="form-label">Item:</label>
+                        <div class="col-md-12">
+                            <select class="form-control procedure-select2" name="procedure" id="procedure">
+                                <option value="">Please Select</option>
+                                {%for i in list_of_charges%}
+                                {%if i.costcenter == 'WARD'%}
+                                <option value="{{i.proccode}}" alt="{{i.procrate}}">{{i.procdesc}}</option>
+                                {%endif%}
+                                {%endfor%}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Qty:</label>
+                        <div>
+                            <input type="number" class="form-control" name="qty"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <input type="submit" class="btn btn-success" form="chargeForm" value="Add"/>
+        </div>
+      </div>
+    </div>
+</div>

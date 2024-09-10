@@ -1,0 +1,44 @@
+<!-- Search Modal-->
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Patient Search</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+                <form id="search-form" action="{% url 'patientsearchopd' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="number" class="form-control" name="hospital_no" placeholder="Hospital #">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" name="lastname" placeholder="Last Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" name="firstname" placeholder="First Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" name="middlename" placeholder="Middle Name">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" type="submit" form="search-form">Search</button>
+        </div>
+      </div>
+    </div>
+</div>

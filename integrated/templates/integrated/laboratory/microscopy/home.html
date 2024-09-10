@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/lab_head.html' with page=page %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-microscope"></i> | MICROSCOPY</h1>
+                <div class="btn btn-group">
+                  <a href="{% url 'laboratory'%}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
+                  <a href="#" class="btn btn-secondary text-white micro_link" id="RELEASED" type="button"><span class="badge bg-secondary fs-6">0</span> Released</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="container-fluid row">
+                
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card micro_link bg-dark text-white" id="PENDING">
+    
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> {{tpending}}</h3>
+                              <span class="fw-bolder h5">PENDING REQUEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+                  </div>
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card micro_link" id="ONPROCESS">
+                     
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <i class="fas fa-id-card-alt font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> {{tonprocess}}</h3>
+                              <span class="fw-bolder h5">ONPROCESS REQUEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
+                  </div>
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card micro_link" id="TO_VERIFY">
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <!-- <i class='fas fa-calendar-alt'></i> -->
+                              <i class="fas fa-id-card-alt font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> {{tcompleted}}</h3>
+                              <span class="fw-bolder h5">TO VERIFY REQUEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
+                  </div>
+                  
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card micro_link" id="COMPLETED">
+                         
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> {{treleased}}</h3>
+                              <span class="fw-bolder h5">RELEASED REQUEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
+                  </div>
+
+               <!-- Nav tabs -->
+      <!-- /////////////// -->
+      <h1 class="h3 mb-2 text-gray-800"><i class="fa-solid fa-users"></i> | <span id="r_display" class="bg-dark text-white p-2 rounded w-100"> PENDING REQUEST</span></h1>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
+        </div>
+        <input type="text" class="form-control" id="micro_search" placeholder="Search Patient">
+    </div>
+  
+    <table class="table table-hover table-striped" id="tbl-pending" style="cursor: pointer;">
+        <thead>
+            <tr>
+              <th>#</th>
+                <th>CONTROL NO</th>
+                <th>Request Date/Time</th>
+                <th>Patient Name</th>
+                <th>Ward</th>
+                <th>Lab Test</th>
+                <th>Status</th>
+                <!-- <th class="text-center">Action</th> -->
+            </tr>
+        </thead>
+        <tbody id="micro_request_tbl">
+          {% for p in p_microscopy%}
+
+          <tr class="add_btn" key="{{p.prikey}}" action="PENDING" encc="{{p.enccode}}" test="occult" type="{{p.toecode}}" wardname="{{p.wardname}}" ctr="{{p.control_no}}" ptx="{{p.patlast}}, {{p.patfirst}}" dreceive="{{p.dodate}}" ord="{{p.lab_order_id}}" procode="{{p.proccode}}" hosno="{{p.hospno}}">
+            <td>{{forloop.counter}}</td>
+            <td ><span class="fs-5 fw-bolder ">{{p.control_no}}</td>
+            <td>{{p.dodate}}</td>
+            <td>{{p.patlast}}, {{p.patfirst}}</td>
+            <td>{% if p.toecode == 'ADM'%}{{p.wardname}}{%else%}{{p.toecode}}{%endif%}</td>
+            <td>{{p.procdesc}}</td>
+            <td>{{p.status}} </td>
+            </tr>
+         
+          {% endfor%}
+
+        </tbody>
+    </table>
+    <!-- {{p_microscopy}} -->
+    <!-- ////////////////////// -->
+  
+
+        
+        <!-- {{req.patfirst}} -->
+        
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+         
+      <!-- {% include 'integrated/laboratory/lab_modals/labmodal.html' with page=page %} -->
+      {% include 'integrated/laboratory/lab_modals/microscopy_modal.html' with page=page %}
+      {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  
+  {% include 'integrated/common/logout_modal.html' %}
+  
+  {% include 'integrated/common/scripts.html' %}
+  <script src="{% static 'integrated/laboratory/js/microscopy.js' %}"></script>
+  <!-- {% include 'integrated/laboratory/scripts/labscript.html' %} -->
+  
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script> -->
+  
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Daily Movement of Patient Report</h1>
+                <form name="form" action="{% url 're-daily-movement' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="date" name="start"/>
+                  <input type="date" name="end"/>
+                  <button type="submit">Generate</button>
+                </form>
+            </div>
+          <!-- Content Row -->
+            {%if list%}
+            <div class="row" style="overflow: auto">
+              <div class="container-fluid">
+              <table class="table table-hover"  style="cursor: pointer;">
+                  <thead>
+                      <tr>
+                            <th>#</th>
+                            <th>Admission Date</th>
+                            <th>Discharged Date</th>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Sex</th>
+                            <th>Address</th>
+                            <th>Services</th>
+                            <th>Admitting Diagnosis</th>
+                            <th>Final Diagnosis</th>
+                            <th>ICD 10</th>
+                            <th>Physician</th>
+                            <th>Disposition</th>
+                            <th>Condition</th>
+                            <th>No. of days</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {%for i in list%}
+                    <tr>
+                        <td>{{i.no}}.</td>
+                        <td>{{i.admdate|date:'m/d/Y'}}</td>
+                        <td>{{i.disdate|date:'m/d/Y'}}</td>
+                        <td>{{i.patlast}} {{i.patfirst}} {{i.patmiddle}}</td>
+                        <td>{{i.patage}}</td>
+                        <td>{{i.patsex}}</td>
+                        <td>{{i.address}}</td>
+                        <td>{{i.tsdesc}}</td>
+                        <td>{{i.admtxt}}</td>
+                        <td>{{i.final_diagnosis}}</td>
+                        <td>{{i.ICD10}}</td>
+                        <td>{{i.physician}}</td>
+                        <td>{{i.dispcode}}</td>
+                        <td>{{i.condcode}}</td>
+                        <td>{{i.no_of_days}}</td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+              </table>
+              </div>
+            </div>
+            {%endif%}
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

@@ -1,0 +1,257 @@
+
+  <!-- //////////////////// CBC FORM-->
+  <div class="modal fade" id="sero_modal" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> SEROLOGY</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder im_hosno"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder im_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder im_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder im_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder im_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder im_ward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder im_received">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder im_ctr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">-- SEROLOGY RESULT DETAILS --</h4>
+          <form id="sero_frm">
+           <table class="table table-bordered P-0">
+            <thead>
+              <th>TESTS</th>
+              <th>RESULT</th>
+              <th> KIT USED</th>
+              <th>LOT NO. </th>
+              <th>EXPIRY DATE</th>
+            </thead>
+            <tbody id="sero_res">
+
+              <tr class="tr_hbsag" hidden >
+              <td><p class="fs-5 fw-bolder">HbsAg</p></td>
+              <td>
+                  <input type="text" step="any" class="form-control" id="hbsag" name="hbsag" placeholder="HbsAg">
+              </td>
+              <td>
+                  <select class="form-control " style="width:100%" id="hbsag_kit" name="hbsag_kit">
+                    <option value="" >Select Kit</option>
+                    {% for k in kit %}
+                      <option lotno="{{k.lot_no}}" xp="{{k.expiry_date}}" value="{{ k.kit_name}}" >{{ k.kit_name}}</option>
+                    {% endfor %}
+                  </select>
+              </td>
+              <td>
+                <input type="text" step="any" class="form-control" id="hbsag_lotno" name="hbsag_lotno" readonly>
+              </td>
+              <td>
+                <input type="date" class="form-control" id="hbsag_expiry" name="hbsag_expiry" readonly>
+              </td>
+            </tr>
+            <!-- ////////////// -->
+
+            <tr class="tr_syp" hidden>
+              <td><p class="fs-5 fw-bolder">Syphilis Test </p></td>
+              <td>
+                  <input type="text" step="any" class="form-control" id="syp" name="syp" placeholder="Syphilis Test">
+              </td>
+              <td>
+                  <select class="form-control " style="width:100%" id="syp_kit" name="syp_kit">
+                    <option value="" >Select Kit</option>
+                    {% for k in kit %}
+                      <option lotno="{{k.lot_no}}" xp="{{k.expiry_date}}" value="{{ k.kit_name}}" >{{ k.kit_name}}</option>
+                    {% endfor %}
+                  </select>
+              </td>
+              <td>
+                <input type="text" step="any" class="form-control" id="syp_lotno" name="syp_lotno" readonly>
+              </td>
+              <td>
+                <input type="date"  class="form-control" id="syp_expiry" name="syp_expiry" readonly>
+              </td>
+            </tr>
+           
+            <!-- ///////////// -->
+
+            <tr class="tr_hav" hidden>
+              <td><p class="fs-5 fw-bolder">Anti-HAV</p></td>
+              <td>
+                  <input type="text" step="any" class="form-control" id="hav_igm" name="hav_igm" placeholder="IgM">
+                  <input type="text" step="any" class="form-control" id="hav_igg" name="hav_igg" placeholder="IgG">
+              </td>
+              <td>
+                  <select class="form-control " style="width:100%" id="hav_kit" name="hav_kit">
+                    <option value="" >Select Kit</option>
+                    {% for k in kit %}
+                      <option lotno="{{k.lot_no}}" xp="{{k.expiry_date}}" value="{{ k.kit_name}}" >{{ k.kit_name}}</option>
+                    {% endfor %}
+                  </select>
+              </td>
+              <td>
+                <input type="text" step="any" class="form-control" id="hav_lotno" name="hav_lotno" readonly>
+              </td>
+              <td>
+                <input type="date"  class="form-control" id="hav_expiry" name="hav_expiry" readonly>
+              </td>
+            </tr>
+
+            <!-- //////////////////// -->
+             
+            <tr class="tr_hbs" hidden>
+              <td><p class="fs-5 fw-bolder">Hbs Antibody</p></td>
+              <td>
+                  <input type="text" step="any" class="form-control" id="hbs" name="hbs" placeholder="hbs Antibody">
+              </td>
+              <td>
+                  <select class="form-control " style="width:100%" id="hbs_kit" name="hbs_kit">
+                    <option value="" >Select Kit</option>
+                    {% for k in kit %}
+                      <option lotno="{{k.lot_no}}" xp="{{k.expiry_date}}" value="{{ k.kit_name}}" >{{ k.kit_name}}</option>
+                    {% endfor %}
+                  </select>
+              </td>
+              <td>
+                <input type="text" step="any" class="form-control" id="hbs_lotno" name="hbs_lotno" readonly>
+              </td>
+              <td>
+                <input type="date"  class="form-control" id="hbs_expiry" name="hbs_expiry" readonly>
+              </td>
+            </tr>
+                 <!-- //////////////////// -->
+             
+                 <tr class="tr_hcv" hidden>
+                  <td><p class="fs-5 fw-bolder">Anti -HCV</p></td>
+                  <td>
+                      <input type="text" step="any" class="form-control" id="hcv" name="hcv" placeholder="Anti HCV">
+                  </td>
+                  <td>
+                      <select class="form-control " style="width:100%" id="hcv_kit" name="hcv_kit">
+                        <option value="" >Select Kit</option>
+                        {% for k in kit %}
+                          <option lotno="{{k.lot_no}}" xp="{{k.expiry_date}}" value="{{ k.kit_name}}" >{{ k.kit_name}}</option>
+                        {% endfor %}
+                      </select>
+                  </td>
+                  <td>
+                    <input type="text" step="any" class="form-control" id="hcv_lotno" name="hcv_lotno" readonly>
+                  </td>
+                  <td>
+                    <input type="date"  class="form-control" id="hcv_expiry" name="hcv_expiry" readonly>
+                  </td>
+                </tr>
+    
+
+            <!-- //////////////////// -->
+            </tbody>
+           </table>
+           <div class="row">
+            <div class="input-group mb-3 w-100">
+              <div class="input-group-prepend ">
+                <span class="input-group-text"><b>Perfomed By<b></span>
+              </div>
+              <input type="text" class="form-control" id="perform" name="perform" readonly >
+              
+              </div>
+           </div>
+           <input type="text" hidden class="form-control" id="perform_id" name="perform_id" readonly >
+           <input type="text" hidden readonly class="form-control action"  name="action">
+           <input type="text" hidden readonly class="form-control i_encc" placeholder="Enccode" name="i_encc">
+           <input type="text" hidden readonly class="form-control i_orderid" placeholder="Order Id" name="i_orderid">
+           <input type="text" hidden readonly class="form-control i_hpercode" placeholder="Hpercode" name="i_hpercode">
+           <input type="text" hidden readonly class="form-control i_ctr" placeholder="Hpercode" name="i_ctr">
+           <input type="text" hidden readonly class="form-control i_key" placeholder="key" name="i_key">
+  
+          
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="sero_frm">Submit</button>
+          </div>
+          
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- sero -->
+  <div class="modal fade" id="sero_toprocess" tabindex="-1" role="dialog"  data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> CBC RESULT</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder sero_hosno"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder sero_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder sero_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder sero_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder sero_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder sero_ward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder sero_date">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder sero_ctr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">-- PENDING SEROLOGY TEST --</h4>
+          <div class="input-group mb-3">
+
+            <table class="table table-bordered">
+                <thead>
+                  <th>Tests</th>
+                  <th>Status</th>
+                </thead>
+                <tbody id="pending_serotest">
+                  <td>Sero</td>
+                  <td>Pending</td>
+                </tbody>
+
+            </table>
+            
+        </div>
+        <form id="seroToprocess">
+          <input type="text" hidden  class="form-control tp_encc" name="'tp_encc"  id="tp_encc">
+          <input type="text" hidden class="form-control tp_orderid" name="'tp_orderid" id="tp_orderid" >
+        </form>
+        
+        
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="seroToprocess">Submit To Process</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,37 @@
+<!-- Discount Modal-->
+<div class="modal fade" id="caserateModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Second Case Rate</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form id="case2-form" action="{% url 'caserate' encounter %}" method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                  <label for="disc-type">Case Rate:</label>
+                  <select class="form-control" style="width:100%" id="case_rate2" name="caserate">
+                      <option value="">Please choose</option>
+                      {% for i in second_case_rate %}
+                      <option value='{{i.casecode}}'>{{i.casecode}} - {{i.casedesc}}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="type" value="S" hidden>
+                </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-group">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" type="submit" form="case2-form">Add</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

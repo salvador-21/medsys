@@ -1,0 +1,521 @@
+<script>
+ 
+
+    $("#search").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#request_pending tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+        $("#view_request_search").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#view_request tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+  
+  setInterval(function(){ 
+    req_notification();   
+  }, 1000);
+  
+  req_notification();
+  
+  function req_notification(){
+    
+        var sound=document.getElementById('sound');
+    $.ajax({
+      method:'POST',
+      url:'request_notif',
+      success:function(response){
+        // console.log(response.status)
+        $('#sound').prop('volume',0.9);
+        if(response.status > 0){
+          $('#inpatient').css({"animation": "wiggle 2.5s infinite","perspective":"1000px",})
+           sound.play();
+          load_request(response.ward[0]);
+          if(response.ward[0] == 'ADM'){
+            ward='IN-PATIENT'
+          }else{
+            ward=response.ward[0]
+          }
+          $('#r_display').text(ward)
+        }else{
+          $('#inpatient').css({"animation": "none"})
+        }
+      }
+    })
+  }
+  
+  // /////////////////////////////////
+    $(document).on('click','.recep_btn',function(){
+      wardtype=$(this).attr('ward')
+      if(wardtype == 'ADM'){
+        txt='IN-PATIENT'
+      }else{
+        txt=wardtype
+      }
+      $('#request_pending').html('')
+      $('#r_display').text(txt)
+      load_request(wardtype)
+      
+    })
+  // ////////////////////////////////
+  
+  
+    load_request('ER');
+      
+    function load_request(wardtype){
+      $('.loader').attr('hidden',false)
+      wd=wardtype
+     
+    $.ajax({
+    url:'get_request',
+    method:'POST',
+    success:function(response){
+      req_notification();
+      $('.er_qty').text(response.er)
+      $('.inp_qty').text(response.inp)
+      $('#request_pending').html('')
+      var cc=1;
+      for(var key in response.status){
+        ward=response.status[key].toecode;
+        if(response.status[key].control_no != null){
+          if(ward =='ADM'){
+          ward=response.status[key].wardname;
+        }else{
+          ward=response.status[key].toecode;
+        }
+        if(response.status[key].received_by == null){
+          bt='<tr class="request_view bg-dark text-white" rtype="unseen" ctrno="'+response.status[key].control_no+'" encc="'+response.status[key].enccode+'" ordid="'+response.status[key].order_id+'">'
+          icc='<i class="fa-solid fa-eye-slash"></i>'
+        }else{
+          bt='<tr class="request_view" rtype="seen" ctrno="'+response.status[key].control_no+'" encc="'+response.status[key].enccode+'" ordid="'+response.status[key].order_id+'">'
+            icc='<i class="fa-solid fa-eye"></i>'
+        }
+        
+          if(response.status[key].toecode == wd){
+          var temp=bt+'<td>'+ cc++ +'</td>\
+                <td>'+response.status[key].control_no+'</td>\
+                <td>'+response.status[key].date_encoded+'</td>\
+                <td class="fw-bolder">'+response.status[key].patlast+','+response.status[key].patfirst+'</td>\
+                <td class="fw-bolder">\
+                  '+ward+'\
+                </td>\
+                <td>'+response.status[key].released_by+'</td>\
+                <td>'+response.status[key].physician+'</td>\
+                <td class="text-center">\
+                  <a href="#" rid="'+response.status[key].enccode+'" class="text-secondary request_details" >'+icc+'</a>\
+                </td>\
+              </tr>\
+      ';
+      
+      $('#request_pending').append(temp);
+        }
+        
+        $('.loader').attr('hidden',true)
+        }
+        
+      
+      }
+      
+     } 
+    });
+  
+  }
+  // //////////////////////////
+  
+  $(document).on('dblclick','.request_view',function(){
+          $('#request_details').modal('show')
+          $('.vloader').attr('hidden',false)
+          $('#view_request').html('')
+          encc=$(this).attr('encc')
+          ordid=$(this).attr('ordid')
+          rtype=$(this).attr('rtype')
+          ctrno=$(this).attr('ctrno')
+          load_lastmeal();
+          cc=1
+          $.ajax({
+              method:'POST',
+              url:'view_labrequest',
+              data:{encc:encc,ordid:ordid,rtype:rtype},
+              success:function(response){
+                // console.log(response)
+                $('.vloader').attr('hidden',true)
+                db=null
+                
+                
+                  ward=response.data.ward
+                  var i;
+                  var d=''
+                  // console.log(response.data.patient[0])
+             
+              for(var p in response.data.patient){
+                  wr=response.data.patient[p].wardname
+                  $('.v_ptx').text(response.data.patient[p].patlast+', '+response.data.patient[p].patfirst+' '+response.data.patient[p].patmiddle)
+                  $('.v_order').text(response.data.patient[p].order_id)
+                  $('.v_dob').text(response.data.patient[p].birthdate)
+                  $('.v_age').text(response.data.patient[p].patage)
+                  $('.v_gender').text(response.data.patient[p].patsex)
+                  $('.v_stat').text(response.data.patient[p].patcstat)
+                  $('.v_hosno').text(response.data.patient[p].hpercode)
+                  // console.log(response.data.patient[p].birthdate)
+  
+                  
+                  
+              }
+              // print(console.log(response.data.patient[1]))
+  
+              if(ward == 'ADM'){
+                  wward=wr
+              }else{
+                  wward=ward
+              }
+              $('.v_ward').text(wward)
+              
+              $('#view_request').html('');
+              $('#btn_option').html('');
+              $('#btn_option').append(
+                  '<a href="'+encc+'/'+ordid+'/chargeslip" target="_blank" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-print"></i> Charge Slip</a>\
+                  <a href="#" encc="'+encc+'" ordid="'+ordid+'" ward="'+ward+'"  class="btn btn-danger gen_ctr" type="button"><i class="fa-solid fa-file"></i> Control No.</a>\
+                  <a href="#" onclick="return confirm(\'Accept All Sample?\')" class="btn btn-secondary text-white accept_all_btn" type="button"><i class="fa-solid fa-recycle"></i> Accept All</a>\
+                  '
+              )
+            
+  
+                // console.log(response.data.labtest)
+                  for(var l in response.data.labtest){
+                    // console.log(response.data.labtest[l].modality)
+                      ctr=response.data.labtest[p].control_no
+                      stat=response.data.labtest[l].status
+  
+                      // ////////test view
+                      if(response.data.labtest[l].modality == 'CHEMI'){
+                        $('.chemistry').attr('hidden',false);
+                      }
+                      if(response.data.labtest[l].modality == 'HEMAT'){
+                        $('.hematology').attr('hidden',false);
+                      }
+                      if(response.data.labtest[l].modality == 'IMMUN'){
+                        $('.immunology').attr('hidden',false);
+                      }
+                      if(response.data.labtest[l].modality == 'MICRO'){
+                        $('.microscopy').attr('hidden',false);
+                      }
+  
+                      // //////////////////
+                      if(ctr == null){
+                          $('.gen_ctr').removeClass('disabled')
+                          $('.accept_all_btn').addClass('disabled')
+                         dis_btn='disabled'
+                      }else{
+                        dis_btn=''
+                        $('.gen_ctr').addClass('disabled')
+                        $('.accept_all_btn').removeClass('disabled')
+                        // $('.req_accept').removeClass('disabled')
+                      }
+                      if(stat == 'PENDING'){
+                          stats='<span class="badge bg-secondary">PENDING</span>'
+                      }else if(stat == 'ONPROCESS'){
+                          stats='<span class="badge bg-primary">ONPROCESS</span>';
+                      }else if(stat == 'COMPLETED'){
+                          stats='<span class="badge bg-success">COMPLETED</span>'
+                      }else if(stat == 'RELEASED'){
+                          stats='<span class="badge bg-danger">RELEASED</span>'
+                      }
+                      if(stat == null){
+                          stats='<span class="badge bg-dark">No Sample</span>'
+                          btn='<button key="'+response.data.labtest[l].prikey+'" hpercode="'+response.data.labtest[l].hpercode+'" modality="'+response.data.labtest[l].modality+'" testname="'+response.data.labtest[l].procdesc+'" encc="'+response.data.labtest[l].enccode+'" '+dis_btn+' orderid="'+ordid+'" class="btn btn-primary btn-sm req_accept">Accept</button>\
+                          <button  key="'+response.data.labtest[l].prikey+'" encc="'+response.data.labtest[l].enccode+'" orderid="'+ordid+'" class="btn btn-secondary btn-sm req_endorse">Endorse</button></td>'
+          
+                      }else{
+                          btn=''
+                          $('.accept_all_btn').addClass('disabled')
+                     
+                      }
+                      $('.v_ctr').text(ctr)
+                      var labreq='<tr>\
+                      <td>'+ response.data.labtest[l].modality +'</td>\
+                      <td ><span class="fs-5 fw-bolder ">'+response.data.labtest[l].procdesc+'</td>\
+                      <td>'+response.data.labtest[l].pchrgup+'</td>\
+                      <td>'+stats+'</td>\
+                      <td>'+ btn +'-'+response.data.labtest[l].dodate+' </tr>\
+                      ';
+                  $('#view_request').append(labreq)
+  
+                 
+  
+                  }
+              }
+          })
+          
+          
+  
+      })
+      // //////////////////////// SINGLE ACCEPT BTN
+  
+  
+  
+  
+      function update_sample(){
+        swal({
+              title: "Received Specimen?",
+              text: "( "+modality+" )",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((isConfirm) => {
+              if (isConfirm) {
+         $.ajax({
+          method:'POST',
+          url:'recep_update_sample',
+          data:{pkey:pkey,encc:encc,orderid:orderid,modality:modality,lastM,lastM,extTime:extTime,hpercode:hpercode},
+          success:function(response){
+            console.log(response)
+           if(response.status == 'success'){
+            
+            // ////////////////////////////
+              $.ajax({
+                method:'POST',
+                url:'load_accept_req',
+                data:{encc:encc,orderid:orderid},
+                success:function(response){
+                  $('#view_request').html('')
+  
+                  for(var p in response.data.patient){
+                  wr=response.data.patient[p].wardname
+                  $('.v_ptx').text(response.data.patient[p].patlast+', '+response.data.patient[p].patfirst+' '+response.data.patient[p].patmiddle)
+                  $('.v_order').text(response.data.patient[p].order_id)
+                  $('.v_dob').text(response.data.patient[p].birthdate)
+                  $('.v_age').text(response.data.patient[p].patage)
+                  $('.v_gender').text(response.data.patient[p].patsex)
+                  $('.v_stat').text(response.data.patient[p].patcstat)
+                  $('.v_hosno').text(response.data.patient[p].hpercode)
+  
+                  ctr=response.data.labtest[p].control_no
+              }
+                  for(var l in response.data.labtest){
+                     
+                    
+                     stat=response.data.labtest[l].status
+                     if(ctr == null){
+                         
+                         $('.gen_ctr').removeClass('disabled')
+                         $('.accept_all_btn').addClass('disabled')
+                         dis_btn='disabled'
+                     }else{
+                       $('.gen_ctr').addClass('disabled')
+                       $('.accept_all_btn').removeClass('disabled')
+                       dis_btn=''
+                     }
+                     if(stat == 'PENDING'){
+                         stats='<span class="badge bg-secondary">PENDING</span>'
+                     }else if(stat == 'ONPROCESS'){
+                         stats='<span class="badge bg-primary">ONPROCESS</span>';
+                     }else if(stat == 'COMPLETED'){
+                         stats='<span class="badge bg-success">COMPLETED</span>'
+                     }else if(stat == 'RELEASED'){
+                         stats='<span class="badge bg-danger">RELEASED</span>'
+                     }
+                     if(stat == null){
+                         stats='<span class="badge bg-dark">No Sample</span>'
+                         btn='<button key="'+response.data.labtest[l].prikey+'" hpercode="'+response.data.labtest[l].hpercode+'" modality="'+response.data.labtest[l].modality+'" encc="'+response.data.labtest[l].enccode+'" '+dis_btn+'  orderid="'+ordid+'" class="btn btn-primary btn-sm req_accept">Accept</button>\
+                         <button  key="'+response.data.labtest[l].prikey+'" encc="'+response.data.labtest[l].enccode+'" orderid="'+ordid+'" class="btn btn-secondary btn-sm req_endorse">Endorse</button></td>'
+         
+                     }else{
+                         btn=''
+                         $('.accept_all_btn').addClass('disabled')
+                    
+                     }
+                     
+                     $('.v_ctr').text(ctr)
+                     var labreq='<tr>\
+                     <td>'+ response.data.labtest[l].modality +'</td>\
+                     <td ><span class="fs-5 fw-bolder ">'+response.data.labtest[l].procdesc+'</td>\
+                     <td>'+response.data.labtest[l].pchrgup+'</td>\
+                     <td>'+stats+'</td>\
+                     <td>'+ btn +'-'+response.data.labtest[l].dodate+' </tr>\
+                     ';
+                 $('#view_request').append(labreq)
+                    
+                 
+                
+  
+                 }
+                }
+              })
+  
+            }
+          }
+        })
+  
+              }})
+  
+  
+      }
+  
+      function load_lastmeal(){
+        $.ajax({
+          method:'POST',
+          url:'load_lastmeal',
+          data:{ordid:ordid,encc:encc},
+          success:function(response){
+            console.log(response)
+            $('.lastmeal').val(response.lastmeal)
+            $('.exttime').val(response.exttime)
+  
+          }
+        })
+      }
+      $(document).on('click','.req_accept',function(e){
+        e.preventDefault()
+        pkey=$(this).attr('key')
+        encc=$(this).attr('encc')
+        orderid=$(this).attr('orderid')
+        testname=$(this).attr('testname')
+        modality=$(this).attr('modality')
+        hpercode=$(this).attr('hpercode')
+        lastM=$('.lastmeal').val()
+        extTime=$('.exttime').val()
+        // console.log(lastM)
+        if(modality == 'CHEMI'){
+         
+          if(lastM == ''){
+            alert('Last Meal is Required!')
+          }else if(extTime == ''){
+            alert('Extration Time is Required!')
+          }else{
+            update_sample()
+          }
+        }else{
+          update_sample()
+        }
+        
+            // ///////////////////////////
+       
+  
+        // console.log(pkey+'-'+orderid+' - '+encc)
+      
+  
+      })
+      // /////////////////////// CONTROL NUMBER
+  
+      $(document).on('click','.gen_ctr',function(e){
+        ward=$(this).attr('ward')
+        ordid=$(this).attr('ordid')
+        encc=$(this).attr('encc')
+        // console.log(ward)
+  
+        swal({
+              title: "Generate Control No?",
+              text: "( "+ordid+" )",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((isConfirm) => {
+              if (isConfirm) {
+           
+        $.ajax({
+          method:'POST',
+          url:'gen_ctr',
+          data:{ward:ward,ordid:ordid,encc:encc},
+          success:function(response){
+            if(response.data == 'success'){
+              // ///////////////////////////
+              $.ajax({
+              method:'POST',
+              url:'view_labrequest',
+              data:{encc:encc,ordid:ordid},
+              success:function(response){
+              load_request(ward);
+                ward=response.data.ward
+              for(var p in response.data.patient){
+                  // console.log(response.data.patient[p].wardname)
+                  wr=response.data.patient[p].wardname
+                  $('.v_ptx').text(response.data.patient[p].patlast+', '+response.data.patient[p].patfirst+' '+response.data.patient[p].patmiddle)
+                  $('.v_order').text(response.data.patient[p].order_id)
+                  $('.v_dob').text(response.data.patient[p].birthdate)
+                  $('.v_age').text(response.data.patient[p].patage)
+                  $('.v_gender').text(response.data.patient[p].patsex)
+                  $('.v_stat').text(response.data.patient[p].patcstat)
+                  $('.v_hosno').text(response.data.patient[p].hpercode)
+              }
+  
+              if(ward == 'ADM'){
+                  wward=wr
+              }else{
+                  wward=ward
+              }
+              $('.v_ward').text(wward)
+              $('#request_details').modal('show')
+              $('#view_request').html('');
+              $('#btn_option').html('');
+              $('#btn_option').append(
+                  '<a href="'+encc+'/'+ordid+'/chargeslip" target="_blank" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-print"></i> Charge Slip</a>\
+                  <a href="#" onclick="return confirm(\'Accept All Sample?\')" class="btn btn-secondary text-white" type="button"><i class="fa-solid fa-recycle"></i> Accept All</a>\
+                  <a href="#" encc="'+encc+'" ordid="'+ordid+'" ward="'+ward+'" class="btn btn-danger gen_ctr" type="button"><i class="fa-solid fa-file"></i> Control No.</a>\
+                  '
+              )
+  
+                  for(var l in response.data.labtest){
+                     
+                      ctr=response.data.labtest[p].control_no
+                      stat=response.data.labtest[l].status
+                      if(ctr == null){
+                         
+                         $('.gen_ctr').removeClass('disabled')
+                         $('.accept_all_btn').addClass('disabled')
+                         dis_btn='disabled'
+                     }else{
+                       $('.gen_ctr').addClass('disabled')
+                       $('.accept_all_btn').removeClass('disabled')
+                       dis_btn=''
+                     }
+                      if(stat == 'PENDING'){
+                          stats='<span class="badge bg-secondary">PENDING</span>'
+                      }else if(stat == 'ONPROCESS'){
+                          stats='<span class="badge bg-primary">ONPROCESS</span>';
+                      }else if(stat == 'COMPLETED'){
+                          stats='<span class="badge bg-success">COMPLETED</span>'
+                      }else if(stat == 'RELEASED'){
+                          stats='<span class="badge bg-danger">RELEASED</span>'
+                      }
+                      if(stat == null){
+                          stats='<span class="badge bg-dark">No Sample</span>'
+                          btn='<button key="'+response.data.labtest[l].prikey+'" hpercode="'+response.data.labtest[l].hpercode+'"  modality="'+response.data.labtest[l].modality+'"  testname="'+response.data.labtest[l].procdesc+'" encc="'+response.data.labtest[l].enccode+'" '+dis_btn+'  orderid="'+ordid+'" class="btn btn-primary btn-sm req_accept">Accept</button>\
+                          <button class="btn btn-secondary btn-sm req_endorse">Endorse</button></td>'
+                      }else{
+                          btn=''
+                     
+                      }
+                      
+                      $('.v_ctr').text(ctr)
+                      var labreq='<tr>\
+                      <td>'+ response.data.labtest[l].modality +'</td>\
+                      <td ><span class="fs-5 fw-bolder ">'+response.data.labtest[l].procdesc+'</td>\
+                      <td>'+response.data.labtest[l].pchrgup+'</td>\
+                      <td>'+stats+'</td>\
+                      <td>'+ btn +'-'+response.data.labtest[l].dodate+' </tr>\
+                      ';
+                  $('#view_request').append(labreq)
+  
+                 
+  
+                  }
+              }
+          })
+  
+        
+              // /////////////////////////
+            }
+          }
+        })
+      }
+            });
+        
+      });
+  
+      // //////////////////////////////////////
+  
+    </script>

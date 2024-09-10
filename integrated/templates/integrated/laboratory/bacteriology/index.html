@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/lab_head.html' with page=page %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-vial-virus"></i> | COVID-19 RAPID ANTIGEN TEST</h1>
+                
+                
+                <div class="btn btn-group">
+                  <a href="{% url 'laboratory'%}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
+                  <a href="#" class="btn btn-secondary text-white bacte_link" id="RELEASED" type="button"><span class="badge bg-secondary fs-6">0</span> Released</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="container-fluid row">
+                
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card bacte_link bg-dark text-white" id="PENDING">
+    
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <i class="fa fa-virus font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span id="r_pending">0</span></h3>
+                              <span class="fw-bolder h5">PENDING REQUEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card bacte_link" id="ONPROCESS">
+                     
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <i class="fas fa-virus font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span id="r_onprocess">0</span></h3>
+                              <span class="fw-bolder h5">ONPROCESS REQUEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
+                  </div>
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card bacte_link" id="TO_VERIFY">
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <!-- <i class='fas fa-calendar-alt'></i> -->
+                              <i class="fas fa-virus font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span id="r_toverify">0</span></h3>
+                              <span class="fw-bolder h5">TO VERIFY REQUEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
+                  </div>
+                  
+                  <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card bacte_link" id="COMPLETED">
+                         
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-virus font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span id="r_completed">0</span></h3>
+                              <span class="fw-bolder h5">COMPLETED TEST</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                 
+                  </div>
+
+               <!-- Nav tabs -->
+      <!-- /////////////// -->
+
+
+      <h1 class="h3 mb-2 text-gray-800"><i class="fa-solid fa-users"></i> | (<span class="total">0</span>)</h1>
+      <div class="input-group mb-3 w-100">
+        <div class="input-group-prepend">
+          <span class="input-group-text fw-bolder bg-dark fw-bolder text-white"><i class="fa fa-virus float-left" aria-hidden="true"> </i>&nbsp; KIT USED:</span>
+        </div>
+        <input type="text" style="width: 300px;" class="form-control" value="{{kit}}" id="bacte_kit" readonly>
+        <div class="input-group-prepend">
+          <span class="input-group-text fw-bolder bg-dark fw-bolder text-white"><i class="fa fa-virus float-left" aria-hidden="true"> </i>&nbsp; LOT NO.:</span>
+        </div>
+        <input type="text" class="form-control" value="{{lotno}}" id="bacte_lotno" readonly>
+        <div class="input-group-prepend bg-secondary">
+          <span class="input-group-text bg-dark fw-bolder text-white"><i class="fa fa-calendar  float-left" aria-hidden="true"> </i>&nbsp; EXPIRY DATE:</span>
+        </div>
+        <input type="text" class="form-control" value="{{expiry}}" id="bacte_expiry" readonly >
+        <div class="input-group-prepend bg-secondary">
+          <!-- <span class="input-group-text bg-dark fw-bolder text-white">CHANGE:</span> -->
+          <button class="btn btn-primary kit_change">CHANGE</button>
+        </div>
+
+    </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
+        </div>
+        <input type="text" class="form-control" id="bacti_search" placeholder="Search Patient">
+    </div>
+  
+    <table class="table table-hover table-striped" id="tbl-pending" style="cursor: pointer;">
+        <thead>
+            <tr>
+   
+                <th>CONTROL NO</th>
+                <th>Request Date/Time</th>
+                <th>Patient Name</th>
+                <th>Ward</th>
+                <th>Physician</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="bacti_request_tbl">
+        
+
+        </tbody>
+    </table>
+    <div class="loader" ></div>
+      </div>
+      <!-- End of Main Content -->
+
+         
+      {% include 'integrated/laboratory/lab_modals/bacte_modal.html' with page=page %}
+      {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" ></script>
+  <script src="{% static 'integrated/laboratory/js/bacte.js' %}"></script>
+
+<script>
+  
+</script>
+  
+</body>
+
+</html>

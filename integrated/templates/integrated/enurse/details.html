@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">E-Nurse</h1>
+                <div class="btn btn-group float-right">
+                  <a href="{% url 'nursecharges' enctr %}" class="btn btn-success">Patient Charges</a>
+                  <!-- <a href="{% url 'nursecharges' enctr %}" class="btn btn-primary">Doctor's Order</a> -->
+                </div>
+                
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+               <div class="container-fluid">
+                    <table class="table table-bordered table-sm">
+                        <tbody>
+                            <tr>
+                                <td>Name: {{details.0.patlast}}, {{details.0.patfirst}} {{details.0.patmiddle}} {% if details.0.patsuffix is not None %}{{details.0.patsuffix}}{% endif %}</td>
+                                <td>Age: {{age}}</td>
+                                <td>Sex: {% if details.0.patsex == 'M'%}MALE{% else %}FEMALE{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Address: {{address.0.address}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Hospital No.: {{details.0.hpercode}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+  
+                    <div class="accordion" >
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                              Patient History
+                            </button>
+                          </h2>
+                          <div  aria-labelledby="panelsStayOpen-headingOne">
+                            <div class="accordion-body">
+                                <table class="table table-bordered table-sm">  
+                                <tr>
+                                  <td colspan="3">General Data and Patient Profile:
+                                    {% for i in records %}
+                                      {% for g in i.0.complaint %}
+                                        {% if g.histype == 'GDPPR' %}
+                                          {{g.history}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Present Complaint:
+                                    
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3"><b>Past History (Previous Illness and Operations):</b>
+                                    {% for i in records %}
+                                   
+                                      {% for y in i.0.diagnosis %}
+                                        {% if y.tdcode == 'FINDX' %}
+                                          {{y.diagtext}};
+                                        {% endif %}
+                                      {% endfor %}
+                                
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Family History:
+                                    {% for i in records %}
+                                      {% for f in i.0.complaint %}
+                                        {% if f.histype == 'PAHIS' %}
+                                          {{f.history}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Occupation and Environment:
+                                    {% for i in records %}
+                                      {% for o in i.0.complaint %}
+                                        {% if o.histype == 'OCENV' %}
+                                          {{o.histype}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Alcohol:
+                                    {% for i in records %}
+                                      {% for o in i.0.complaint %}
+                                        {% if o.histype == 'OTHAL' %}
+                                          {{o.histype}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Tabacco:
+                                    {% for i in records %}
+                                      {% for o in i.0.complaint %}
+                                        {% if o.histype == 'TOBAC' %}
+                                          {{o.histype}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Drug Theraphy:
+                                    {% for i in records %}
+                                      {% for o in i.0.complaint %}
+                                        {% if o.histype == 'DRTHE' %}
+                                          {{o.histype}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Drug Allergies:
+                                    {% for i in records %}
+                                      {% for o in i.0.complaint %}
+                                        {% if o.histype == 'DRUGA' %}
+                                          {{o.histype}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="3">Other Allergies:
+                                    {% for i in records %}
+                                      {% for o in i.0.complaint %}
+                                        {% if o.histype == 'OTHAL' %}
+                                          {{o.histype}};
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endfor %}
+                                  </td>
+                                </tr>
+                                </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                Diagnosis
+                            </button>
+                          </h2>
+                          <div aria-labelledby="panelsStayOpen-headingTwo">
+                            <div class="accordion-body">
+                              <table class="table table-bordered table-sm">
+                                <tbody>
+                                  {% for i in diagnosis %}
+                                  <tr>
+                                    {% if i.tdcode == 'ADMDX' %}
+                                    <td>Admitting Diagnosis</td>
+                                    {% elif i.tdcode == 'CLIDI' %}
+                                    <td>Clinical Diagnosis</td>
+                                    {% elif i.tdcode == 'FINDX' %}
+                                    <td>Final Diagnosis</td>
+                                    {% elif i.tdcode == 'OTHER' %}
+                                    <td>Other Diagnosis</td>
+                                    {% elif i.tdcode == 'WODIA' %}
+                                    <td>Interim Diagnosis</td>
+                                    {% elif i.tdcode == 'WORDX' %}
+                                    <td>Working Diagnosis</td>
+                                    {% else %}
+                                    <td></td>
+                                    {% endif %}
+                                    <td>{{i.diagtext}}</td>
+                                    <td>{{i.physician}}</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                              <a href="{% url 'diagnosis' enctr %}" type="button" class="btn btn-success">Add Diagnosis</a>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- <div class="accordion-item">
+                          <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                              Laboratory & Radiology Requests
+                            </button>
+                          </h2>
+                          <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                            <div class="accordion-body">
+                              <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                          </div>
+                        </div> -->
+                        <!-- <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                Prescriptions
+                              </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
+                              <div class="accordion-body">
+                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                              </div>
+                            </div>
+                          </div>
+                      </div>   -->
+                      <!-- <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                            Nursing Notes
+                          </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
+                          <div class="accordion-body">
+                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                          </div>
+                        </div>
+                      </div> -->
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                            May Go Home Order
+                          </button>
+                        </h2>
+                        <div aria-labelledby="panelsStayOpen-headingSix">
+                          <div class="accordion-body">
+                            {% if mgh %}
+                              <table class="table table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Ordering Physician</th>
+                                    <th>Entered by</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for m in mgh %}
+                                    <tr>
+                                      <td>{{m.dodate|date:"SHORT_DATE_FORMAT"}}</td>
+                                      <td>{{m.dotime|time:"h:i a"}}</td>
+                                      <td>{{m.physician}}</td>
+                                      <td>{{m.encoder}}</td>
+                                    </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                              <a href="{% url 'editmgh' enctr %}" type="button" class="btn btn-success">Edit</a>
+                            {% else %}
+                            <a href="{% url 'addmgh' enctr %}" type="button" class="btn btn-success">Create May Go Home Order</a>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                      <!-- <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-headingSeven">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSeven" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                            Nursing Care Procedure
+                          </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseSeven" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSeven">
+                          <div class="accordion-body">
+                            
+                          </div>
+                        </div>
+                      </div> -->
+                  </div>  
+               </div>               
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/rad_search_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+</html>

@@ -1,0 +1,84 @@
+
+<script>
+$(document).ready(function(){
+    $("#search").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#request_pending tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  
+// alert('potaka')
+// request details
+// load_request();
+function load_request(){
+
+    $.ajax({
+      url:'get_request',
+      method:'POST',
+      success:function(response){
+        $('#request_pending').html('')
+        for(var key in response.status){
+          console.log(response.status[key]);
+          ward=response.status[key].toecode;
+          if(ward =='ADM'){
+            ward=response.status[key].wardname;
+          }else{
+            ward=response.status[key].toecode;
+          }
+          var temp='<tr>\
+                  <td>'+response.status[key].hpercode+'</td>\
+                  <td>'+response.status[key].date_encoded+'</td>\
+                  <td class="fw-bolder">'+response.status[key].patlast+','+response.status[key].patfirst+'</td>\
+                  <td class="fw-bolder">\
+                    '+ward+'\
+                  </td>\
+                  <td>'+response.status[key].physician+'</td>\
+                  <td class="text-center">\
+                    <a href="#" rid="'+response.status[key].enccode+'" class="text-secondary request_details" ><i class="fa-solid fa-hospital-user"></i></a>\
+                  </td>\
+                </tr>\
+        ';
+        $('#request_pending').append(temp);
+        
+        }
+        
+        
+       } 
+
+
+  // ///////////////////////////
+
+
+
+  // /////////////////////////
+    });
+
+$(document).on('click','.request_details',function(){
+    var v_request=$(this).attr('rid');
+    document.location.href=v_request+'/lab_request_details';
+    // alert(v_request);
+});
+// ///////////////////////////
+
+// ///////////////////////
+
+    }
+
+// //////////////////////////////
+
+ 
+
+
+
+// //////////////////////////////
+                      
+                
+
+
+  
+  });
+
+</script>
+
+  

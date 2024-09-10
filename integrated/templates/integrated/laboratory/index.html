@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Laboratory</h1>
+            </div>
+          <!-- Content Row -->
+            <!-- <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 row-cols-lg-6">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-4 ml-5">
+                    <div class="col d-flex align-items-start">
+                      <i style="color:#e7aa38" class="bi text-body-secondary flex-shrink-0 me-3 fa fa-syringe fa-4x" ></i>
+                      <div>
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f" href="{% url 'lab-patient-search' %}">OPD Extraction</a></h3>
+                      </div>
+                    </div>
+                  </div>
+            </div> -->
+            <div class="row ">
+                 <!-- <div class="col-2">
+                    <div class="col d-flex align-items-start">
+                      <i style="color:#e7aa38" class="bi text-body-secondary flex-shrink-0 me-3 fa fa-syringe fa-4x" ></i>
+                      <div>
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f" href="{% url 'lab-patient-search' %}">OPD</a></h3>
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="col-md-2 mb-2" >
+                    <a style="color:#3d925f" href="{% url 'lab-patient-search' %}">
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" >
+                        <img src="{% static 'integrated/laboratory/img/opd.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4">OPD</h3>
+                      </div>
+                    </div>
+                  </a>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" >
+                        <img src="{% static 'integrated/laboratory/img/recep.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f" href="{% url 'lab-patient-search' %}">RECEPTION</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" >
+                        <img src="{% static 'integrated/laboratory/img/chem.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f" href="{% url 'lab-patient-search' %}">CHEMISTRY</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" >
+                        <img src="{% static 'integrated/laboratory/img/hema.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f" href="{% url 'lab-patient-search' %}">HEMATOLOGY</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <a style="color:#3d925f;" href="{% url 'lab_microscopy' %}">
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/microscopy.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4">MICROSCOPY</h3>
+                      </div>
+                    </div>
+                  </a>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/sero.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" href="{% url 'lab-patient-search' %}">SEROLOGY</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/biology.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" disabled href="{% url 'lab-patient-search' %}">MICROBIOLOGY</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/tyroid.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" href="{% url 'lab-patient-search' %}">TYROID</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/gas.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" href="{% url 'lab-patient-search' %}">BLOOD GAS</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/cardiac.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" href="{% url 'lab-patient-search' %}">CARDIAC</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/tumor.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" href="{% url 'lab-patient-search' %}">TUMOR</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/drug.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" href="{% url 'lab-patient-search' %}">DRUG TEST</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr>
+                  <div class="col-md-2 mb-2" >
+                    <div class="row text-center">
+                      <div class="col-6 mx-auto" style="">
+                        <img src="{% static 'integrated/laboratory/img/drug.png'%}" style="width: 80px;height: auto;"/>
+                      </div>
+                      <div class="col-12">
+                        <h3 class="fw-bold mb-0 fs-4"><a style="color:#3d925f;" href="{% url 'lab-patient-search' %}">VERIFIER</a></h3>
+                      </div>
+                    </div>
+                  </div>
+
+
+            </div>
+            
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/opd/search_modal.html' %}
+  {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

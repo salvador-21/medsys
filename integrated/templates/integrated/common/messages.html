@@ -1,0 +1,10 @@
+{%if messages%}
+    {%for message in messages%}
+    <div class="alert {{message.tags}}">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span>{{message}}</span>
+    </div>
+    {%endfor%}
+{%endif%}

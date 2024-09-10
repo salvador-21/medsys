@@ -1,0 +1,371 @@
+
+
+
+<div class="modal fade" id="torelease_mdl" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | TO RELEASE LABORATORY TEST</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <button  href="#"class="btn btn-sm btn-primary toreleased_btn" >Release</button>
+        <input type="text" class="form-control" id="search_torel"> -->
+
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <button  href="#"class="btn btn-sm btn-primary toreleased_btn" >Release</button></div>
+            <input class="form-control" id="search_torel" placeholder="Search Result" type="text">
+          </div>
+
+
+          <table class="table table-hover table-striped">
+            <thead>
+              <tr>
+            <th><input type="checkbox" class="chk_all" id="chk_all"></th>
+            <th>Ctr #</th>
+            <th>PATIENT</th>
+            <th>LABORATORY</th>
+            <th>WARD</th>
+            <th>COMPLETED</th>
+            <!-- <th>ACTION</th> -->
+              </tr>
+            </thead>
+            <tbody id="tbl_torelease">
+            </tbody>
+          </table>
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-group">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ENDORSEMENT MODAL -->
+
+<div class="modal fade" id="endorsement_mdl" data-bs-backdrop="static" style="z-index: 1052" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | ENDORSED FORM</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <form id="endorsement_frm">
+            <div class="form-group">
+              <label >PATIENT:</label>
+              <input class="form-control" style="width:100%" readonly id="en_ptx" name="en_ptx">
+            </div>
+            <div class="form-group">
+              <label>LABORATORY TEST:</label>
+              <input class="form-control" readonly style="width:100%" id="en_test" name="en_test">
+            </div>
+            
+            <div class="form-group">
+              <label>REMARKS:</label>
+              <textarea class="form-control" required style="width:100%" name="en_remarks"></textarea>
+            </div>
+            <div class="form-group">
+              <input class="form-control" readonly style="width:100%" id="en_key" name="en_key">
+              <input class="form-control" readonly style="width:100%" id="en_orderid" name="en_orderid">
+              <input class="form-control" readonly style="width:100%" id="en_encc" name="en_encc">
+            </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-group">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-success" type="submit" form="endorsement_frm">Submit</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Discount Modal-->
+<div class="modal fade" id="labmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">CECILIO, SALVADOR B.</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="case2-form" action="#" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Case Rate:</label>
+                    <select class="form-control" style="width:100%" id="case_rate2" name="caserate">
+                        <option value="">Please choose</option>
+                       
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="type" value="S" hidden>
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="case2-form">Update</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="endorse_req" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | ENDORSED LABORATORY TEST</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-hover table-striped">
+              <thead>
+                <tr>
+              <th>Endorse Time</th>
+              <th>Ctr #</th>
+              <th>PATIENT</th>
+              <th>LABORATORY</th>
+              <th>WARD</th>
+              <th>REMARKS</th>
+              <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="tbl_endorsement">
+              </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+
+  <div class="modal fade" id="patient_details" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | Patient Information</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+<div class="modal-body">
+            <form id="case2-form" action="#" method="post" class="row">
+                {% csrf_token %}
+<table class="table table-bordered">
+  <tr>
+    <td class="text-right" style="width: 30%;">Hospital No.:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder fs-5">0000000123</span></td>
+  </tr>
+  <tr>
+    <td class="text-right" style="width: 30%;">Last Name:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder">CECILIO</span></td>
+  </tr>
+  <tr>
+    <td class="text-right" style="width: 30%;">First Name:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder">SALVADOR</span></td>
+  </tr>
+  <tr>
+    <td class="text-right" style="width: 30%;">Middle Name:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder">BALONCIO</span></td>
+  </tr>
+  <tr>
+    <td class="text-right" style="width: 30%;">Date of Birth:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder">07/21/1990</span></td>
+  </tr>
+  <tr>
+    <td class="text-right" style="width: 30%;">Gender:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder">MALE</span></td>
+  </tr>
+  <tr>
+    <td class="text-right" style="width: 30%;">Mobile No.:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder">09073630080</span></td>
+  </tr>
+  <tr>
+    <td class="text-right" style="width: 30%;">Address:</td>
+    <td class="w-80" style="width: 70%;"><span class="fw-bolder">BRGY. TAISAN SIPOCOT CAMARINES SUR</span></td>
+  </tr>
+</table>
+
+                <div class="form-group">
+                    <input type="text" name="type" value="S" hidden>
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <!-- <button class="btn btn-success" type="submit" form="case2-form">Update</button> -->
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ////////////////////////// REQUEST DETAILS -->
+  <div class="modal fade" id="request_details"  data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | Patient Information</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+    <div class="modal-body">
+  <h4 class="text-center fw-bolder bg-dark text-white">REQUEST DETAILS</h4>
+  <table class="table-bordered table w-100 mb-2">
+    <tbody>
+      <tr>
+        <td colspan="4">CONTROL NO.: <span class="fw-bolder text-danger v_ctr fs-4"></span> &nbsp; <i class="fs-4 fa fa-edit ctr_edit" aria-hidden="true"></i>
+          <input type="hidden" class="txt_enccode">
+          <input type="hidden" class="txt_orderid">
+        </td>
+      </tr>
+    <tr>
+      <td colspan="2">NAME: <span class="fw-bolder fs-5 v_ptx"> </span></td>
+      <td colspan="2"> HOSPITAL NO.: <span class="fw-bolder v_hosno"> </span></td>
+    </tr>
+    <tr>
+      <td>DOB: <span class="fw-bolder v_dob">-----</span></td>
+      <td>AGE: <span class="fw-bolder v_age">------</span></td>
+      <td>GENDER: <span class="fw-bolder v_gender">-------</span></td>
+      <td>CIVIL STAT: <span class="fw-bolder v_stat">------</span></td>
+    </tr>
+    <tr>
+      <td colspan="2">WARD: <span class="fw-bolder v_ward"></span><br>(<span class="fw-bolder v_physician"></span>)</td>
+      <td ><label>EXTRACTION TIME:</label><input type="datetime-local" class="form-control exttime"></td>
+      <td ><label>LAST MEAL:</label><input type="datetime-local" class="form-control lastmeal"></td>
+    </tr>
+  </tbody>
+  </table>
+  
+  <div class="btn btn-group mx-auto" id="btn_option">
+    
+</div>
+<h4 class="text-center fw-bolder bg-dark text-white mb-3">LABORATORY TEST</h4>
+<!-- ////////////////////////// -->
+  <input type="text" class="form-control" id="view_request_search" placeholder="Search">
+<!-- ///////////////////////// -->
+  <table class="table table-hover" id="tbl-onprocess" style="cursor: pointer;">
+    <thead>
+        <tr>
+            <th><input type="checkbox" class="chk_all" id="chk_all" name="chk_all"></th>
+            <th>Received</th>
+            <th>Laboratory Name</th>
+            <th>Price</th>
+            <th>Remarks</th>
+            <th>Status</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody id="view_request">
+      <tr>
+        <td>1</td>
+        <td></td>
+        <td ><span class="fs-5 fw-bolder ">Urinalysis</span> </td>
+        <td>1125</td>
+        <td><span class="badge bg-dark">No Sample</span></td>
+        <td><button class="btn btn-primary btn-sm">Accept</button></td>
+        <td><button class="btn btn-dark btn-sm">Endorse</button></td>
+      </tr>
+    
+
+    </tbody>
+    </table>
+    
+    <div class="vloader" style="
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #0a90a1;
+      margin: 60px auto;
+      width: 200px;
+      height: 200px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+    
+    
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }"></div>
+
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <!-- <button class="btn btn-success" type="submit" form="case2-form">Update</button> -->
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Control Number Update -->
+
+  <div class="modal fade" id="ctr_change_modal" data-bs-backdrop="static" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | Control No. Update</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <button  href="#"class="btn btn-sm btn-primary toreleased_btn" >Release</button>
+          <input type="text" class="form-control" id="search_torel"> -->
+          
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              
+              <input class="form-control" id="cur_ctr"  type="text">
+              <button  href="#"class="btn btn-sm btn-danger update_ctr_btn" >Update</button></div>
+            </div>
+  
+  
+            
+        </div>
+    
+      </div>
+    </div>
+  </div>

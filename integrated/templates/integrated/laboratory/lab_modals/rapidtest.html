@@ -1,0 +1,82 @@
+<!-- ////////////////////// RAPID TEST RESULT INPUT-->
+
+<div class="modal fade" id="rdt_res_modal" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> RAPID TEST RESULT</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">--RAPID TEST RESULT DETAILS--</h4>
+            <form id="case2-form" action="#" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="disc-type">RESULT:</label>
+                    <select class="form-control" style="width:100%" id="result" name="result">
+                        <option value="">Please choose</option>
+                        <option value="NEGATIVE">NEGATIVE</option>
+                        <option value="POSITIVE">POSITIVE</option>
+                       
+                    </select>
+                </div>
+                <div class="form-group">
+                  <label for="disc-type">KIT USED:</label>
+                  <select class="form-control" style="width:100%" id="kit" name="kit">
+                      <option value="">Please choose</option>
+                      <option value="NEGATIVE">NEGATIVE</option>
+                      <option value="POSITIVE">POSITIVE</option>
+                     
+                  </select>
+              </div>
+              <div class="form-group">
+                <label for="disc-type">LOT NO:</label>
+                <input class="form-control" style="width:100%" id="lotno" name="lotno">
+              </div>
+              <div class="form-group">
+                <label for="disc-type">EXPIRY DATE:</label>
+                <input type="date" class="form-control" style="width:100%" id="expdate" name="expdate">
+              </div>
+  
+                <div class="form-group">
+                    <input type="text" name="type" value="S" hidden>
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="case2-form">Submit</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <!-- ////////////////////////// -->
+  

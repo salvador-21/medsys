@@ -1,0 +1,69 @@
+{% load static %}
+<!-- Bootstrap core JavaScript-->
+<script src="{%static 'integrated/vendor/jquery/jquery.min.js' %}"></script>
+<script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="{%static 'integrated/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+<!-- Custom scripts for all pages-->
+<script src="{%static 'integrated/js/sb-admin-2.min.js' %}"></script>
+
+{% if page == 'E-Nurse' %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script src="{% static 'integrated/js/enurse.js' %}"></script>
+{% else %}
+<script src="{%static 'integrated/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+{% endif %}
+<script src="{%static 'integrated/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'integrated/js/camera.js' %}"></script>
+{% if page == 'Consultations' %}
+<script src="{% static 'integrated/js/consultation.js' %}"></script>
+{% endif %}
+{% if page == 'Billing' %}
+<script src="{% static 'integrated/js/billing.js' %}"></script>
+{% endif %}
+{% if page == 'Patient Discount' %}
+<script src="{% static 'integrated/js/discount.js' %}"></script>
+{% endif %}
+
+{% if page == 'Radiology' %}
+<script src="{% static 'integrated/js/rad.js' %}"></script>
+{% endif %}
+
+{% if page == 'Laboratory' %}
+<script src="{% static 'integrated/js/lab.js' %}"></script>
+{% endif %}
+
+{% if page == 'Pharmacy' %}
+<script src="{% static 'integrated/js/pharmacy.js' %}"></script>
+{% endif %}
+
+{% if page == 'Profile' %}
+<script src="{% static 'integrated/js/profile.js' %}"></script>
+{% endif %}
+
+{% if page == 'Emergency Room' %}
+<script src="{% static 'integrated/js/er.js' %}"></script>
+{% endif %}
+
+
+{% if page == 'Dashboard'%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js" integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endif %}
+
+
+<script>
+$(document).ready( function () {
+    $('#myTable').DataTable();
+    $('#erTable').DataTable({
+        "order": [[ 2, "desc"]],
+    });
+    $(".rfid-modal").on("click", function(){
+        document.getElementById("rfid").focus()
+    })
+});
+</script>
+
+<script src="{% static 'integrated/js/alertify/alertify.min.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

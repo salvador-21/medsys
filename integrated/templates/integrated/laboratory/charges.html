@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %} 
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Laboratory</h1>
+                <h4>{{patient_details.0.patlast}}, {{patient_details.0.patfirst}} {{patient_details.0.patmiddle}} ({{patient_details.0.hpercode}})</h4>
+                {% include 'integrated/common/laboratory_button.html' with page=page %}
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+                <div class="col-md-4" style="overflow:auto;height: 70vh;">
+                  <div class="sticky-top bg-primary text-white">
+                    <h5 class="text-center">Examinations</h5>
+                  </div>
+                  <br>
+                    <div class="form-group">
+                      <input type="text" class="form-control" id="search" placeholder="Search...">
+                    </div>
+                    <ul class="list-group" id="mlist" style='cursor: pointer;'>
+                        {% for i in exam %}
+                        <li id="ilist" class="list-group-item sel-item" name="{{i.proccode}}" alt="{{enctr}}">&nbsp;
+                          {{i.procdesc}} <text style="float:right">{{i.procrate|stringformat:".2f"|intcomma}}</text>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-md-4" style="overflow:auto;height: 70vh;">
+                  <div class="sticky-top bg-danger text-white">
+                    <h5 class="text-center">Charges</h5>
+                  </div>
+                    <br>
+                    <div id="load">
+                      <ul class="list-group">
+                        {% if charges %}
+                        {% for i in charges %}
+                        <li class="list-group-item">
+                          {{i.procdesc}}
+                          <a href="#"><span style="float:right">&nbsp;&nbsp;<i class="fa fa-times del" name="{{i.docointkey}}" id="{{enctr}}"></i></span></a>
+                          <text style="float:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</text>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li class="list-group-item text-center">No Charges</li>
+                        {% endif %}
+                      </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-4" style="overflow:auto;height: 70vh;">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Total Amount</h5>
+                      <h2 style="float:right" id="total">{{total|stringformat:".2f"|intcomma}}</h2>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="btn-group">
+                    <a href="{% url 'printlabcharges' enctr %}" target="_blank" class="col-md-12 btn btn-success btn-lg">Print Charge Slip</a>
+                    <a href="{% url 'printlatestlabcharges' enctr %}" target="_blank" class="col-md-12 btn btn-danger btn-lg">Print Latest Charge Slip</a>
+                  </div>
+                  
+                </div>
+                
+
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' with page=page %}
+</body>
+
+</html>

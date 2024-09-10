@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %} 
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Patient Bill [{{toecode}}]</h1>
+                <div class="btn btn-group float-right">
+                  <a href="{% url 'newcharges' encounter %}" class="btn btn-primary" type="button">Add Charges</a>
+                </div>
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+              <div class="container-fluid">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                        <tr>
+                            <td>PATIENT NAME: <b>{{header.patient.0.patlast}}, {{header.patient.0.patfirst}} {{header.patient.0.patmiddle}} {% if header.patient.0.patsuffix %}{{header.patient.0.patsuffix}}{% endif %}</b></td>
+                            <td>AGE: <b>{{header.age}}</b></td>
+                            <td>DATE: <b>{% now "F d, Y H:i " %}</b></td>
+                        </tr>
+                        <tr>
+                            <td>ADDRESS: <b>{{header.address}}</b></td>
+                            <td>Birthdate: <b>{{header.patient.0.bday}}</b></td>
+                            {% if toecode == 'IN-PATIENT' %}
+                            <td>No. of Days: 
+                              <b>
+                                {% if header.details.0.date_discharged %}
+                                  {{header.details.0.no_day}}
+                                {% else %}
+                                  {% if header.details.0.no_days is not None %}{{header.details.0.no_days}}{% endif %}
+                                {% endif %}
+                              </b>
+                            </td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <td>FINAL DIAGNOSIS:
+                              {%for i in header.diagnosis%}
+                                {% if i.primediag == 'Y'%}
+                                  <b>{{i.diagtext}}</b>
+                                {% endif %}
+                              {% endfor %}
+                            </td>
+                            <td>DATE ADMITTED: <b>{{header.details.0.date_admitted}}</b></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>DATE DISCHARGED: {% if header.details.0.date_discharged %} <b>{{ header.details.0.date_discharged }}</b> {% endif %}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered table-sm">
+                  <thead>
+                    <tr>
+                        <td colspan="9" style="background-color: grey; color:white;"><b>HOSPITAL CHARGES</b></td>
+                    </tr>
+                    <tr style='text-align:center'>
+                      <td>DATE CHARGED</td>
+                      <th>PARTICULARS</th>
+                      <th>CHARGE CODE</th>
+                      <th>QTY</th>
+                      <th>AMOUNT</th>
+                      <th>TOTAL</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if header.medsup %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Medical Supplies</b></td>
+                  </tr>
+                  {% for i in header.medsup %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.cl2desc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}   
+
+                  {% if header.meds %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Drugs and Medicines</b></td>
+                  </tr>
+                  {% for i in header.meds %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.gendesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod 'DRUME' i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}    
+
+                  {% if header.lab %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Laboratory</b></td>
+                  </tr>
+                  {% for i in header.lab %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod 'LABOR' i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}    
+
+
+                  {% if header.rad %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Xray/Ultrasound/2D Echo</b></td>
+                  </tr>
+                  {% for i in header.rad %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+
+                  {% for i in header.ultra %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+
+                  {% for i in header.echo %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+
+                  {% endif %}  
+                  
+                  {% if header.mrict %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>MRI/CT Scan</b></td>
+                  </tr>
+                  {% for i in header.mrict %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}    
+
+
+                  {% if header.er %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Emergency Room</b></td>
+                  </tr>
+                  {% for i in header.er %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}  
+                  
+                  {% if header.ordr %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Operating/Delivery Room</b></td>
+                  </tr>
+                  {% for i in header.ordr %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod 'OR-DR' i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}   
+
+                  {% if header.nursing %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Nursing Care Procedure</b></td>
+                  </tr>
+                  {% for i in header.nursing %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  {% if header.ecg %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>ECG</b></td>
+                  </tr>
+                  {% for i in header.ecg %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+                  
+                  {% if header.pt %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Physical Therapy</b></td>
+                  </tr>
+                  {% for i in header.pt %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  {% if header.dialysis %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>Dialysis</b></td>
+                  </tr>
+                  {% for i in header.dialysis %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  {% if header.abtc %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>ABTC</b></td>
+                  </tr>
+                  {% for i in header.abtc %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  {% if header.nbs %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>New Born Screening</b></td>
+                  </tr>
+                  {% for i in header.nbs %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  {% if header.nbh %}
+                  <tr>
+                    <td colspan="9" style="background-color: grey; color:white; font-size: small;"><b>New Born Hearing Test</b></td>
+                  </tr>
+                  {% for i in header.nbh %}
+                  <tr>
+                      <td style="text-align: center;">{{i.date}}</td>
+                      <td>{{i.procdesc}}</td>
+                      <td style="text-align:center">{{i.pcchrgcod}}</td>
+                      <td style="text-align:center">{{i.pchrgqty}}</td>
+                      <td style="text-align:right">{{i.pchrgup|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:right">{{i.pcchrgamt|stringformat:".2f"|intcomma}}</td>
+                      <td style="text-align:center"><a href="{% url 'editcharges' i.pcchrgcod i.chargcode i.enccode %}"><span class="fa fa-edit"></span></a></td>
+                  </tr>
+                  {% endfor %}
+                  {% endif %}
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include 'integrated/common/footer.html' %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<DOCTYPE html>
+    {% load static %}
+    <head>
+        <title>RAPID TEST</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <style>
+            body {
+        margin: 0;
+        padding: 0;
+        /* background-color: #FAFAFA; */
+        font: 12pt "Times New Roman";
+    }
+    * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    .page {
+        /* width: 21cm; */
+        width: 210mm;
+        min-height: 148.5mm;
+        /* padding: 2cm; */
+        margin: 1cm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 5px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .subpage {
+        padding: 1cm;
+        /* border: 5px red solid; */
+        height: 148.5mm;
+        /* outline: 1cm #FFEAEA solid; */
+    }
+    
+    @page {
+        size:210mm 148.5mm;
+        margin: 0;
+    }
+    @media print {
+        .page {
+            margin: 0;
+            border: initial;
+            border-radius: initial;
+            width: initial;
+            min-height: initial;
+            box-shadow: initial;
+            background: initial;
+            page-break-after: always;
+        }
+    }
+        </style>
+    </head>
+    <body>
+        <div class="book">
+            <div class="page">
+                <div class="subpage">
+                 <div class="header" style="height: 100px;">
+                    <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
+                        <tr>
+                        <td><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 75px; height: 75px;margin: 0px;" /></td>
+                        <td><img src="{% static 'integrated/img/doh.png'%}" style="width: 75px; height: 75px;margin: 0px;" /></td>
+                        <td style="text-align: center;padding: 0px;">
+                          <span style="font-weight: bolder;font-size: 15.5px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
+                          <span class="fw-bolder">Formerly( Bicol Sanitarium )</span><br>
+                          <span>San Pedro, Cabusao, Camarines Sur</span><br>
+                          <span>Telephone Nos.: (054) 473-2244; 472-4422, 881-1033, 881-1761</span><br>
+                          <span>Email Address: bicolsan@yahoo.com; brghgmc@gmail.com</span>
+                        </td>
+                        </tr>
+                    </table>
+                   
+                 </div>
+                 <div class="content" style="height: 370px;padding: 0px;">
+                    <h2 class="text-center fw-bolder">CHEMISTRY</h2>
+
+                </div>
+                <div style="height: 20px;">
+                    <table style="font-size: 12px;width: 100%;border-top: 4px solid rgb(14, 14, 187);font-style: italic;">
+                        <tr>
+                            <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
+                            <td width="20%" align="center"><span>Rev 8</span></td>
+                            <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
+                            <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                        </tr>
+                    </table>
+
+                </div>
+                <hr>
+               
+            </div>
+           
+        </div>
+    </body>
+</html>

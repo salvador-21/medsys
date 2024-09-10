@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Emergency Room Record</h1>
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+                <div class="container-fluid">
+                  {%include 'integrated/common/messages.html'%}
+                    <table class="table table-bordered table-sm">
+                        <tr>
+                            <td>Name of Patient: {{details.details.0.patlast}}, {{details.details.0.patfirst}}{%if details.details.0.patsuffix%} {{details.details.0.patsuffix}}{%endif%}, {{details.details.0.patmiddle}}</td>
+                            <td>Age: {{details.details.0.patbdate|timesince:now}} old</td>
+                            <td>Sex: {% if details.details.0.patsex == 'M'%}MALE{%else%}FEMALE{%endif%}</td>
+                        </tr>
+                        <tr>
+                            <td>Address: {{addr.0.address}}</td>
+                            {% if details.details.0.patcstat == 'C' %}
+                            <td>Civil Status: CHILD</td>
+                            {% elif details.details.0.patcstat == 'D' %}
+                            <td>Civil Status: DIVORSED</td>
+                            {% elif details.details.0.patcstat == 'M' %}
+                            <td>Civil Status: MARRIED</td>
+                            {% elif details.details.0.patcstat == 'X' %}
+                            <td>Civil Status: SEPARATED</td>
+                            {% elif details.details.0.patcstat == 'S' %}
+                            <td>Civil Status: SINGLE</td>
+                            {% elif details.details.0.patcstat == 'W' %}
+                            <td>Civil Status: WIDOW/WIDOWER</td>
+                            {%else%}
+                            <td>Civil Status: </td>
+                            {%endif%}
+                            {% if details.details.0.relcode == 'CATHO' %}
+                            <td>Religion: ROMAN CATHOLIC</td>
+                            {%else%}
+                            <td>Religion:</td>
+                            {%endif%}
+                        </tr>
+                        <tr>
+                            <td>Date of Birth: {{details.details.0.patbdate|date:"SHORT_DATE_FORMAT"}}</td>
+                            <td>Place of Birth: {{details.details.0.patbplace}}</td>
+                            <td>Hospital No.: {{no}}</td>
+                        </tr>
+                        <tr>
+                            {%if details.details.0.occupation%}
+                            <td>Occupation: {{details.details.0.occupation}}</td>
+                            {%else%}
+                            <td>Occupation:</td>
+                            {%endif%}
+                            {%if details.details.0.natcode == 'FILIP'%}
+                            <td>Citizenship: FILIPINO</td>
+                            {%else%}
+                            <td>Citizenship:</td>
+                            {%endif%}
+                            <td></td>
+                        </tr>
+                    </table>
+                    {% if msg == 'success' %}<div class="alert alert-success" role="alert" style='text-align:center'>Record added successfully</div>{%elif msg == 'failed' %}<div class="alert alert-danger" role="alert" style='text-align:center'>Failed adding new record</div>{% endif %}
+                    <form id="patient-details-form" name="form" action="{% url 'erlogdetails' no enctr %}" method="POST">
+                        {% csrf_token %}
+                        {% for i in erdetails %}
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                              <label>Name of Companion:</label>
+                              <input type="text" class="form-control" id="companion" name="companion" value="{{i.companion}}" placeholder="Name of Companion">
+                            </div>
+                            <div class="form-group col-md-4">
+                              <label>Relationship to Patient:</label>
+                              <select class="form-control" id="rel_to_patient" name="rel_to_patient">
+                                <option value="FAMEM" {%if i.erbrouby == 'FAMEM'%}selected{%endif%}>Family Member</option>
+                                <option value="FREND" {%if i.erbrouby == 'FREND'%}selected{%endif%}>Friend</option>
+                                <option value="NEIGH" {%if i.erbrouby == 'NEIGH'%}selected{%endif%}>Neighbor</option>
+                                <option value="POLIC" {%if i.erbrouby == 'POLIC'%}selected{%endif%}>Police</option>
+                                <option value="RELAT" {%if i.erbrouby == 'RELAT'%}selected{%endif%}>Relative</option>
+                                <option value="SELF" {%if i.erbrouby == 'SELF'%}selected{%endif%}>Self</option>
+                                <option value="AMBUL" {%if i.erbrouby == 'AMBUL'%}selected{%endif%}>Ambulance</option>
+                                <option value="OTHRS" {%if i.erbrouby == 'OTHRS'%}selected{%endif%}>Others</option>
+                              </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                              <label>Contact No.:</label>
+                              <input type="text" class="form-control" id="contact" name="contact" value="{{i.companion_contact_no}}" placeholder="Contact No.">
+                          </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                              <label>Date of Arrival:</label>
+                              <input type="date" class="form-control" id="date_of_arrival" value="{{i.date_arrival|date:'Y-m-d'}}"  name="date_of_arrival">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Time of Arrival:</label>
+                                <input type="time" class="form-control" id="time_of_arrival" value="{{i.timearrive|date:'H:i'}}" name="time_of_arrival">
+                            </div>
+                            <div class="form-group col-md-4">
+                              <label>Referred by:</label>
+                              <select class="form-control" id="referred_by" name="referred_by" required> 
+                                  <option value="SELF" {% if i.reffered_by == 'SELF'%}selected{%endif%}>Self</option>
+                                  <option value="OPD" {% if i.reffered_by == 'OPD'%}selected{%endif%}>OPD</option>
+                                  <option value="PRIVATE" {% if i.reffered_by == 'PRIVATE'%}selected{%endif%}>Private MD</option>
+                                  <option value="OTHER HOSPITAL" {% if i.reffered_by == 'OTHER HOSPITAL'%}selected{%endif%}>Other Hospital</option>
+                                  <option value="OTHERS" {% if i.reffered_by == 'OTHERS'%}selected{%endif%}>Others</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                              {%if version == 'rev3'%}
+                              <label>Emergency Severity Index (ESI):</label>
+                              {%elif version == 'rev4'%}
+                                <label>Emergency Triage System:</label>
+                              {% endif %}
+                              <select class="form-control" id="esi" name="esi" required> 
+                                {%if version == 'rev3'%}
+                                  <option value="Resuscitation" {%if i.esi == 'Resuscitation'%}selected{%endif%}>Resuscitation</option>
+                                  <option value="Emergent" {%if i.esi == 'Emergent'%}selected{%endif%}>Emergent</option>
+                                  <option value="Urgent" {%if i.esi == 'Urgent'%}selected{%endif%}>Urgent</option>
+                                  <option value="Less urgent" {%if i.esi == 'Less urgent'%}selected{%endif%}>Less urgent</option>
+                                  <option value="Least urgent" {%if i.esi == 'Least urgent'%}selected{%endif%}>Least urgent</option>
+                                {% elif  version == 'rev4'%}
+                                  <option value="Immediate" {%if i.esi == 'Immediate'%}selected{%endif%}>Immediate</option>
+                                  <option value="Emergency" {%if i.esi == 'Emergency'%}selected{%endif%}>Emergency</option>
+                                  <option value="Urgent" {%if i.esi == 'Urgent'%}selected{%endif%}>Urgent</option>
+                                  <option value="Semi-urgent" {%if i.esi == 'Semi-urgent'%}selected{%endif%}>Semi-urgent</option>
+                                  <option value="Non-urgent" {%if i.esi == 'Non-urgent'%}selected{%endif%}>Non-urgent</option>
+                                {% endif %}
+                              </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Services:</label>
+                                <select class="form-control" id="services" name="services" required> 
+                                    {%for x in services%}
+                                    <option value="{{x.tscode}}" {%if i.tscode == x.tscode%}selected{%endif%}>{{x.tsdesc}}</option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                              <label>Condition on Arrival:</label>
+                              <select class="form-control" id="condition" name="condition" required> 
+                                  <option value="AMBUL" {%if i.ercond == 'AMBUL'%}selected{%endif%}>Ambulatory</option>
+                                  <option value="UNCON" {%if i.ercond == 'UNCON'%}selected{%endif%}>Unconcious</option>
+                                  <option value="DOA" {%if i.ercond == 'DOA'%}selected{%endif%}>Dead on Arrival</option>
+                                  <option value="GOOD" {%if i.ercond == 'GOOD'%}selected{%endif%}>Good</option>
+                                  <option value="FAIR" {%if i.ercond == 'FAIR'%}selected{%endif%}>Fair</option>
+                                  <option value="CORNA" {%if i.ercond == 'CORNA'%}selected{%endif%}>Comatose</option>
+                                  <option value="HEMOR" {%if i.ercond == 'HEMOR'%}selected{%endif%}>Hemorrhagic</option>
+                                  <option value="POOR" {%if i.ercond == 'POOR'%}selected{%endif%}>Poor</option>
+                                  <option value="SHOCK" {%if i.ercond == 'SHOCK'%}selected{%endif%}>Shock</option>
+                              </select>
+                          </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>Chief Complaint:</label>
+                                <textarea class="form-control" rows="5" id="complaint" name="complaint">{{i.chief_complaint}}</textarea>
+                            </div>
+                        </div>
+                        <hr>
+                        <p>Vital Signs</p>
+                        <div class="form-row">
+                          <div class="form-group col-md-1">
+                            <label>BP:</label>
+                            <input type="text" class="form-control" id="bp" name="bp" value="{{vs.0.vsbp}}">
+                          </div>
+                          <div class="form-group col-md-1">
+                            <label>HR:</label>
+                            <input type="text" class="form-control" id="hr" name="hr" value="{{vs.0.vspulse}}">
+                          </div>
+                          <div class="form-group col-md-1">
+                            <label>RR:</label>
+                            <input type="text" class="form-control" id="rr" name="rr" value="{{vs.0.vsresp}}">
+                          </div>
+                          <div class="form-group col-md-1">
+                            <label>Temp:</label>
+                            <input type="text" class="form-control" id="temp" name="temp" value="{{vs.0.vstemp}}">
+                          </div>
+                          <div class="form-group col-md-1">
+                            <label>O2 Sat</label>
+                            <input type="text" class="form-control" id="sat" name="sat" value="{{sat.0.o2sat}}">
+                          </div>
+                          <div class="form-group col-md-1">
+                            <label>Weight:</label>
+                            <input type="text" class="form-control" id="weight" name="weight" value="{{hw.0.vsweight}}">
+                          </div>
+                          <div class="form-group col-md-1">
+                            <label>Height:</label>
+                            <input type="text" class="form-control" id="height" name="height" value="{{hw.0.vsheight}}">
+                          </div>
+                      </div>
+                      <hr>
+                      <p>Accident/Injury?: <input type="radio" id="yes" name="injury" {%if injury == 1%}checked{%endif%} value="1">YES &nbsp;|&nbsp; <input type="radio" id="no" name="injury" value="0" {%if injury == 0%}checked{%endif%}>NO</p>
+                        <div class="form-row">
+                          <div class="form-group col-md-4">
+                            <label>NOI:</label>
+                            <input type="text" class="form-control" id="noi" name="noi" value="{{inj.0.injadd}}">
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label>DOI:</label>
+                            <input type="date" class="form-control" id="doi" name="doi" value="{{inj.0.injdte|date:'Y-m-d'}}">
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label>TOI:</label>
+                            <input type="time" class="form-control" id="toi" name="toi" value="{{inj.0.ijntme|date:'H:i'}}">
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label>POI:</label>
+                            <select class="form-control" id="poi" name="poi">
+                              <option value="">Please Select</option>
+                              {%for i in place_of_incident %}
+                              {% if inj.0.injloc == i.injloc%}
+                                <option value="{{i.injloc}}" selected>{{i.injdesc}}</option>
+                              {%else%}
+                                <option value="{{i.injloc}}">{{i.injdesc}}</option>
+                              {%endif%}
+                              {%endfor%}
+                            </select> 
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label>Remarks:</label>
+                            <input type="text" class="form-control" id="remarks" name="remarks" value="{{inj.0.remarks}}">
+                          </div>
+                      </div>
+                        <hr>
+                        <div class="form-row">
+                          <div class="form-group col-md-12">
+                              <label>Final Diagnosis:</label>
+                              <textarea class="form-control" rows="3" id="diagnosis" name="diagnosis">{%if diagnosis%}{{diagnosis.0.diagtext}}{%endif%}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-group col-md-12">
+                              <label>Management:</label>
+                              <textarea class="form-control" rows="10" id="management" name="management">{%if management%}{{management.0.management}}{%endif%}</textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-group col-md-2">
+                              <label>Time seen by ER Doctor:</label>
+                              <input type="time" class="form-control" id="time_seen" value="{{i.TmeSeenDr|date:'H:i'}}"  name="time_seen">
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label>Disposition Time:</label>
+                            <input type="time" class="form-control" id="disp_time" value="{{i.disptime|date:'H:i'}}"  name="disp_time">
+                        </div>
+                          <div class="form-group col-md-4">
+                              <label>Disposition:</label>
+                              <select class="form-control" id="disposition" name="disposition"> 
+                                  <option value="" {%if i.dispcode is None%}selected{%endif%}>Please Select</option>
+                                  <option value="TRASH" {% if i.dispcode == 'TRASH'%}selected{%endif%}>Treated and Sent Home</option>
+                                  <option value="ADMIT" {% if i.dispcode == 'ADMIT'%}selected{%endif%}>Admitted</option>
+                                  <option value="REFAD" {% if i.dispcode == 'REFAD'%}selected{%endif%}>Refused Admission</option>
+                                  <option value="REFER" {% if i.dispcode == 'REFER'%}selected{%endif%}>Referred</option>
+                                  <option value="ABSC" {% if i.dispcode == 'ABSC'%}selected{%endif%}>Absconded</option>
+                                  <option value="DIEDD" {% if i.dispcode == 'DIEDD'%}selected{%endif%}>Died</option>
+                                  <option value="OWC" {% if i.dispcode == 'OWC'%}selected{%endif%}>Out When Called</option>
+                                  <option value="EXPIR" {% if i.dispcode == 'EXPIR'%}selected{%endif%}>Expired</option>
+                                  <option value="HAMA" {% if i.dispcode == 'HAMA'%}selected{%endif%}>Discharges Againts Medical Advice</option>
+                              </select>
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label>Condition upon discharged:</label>
+                            <select class="form-control" id="condition2" name="condition2"> 
+                                <option value="" {%if i.condcode is None%}selected{%endif%}>Please Select</option>
+                                <option value="STABL" {%if i.condcode == 'STABL'%}selected{%endif%}>Stable</option>
+                                <option value="CRITI" {%if i.condcode == 'CRITI'%}selected{%endif%}>Critical</option>
+                                <option value="EXPIR" {%if i.condcode == 'EXPIR'%}selected{%endif%}>Expired</option>
+                            </select>
+                        </div>
+                      </div>
+
+                      <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Discharged Date:</label>
+                            <input type="date" class="form-control" id="discharged_date" value="{{i.disdate|date:'Y-m-d'}}"  name="discharged_date">
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label>Discharged Time:</label>
+                          <input type="time" class="form-control" id="discharged_time" value="{{i.distime|date:'H:i'}}"  name="discharged_time">
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label>Doctor on Duty:</label>
+                          <select class="form-control" id="doctor" name="doctor"> 
+                              <option value="">Please Select</option>
+                              {%for j in doctors%}
+                                  <option value="{{j.licno}}" {%if i.licno == j.licno%}selected{%endif%}>{{j.name}}</option>
+                              {%endfor%}
+                          </select>
+                      </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>Remarks:</label>
+                            <textarea class="form-control" rows="5" id="er_remarks" name="er_remarks">{% if i.remarks is not None%}{{i.remarks}}{%endif%}</textarea>
+                        </div>
+                      </div>
+                      {%endfor%}
+                      <div class="btn btn-group">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <a href="{% url 'printerrecord' enctr %}" target="_blank" type="submit" class="btn btn-primary">Print Record</button>
+                        <a href="{% url 'patientdetails' no page %}" class="btn btn-warning">Cancel</a>
+                      </div>
+
+                      <div class="btn btn-group" style="float:right">
+                        <button style="float:right" type="button" class="btn btn-danger discharged" id="{{enctr}}" name="{{no}}">Save & Discharged</button>
+                      </div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/search_modal.html' %}
+  {% include 'integrated/common/camera_modal.html' %}
+  {% include 'integrated/common/scripts.html' with page=page %}
+  <script>
+    $(".discharged").click(function(){
+      let complaint = $("#complaint").val()
+      let disposition = $("#disposition").val()
+      let time_seen = $("#time_seen").val()
+      let discharged_date = $("#discharged_date").val()
+      let discharged_time = $("#discharged_time").val()
+      let doctor = $("#doctor").val()
+      let no = $(this).attr("name")
+      let enctr = $(this).attr("id")
+      if (complaint === ""){
+        $("#complaint").focus()
+        alertify.alert("Required", "Complaint is required", function(){
+          alertify.message('OK');
+        });
+      }else if(disposition === ""){
+        $("#disposition").focus()
+        alertify.alert("Required", "Disposition is required", function(){
+          alertify.message('OK');
+        });
+      }else if(time_seen === ""){
+        $("#time_seen").focus()
+        alertify.alert("Required", "Time Seen is required", function(){
+          alertify.message('OK');
+        });
+      }else if(discharged_date === ""){
+        $("#discharged_date").focus()
+        alertify.alert("Required", "Discharged Date is required", function(){
+          alertify.message('OK');
+        });
+      }else if(discharged_time === ""){
+        $("#discharged_time").focus()
+        alertify.alert("Required", "Discharged Time is required", function(){
+          alertify.message('OK');
+        });
+      }else if (doctor === ""){
+        $("#doctor").focus()
+        alertify.alert("Required", "Doctor on duty is required", function(){
+          alertify.message('OK');
+        });
+      }else{
+        $('.discharged').removeAttr("type").attr("type", "submit");
+        form.action = '/' + no + "/" + enctr + "/erdischarged"
+      }
+    })
+
+    $("#yes").click(function(){
+      if($(this).prop("checked", true)){
+        $("#noi").prop('required', true)
+        $("#doi").prop('required', true)
+        $("#toi").prop('required', true)
+        $("#poi").prop('required', true)
+        $("#remarks").prop('required', true)
+      }
+    })
+
+    $("#no").click(function(){
+      if($(this).prop("checked", true)){
+        $("#noi").prop('required', false)
+        $("#doi").prop('required', false)
+        $("#toi").prop('required', false)
+        $("#poi").prop('required', false)
+        $("#remarks").prop('required', false)
+      }
+    })
+
+    {%if injury == 0%}
+    document.getElementById('doi').value = new Date().toISOString().substring(0, 10);
+    document.getElementById('toi').value = new Date().getHours() + ":" + new Date().getMinutes();
+    {%endif%}
+  </script>
+</body>
+
+</html>

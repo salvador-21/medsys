@@ -1,0 +1,175 @@
+<div class="modal fade" id="bio_modal" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> BACTERIOLOGY</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder im_hosno"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder im_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder im_gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder im_age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder im_stat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder im_ward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder im_received">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder im_ctr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">-- BACTERIOLOGY RESULT DETAILS --</h4>
+          <form id="bio_frm">
+           <table class="table table-bordered P-0">
+            <thead>
+              <th colspan="2">TESTS</th>
+              <th>RESULTS</th>
+            </thead>
+            <tbody>
+
+            <tr class="salmogen_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="3">SALMOGEN</td>
+            </tr>
+            <tr class="salmogen_tr" hidden>
+                <td >IgM</td>
+                <td>
+                <input type="text" step="any" class="form-control mb-0" id="sal_igg" name="sal_igg" placeholder="HbsAg">
+                </td>
+            </tr>
+            <tr class="salmogen_tr" hidden>
+                <td>IgG</td>
+                <td>
+                   <input type="text" step="any" class="form-control mb-0" id="sal_igm" name="sal_igm" placeholder="HbsAg">
+                </td>
+            </tr>
+           
+            <!-- ////////////// -->
+            <tr class="dengue_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="4">DENGUE TEST</td>
+            </tr>
+            <tr class="dengue_tr" hidden>
+                <td>IgG</td>
+                <td>
+                  <input type="text" step="any" class="form-control mb-0" id="dt_igg" name="dt_igg" placeholder="Dengue IgG">
+                </td>
+            </tr>
+            <tr class="dengue_tr" hidden>
+                <td>IgM</td>
+                <td>
+                 <input type="text" step="any" class="form-control mb-0" id="dt_igm" name="dt_igm" placeholder="Dengue IgM">
+                </td>
+            </tr>
+            <tr class="dengue_tr" hidden>
+                <td>NS1</td>
+                <td>
+                 <input type="text" step="any" class="form-control mb-0" id="dt_ns1" name="dt_ns1" placeholder="Dengue NS1">
+                </td>
+            </tr>
+              <!-- ////////////// -->
+            <tr class="malaria_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="3">MALARIA RAPID TEST</td>
+            </tr>
+            <tr class="malaria_tr" hidden>
+                <td>P.f.</td>
+                <td>
+                  <input type="text" step="any" class="form-control mb-0" id="mal_pf" name="mal_pf" placeholder="HbsAg">
+                </td>
+            </tr>
+            <tr class="malaria_tr" hidden>
+                <td>Pan</td>
+                <td>
+                 <input type="text" step="any" class="form-control mb-0" id="mal_pan" name="mal_pan" placeholder="HbsAg">
+                </td>
+            </tr>
+               <!-- ////////////// -->
+               <tr class="gram_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="4">GRAM STAIN</td>
+            </tr>
+            <tr class="gram_tr" hidden>
+                <td>Cells</td>
+                <td>
+                  <input type="text" step="any" class="form-control mb-0" id="gram_ep" name="gram_ep" placeholder="Gram Ep">
+                </td>
+            </tr>
+            <tr class="gram_tr" hidden>
+                <td>Neg</td>
+                <td>
+                 <input type="text" step="any" class="form-control mb-0" id="gram_neg" name="gram_neg" placeholder="Gram Neg">
+                </td>
+            </tr>
+            <tr class="gram_tr" hidden>
+                <td>Pos</td>
+                <td>
+                 <input type="text" step="any" class="form-control mb-0" id="gram_pos" name="gram_pos" placeholder="Gram Pos">
+                </td>
+            </tr>
+            <tr class="koh_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" >KOH</td>
+                <td colspan="2">
+                 <input type="text" step="any" class="form-control mb-0" id="koh" name="koh" placeholder="Koh">
+                </td>
+            </tr>
+            <tr class="acid_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder">ACID FAST STAIN</td>
+                <td colspan="2">
+                 <input type="text" step="any" class="form-control mb-0" id="acid_fast" name="acid_fast" placeholder="Acid Fast Stain">
+                </td>
+            </tr>
+            <tr class="slit_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder">SKIN SLIT</td>
+                <td colspan="2">
+                 <input type="text" step="any" class="form-control mb-0" id="slit_skin" name="slit_skin" placeholder="Skin Slit">
+                </td>
+            </tr>
+            <tr class="bi_tr" hidden>
+                <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" >B.I</td>
+                <td colspan="2">
+                 <input type="text" step="any" class="form-control mb-0" id="bi" name="bi" placeholder="B.I.">
+                </td>
+            </tr>
+
+            <!-- //////////////////// -->
+            </tbody>
+           </table>
+           <div class="row">
+            <div class="input-group mb-3 w-100">
+              <div class="input-group-prepend ">
+                <span class="input-group-text"><b>Perfomed By<b></span>
+              </div>
+              <input type="text" class="form-control" id="perform" name="perform" readonly >
+              
+              </div>
+           </div>
+           <input type="text" hidden class="form-control" id="perform_id" name="perform_id" readonly >
+           <input type="text" hidden  class="form-control action"  name="action">
+           <input type="text" hidden  class="form-control i_encc" placeholder="Enccode" name="i_encc">
+           <input type="text" hidden  class="form-control i_orderid" placeholder="Order Id" name="i_orderid">
+           <input type="text" hidden  class="form-control i_hpercode" placeholder="Hpercode" name="i_hpercode">
+           <input type="text" hidden  class="form-control i_ctr" placeholder="Hpercode" name="i_ctr">
+           <input type="text" hidden  class="form-control i_key" placeholder="key" name="i_key">
+  
+          
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="bio_frm">Submit</button>
+          </div>
+          
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+  

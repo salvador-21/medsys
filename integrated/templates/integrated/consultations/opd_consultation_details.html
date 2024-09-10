@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+{% load static %}
+{% include 'integrated/common/head.html' with page=page %}
+<body id="page-top">
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+    {% include 'integrated/common/sidebar.html' with page=page user_level=user_level %}
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <!-- Main Content -->
+      <div id="content">
+        {% include 'integrated/common/top_nav.html' with name=name user_level=user_level %}
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">OPD Record</h1>
+                {% include 'integrated/common/button_search_new.html' with page=page enctr=enctr %}
+            </div>
+          <!-- Content Row -->
+            <div class="row">
+              <div class="container-fluid">
+                <table class="table table-bordered table-sm">
+                  <tbody>
+                    <tr>
+                      <td>Consultation Date and Time:</td>
+                      <td>{{record.0.opd_datetime}} <i>({{record.0.opddate|timesince:today}} ago)</i></td>
+                    </tr>
+                    <tr>
+                      <td>Name:</td>
+                      <td>{{record.0.patient_name}}</td>
+                    </tr>
+                    <tr>
+                      <td>Hospital #:</td>
+                      <td>{{record.0.hpercode}}</td>
+                    </tr>
+                    <tr>
+                      <td>Address:</td>
+                      <td>{{addr.0.address}}</td>
+                    </tr>
+                    <tr>
+                      <td>Birthdate:</td>
+                      <td>{{record.0.birthdate|date:'F d, Y'}}</td>
+                    </tr>
+                    <tr>
+                      <td>Age:</td>
+                      <td>{{record.0.Age}}</td>
+                    </tr>
+                    <tr>
+                      <td>Sex:</td>
+                      <td>{%if record.0.Sex == 'M'%}MALE{%else%}FEMALE{%endif%}</td>
+                    </tr>
+                    <tr>
+                      <td>Civil Status:</td>
+                      {% if record.0.status == 'C'%}
+                      <td>CHILD</td>
+                      {% elif record.0.status == 'D' %}
+                      <td>DIVORSED</td>
+                      {% elif record.0.status == 'M' %}
+                      <td>MARRIED</td>
+                      {% elif record.0.status == 'X' %}
+                      <td>SEPARATED</td>
+                      {% elif record.0.status == 'S' %}
+                      <td>SINGLE</td>
+                      {% elif record.0.status == 'W' %}
+                      <td>WIDOW/WIDOWER</td>
+                      {% else %}
+                      <td>N/A</td>
+                      {% endif %}
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="col-md-12 text-center"> <h5>CASE SUMMARY</h5></div>
+                <table class="table table-bordered table-sm">
+                  <tbody>
+                    <tr class="bg-primary">
+                      <td colspan="2" class="text-center text-white">Vital Signs</td>
+                    </tr>
+                    <tr>
+                      <td>Height:</td>
+                      <td>
+                        {% for i in hw %}
+                        {% if i.othrvs == 'HEIGH' %}
+                        {{i.othrmeas}} {% if i.othrunit == 'CENTI'%}cm{%else%}{{i.othruni}}{%endif%}
+                        {% endif %}  
+                        {% endfor %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Weight:</td>
+                      <td>
+                        {% for j in hw %}
+                        {% if j.othrvs == 'WEIGH' %}
+                        {{j.othrmeas}} {% if j.othrunit == 'KILOS'%}kl{%else%}{{j.othrunit}}{%endif%}
+                        {% endif %}
+                        {% endfor %}  
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Temperature:</td>
+                      <td>{{vitals.0.vstemp}}</td>
+                    </tr>
+                    <tr>
+                      <td>Pulse:</td>
+                      <td>{{vitals.0.vspulse}}</td>
+                    </tr>
+                    <tr>
+                      <td>Blood Pressure:</td>
+                      <td>{{vitals.0.vsbp}}</td>
+                    </tr>
+                    <tr>
+                      <td>Respiratory Rate:</td>
+                      <td>{{vitals.0.vstemp}}</td>
+                    </tr>
+                    {% if illness %}
+                    <tr class="bg-primary">
+                      <td colspan="2" class="text-center text-white">Present Illness</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">{{illness.0.history}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if complaint %}
+                    <tr class="bg-primary">
+                      <td colspan="2" class="text-center text-white">Chief Complaint</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">{{complaint.0.history}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if diagnosis %}
+                    <tr class="bg-primary">
+                      <td colspan="2" class="text-center text-white">Consulting Doctor</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">{{diagnosis.0.physician}}</td>
+                    </tr>
+                    <tr class="bg-primary">
+                      <td colspan="2" class="text-center text-white">Diagnosis</td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">{{diagnosis.0.diagtext}}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td>Disposition</td>
+                      {% if record.0.opddisp == 'TRASH' %}
+                      <td>TREATED AND SENT HOME</td>
+                      {% elif record.0.opddisp == 'ADMIT' %}
+                      <td>ADMITTED</td>
+                      {% elif record.0.opddisp == 'OWC' %}
+                      <td>OUT WHEN CALLED</td>
+                      {% elif record.0.opddisp == 'REFAD' %}
+                      <td>REFUSED ADMISSION</td>
+                      {% elif record.0.opddisp == 'REFER' %}
+                      <td>REFERRED</td>
+                      {% else %}
+                      <td></td>
+                      {% endif %}
+                    </tr>
+                    <tr>
+                      <td>Discharged Date & Time</td>
+                      <td>{{record.0.discharged_date}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->
+      {% include 'integrated/common/footer.html' %}
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/search_modal.html' %}
+  {% include 'integrated/common/cert_no_modal.html' with enctr=enctr %}
+  {% include 'integrated/common/scripts.html' with page=page %}
+</body>
+
+</html>
