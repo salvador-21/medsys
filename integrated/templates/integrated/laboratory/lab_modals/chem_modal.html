@@ -1,4 +1,103 @@
 
+<div class="modal fade" id="chem_machine" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> CLINICAL CHEMISTRY - MACHINE</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 class="text-center fw-bolder bg-dark text-white">--CHEMISTRY NORMAL VALUES--</h4>
+          <form id="machine_frm">
+              {% csrf_token %}
+              <table class="table-bordered w-100 table-striped mb-0">
+                  <thead class="bg-info text-white">
+                      <th class="text-center">MACHINE </th>
+                      <th class="text-center">TEST</th>
+                      <th class="text-center">NORMAL VALUES</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input type="text" class="form-control machine_id" hidden  name="machine_id" >
+                        <input type="text" class="form-control machine_name" placeholder="Machine Name"  name="machine_name" required></td>
+                      <td>
+                        <select class="form-control form-control-sm test_name" name="test_name" required>
+                          <option value="">Select Here</option>
+                          <option value="HBA1C">HBA1C</option>
+                          <option value="FBS">FBS</option>
+                          <option value="RBS">RBS</option>
+                          <option value="Cholesterol">Cholesterol</option>
+                          <option value="Triglycerides">Triglycerides</option>
+                          <option value="HDL Cholesterol">HDL Cholesterol</option>
+                          <option value="LDL Cholesterol">LDL Cholesterol</option>
+                          <option value="BUA">BUA</option>
+                          <option value="BUN">BUN</option>
+                          <option value="Creatinine">Creatinine</option>
+                          <option value="ALT/SGPT">ALT/SGPT</option>
+                          <option value="AST/SGOT">AST/SGOT</option>
+                          <option value="Potassium">Potassium</option>
+                          <option value="Total Calcium">Total Calcium</option>
+                          <option value="Ionized Calcium">Ionized Calcium</option>
+                          <option value="Magnesium">Magnesium</option>
+                          <option value="Phosporus">Phosporus</option>
+                          <option value="Total Protein">Total Protein</option>
+                          <option value="Albumin">Albumin</option>
+                          <option value="Globulin">Globulin</option>
+                          <option value="A/G Ratio">A/G Ratio</option>
+                          <option value="ALKP">ALKP</option>
+                          <option value="Amylase">Amylase</option>
+                          <option value="Lipase">Lipase</option>
+                          <!-- <option value="GGT">GGT</option> -->
+                          <option value="LDH">LDH</option>
+                          <option value="Ferritin">Ferritin</option>
+                          <option value="Total Bilirubin">Total Bilirubin</option>
+                          <option value="Direct Bilirubin">Direct Bilirubin</option>
+                          <option value="Indirect Bilirubin">Indirect Bilirubin</option>
+                          <option value="HBA1C">HBA1C</option>
+                          <option value="Sodium">Sodium</option>
+                          <option value="Chloride">Chloride</option>
+                      </select>
+                      </td>
+                      <td><input type="text" class="form-control normal_values" placeholder="Normal Values"  name="normal_values" required></td></td>
+                    </tr>
+                  </tbody>
+              </table>
+              <div class="row">
+                <div class="col-10">
+                  <button class="btn btn-success w-100" type="submit" form="machine_frm">Submit</button>
+                </div>
+                <div class="col-2">
+                  <button class="btn btn-danger w-100 machine_reset" type="button" form="#">Reset</button>
+                </div>
+              </div>
+             
+             
+          </form>
+          <input type="text" class="form-control w-100 mt-2 search_values" placeholder="Search Here...." >
+          <table class="table-bordered w-100 table-striped table-hover">
+            <thead class="bg-dark text-white">
+              <th class="text-center">MACHINE </th>
+              <th class="text-center">TEST</th>
+              <th class="text-center">NORMAL VALUES</th>
+          </thead>
+          <tbody id="tbl_machine">
+          </tbody>
+          </table>
+
+
+      </div>
+      <div class="modal-footer">
+        <div class="btn btn-group">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
 <!-- //////////////////// CHEM FORM-->
 <div class="modal fade" id="chemistry" data-bs-backdrop="static"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -54,11 +153,11 @@
                     <input type="text"  hidden class="form-control chem_lastmeal" name="chem_lastmeal">
                     <input type="text"  hidden class="form-control chem_ext_time" name="chem_ext_time">
 
-                    <input type="text" hidden  class="form-control chem_action" name="chem_action">
-                    <input type="text"  hidden class="form-control chem_orderid" name="chem_orderid">
+                    <input type="text"   class="form-control chem_action" name="chem_action">
+                    <input type="text"   class="form-control chem_orderid" name="chem_orderid">
                     <!-- <input type="text" class="form-control chem_proccode" name="chem_proccode"> -->
                     <input type="text"  hidden  class="form-control chem_prikey" name="chem_prikey">
-                    <input type="text"  hidden class="form-control chem_encc" name="chem_encc">
+                    <input type="text"   class="form-control chem_encc" name="chem_encc">
                     <input hidden class="form-control form-control-sm chem_hpercode" name="chem_hpercode">
   
                   </div>
@@ -152,3 +251,6 @@
     </div>
   </div>
   <!-- /////////////// -->
+
+
+  

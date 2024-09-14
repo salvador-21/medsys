@@ -304,7 +304,7 @@ def result_hematology(request):
     logo = ImageReader(static_root + '/integrated/img/brghgmclogo.png')
     logo1 = ImageReader(static_root + '/integrated/img/dohlogo.png')
     padaba = ImageReader(static_root + '/integrated/img/pagpadaba.png')
-    # bg = ImageReader(static_root + '/integrated/img/lab-bg.png')
+    bg = ImageReader(static_root + '/integrated/img/lab-bg.png')
    
     response = HttpResponse(content_type='application/pdf')
     buffer = io.BytesIO()

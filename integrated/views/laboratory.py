@@ -49,7 +49,7 @@ from django.utils.timezone import localdate
 
 
 static_root = "http://173.10.7.2/medsys-static-files"
-#root = "http://173.10.2.108:9092/"
+# root = "http://173.10.2.108:9092/"
 root = "http://172.22.10.11:9091/"
 
 
@@ -113,6 +113,35 @@ getsero_result=root+"api/laboratory/getSerologyResult"
 su_microbio=root+"api/laboratory/bactiResult"
 getbacti_result=root+"api/laboratory/getBactiResult"
 
+
+#MACHINE_CHEM
+
+machineAll=root+"api/laboratory/getAllMachineChem"
+#machine_name,test_name,normal_values
+su_machine=root+"api/laboratory/machineChem"
+
+
+
+
+############################## CHEM MACHINE
+@csrf_exempt
+def getAllMachine(request):
+    machine=requests.post(machineAll).json()
+    data=machine
+    return JsonResponse({'data':data})
+
+@csrf_exempt
+def addMachine(request):
+    machine_id=request.POST.get('machine_id')
+    machine_name=request.POST.get('machine_name')
+    test_name=request.POST.get('test_name')
+    normal_values=request.POST.get('normal_values')
+    if machine_id is None:
+        addmachine=requests.post(su_machine,data={'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values}).json()
+    else:
+        addmachine=requests.post(su_machine,data={'machine_id':machine_id,'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values}).json()
+    data=addmachine['status']
+    return JsonResponse({'data':data})
 ############################## UPDATE CONTROL NUMBER
 
 @csrf_exempt
@@ -1157,7 +1186,7 @@ def lab_opd(request):
 def lab_request_print(request,encc,orderid,ward):
     doctOrder = requests.post(doctorsOrderPatient).json()
     labrequest=doctOrder['data']
-
+    test_data=[]
     get_examination = requests.post(get_lab_request, data={'enccode': encc,'order_id':orderid}).json()
     tests=get_examination['laboratory']
     ptx=get_examination['details']
@@ -1165,12 +1194,14 @@ def lab_request_print(request,encc,orderid,ward):
 
     for c in tests:
         ctr=c['control_no']
+        if c['status'] != 'CANCELLED':
+            test_data.append(c)
     doctor=''
     for d in labrequest:
         if d['control_no'] == ctr:
            doctor=d['physician']
    
-    return render(request, 'integrated/laboratory/print/lab_request.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'test':tests,'ward':ward,'ptx':ptx,'ctr':ctr,'doctor':doctor})
+    return render(request, 'integrated/laboratory/print/lab_request.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'test':test_data,'ward':ward,'ptx':ptx,'ctr':ctr,'doctor':doctor})
 
 
 
@@ -1313,7 +1344,43 @@ def save_chem_result(request):
     encc=request.POST.get('chem_encc')
     hpercode=request.POST.get('chem_hpercode')
     action =request.POST.get('chem_action')
-  
+    
+    hba1c=str(request.POST.get('hba1c'))+','+str(request.POST.get('hba1c_nv'))
+    fbs=str(request.POST.get('fbs'))+','+str(request.POST.get('fbs_nv'))
+    rbs=str(request.POST.get('rbs'))+','+str(request.POST.get('rbs_nv'))
+    cholesterol=str(request.POST.get('cholesterol'))+','+str(request.POST.get('cholesterol_nv'))
+    triglycerides=str(request.POST.get('triglyceride'))+','+str(request.POST.get('triglyceride_nv'))
+    hdl_cholesterol=str(request.POST.get('hdl_col'))+','+str(request.POST.get('hdl_col_nv'))
+    ldl_cholesterol=str(request.POST.get('ldl_col'))+','+str(request.POST.get('ldl_col_nv'))
+    bua=str(request.POST.get('bua'))+','+str(request.POST.get('bua_nv'))
+    bun=str(request.POST.get('bun'))+','+str(request.POST.get('bun_nv'))
+    creatinine=str(request.POST.get('crea'))+','+str(request.POST.get('crea_nv'))
+    alt_sgpt=str(request.POST.get('alt'))+','+str(request.POST.get('alt_nv'))
+    ast_sgot=str(request.POST.get('ast'))+','+str(request.POST.get('ast_nv'))
+    potassium=str(request.POST.get('potassium'))+','+str(request.POST.get('potassium_nv'))
+    sodium=str(request.POST.get('sodium'))+','+str(request.POST.get('sodium_nv'))
+    chloride=str(request.POST.get('chloride'))+','+str(request.POST.get('chloride_nv'))
+    total_calcium=str(request.POST.get('tca'))+','+str(request.POST.get('tca_nv'))
+    ionized_calcium=str(request.POST.get('ica'))+','+str(request.POST.get('ica_nv'))
+    magnesium=str(request.POST.get('magnesium'))+','+str(request.POST.get('magnesium_nv'))
+    phosphorus=str(request.POST.get('phosphorus'))+','+str(request.POST.get('phosphorus_nv'))
+    total_protein=str(request.POST.get('tprotein'))+','+str(request.POST.get('tprotein_nv'))
+    albumin=str(request.POST.get('albumin'))+','+str(request.POST.get('albumin_nv'))
+    globulin=str(request.POST.get('globulin'))+','+str(request.POST.get('globulin_nv'))
+    ag_ratio=str(request.POST.get('ag_ratio'))+','+str(request.POST.get('ag_ratio_nv'))
+    alkaline_phospatase=str(request.POST.get('alkp'))+','+str(request.POST.get('alkp_nv'))
+    amylase=str(request.POST.get('amylase'))+','+str(request.POST.get('amylase_nv'))
+    lipase=str(request.POST.get('lipase'))+','+str(request.POST.get('lipase_nv'))
+    ldh=str(request.POST.get('ldh'))+','+str(request.POST.get('ldh_nv'))
+    total_bilirubin=str(request.POST.get('tbilirubin'))+','+str(request.POST.get('tbilirubin_nv'))
+    direct_bilirubin=str(request.POST.get('dbilirubin'))+','+str(request.POST.get('dbilirubin_nv'))
+    indirect_bilirubin=str(request.POST.get('ibilirubin'))+','+str(request.POST.get('ibilirubin_nv'))
+
+    
+    # hba1c_res=hba1c.split("/")
+    # print(hba1c_res[0])
+    # print(hba1c_res[1])
+
     if action == 'INSERT':
         try:
             chem_res=requests.post(save_chem, data={
@@ -1323,36 +1390,36 @@ def save_chem_result(request):
                 'date':datetime.datetime.now(),
                 'last_meal':request.POST.get('chem_lastmeal'),
                 'extraction_time':request.POST.get('chem_ext_time'),
-                'hba1c':request.POST.get('hba1c'),
-                'glucose_fbs':request.POST.get('fbs'),
-                'glucose_rbs':request.POST.get('rbs'),
-                'cholesterol':request.POST.get('cholesterol'),
-                'triglycerides':request.POST.get('triglyceride'),
-                'hdl_cholesterol':request.POST.get('hdl_col'),
-                'ldl_cholesterol':request.POST.get('ldl_col'),
-                'blood_uric':request.POST.get('bua'),
-                'blood_urea':request.POST.get('bun'),
-                'creatinine':request.POST.get('crea'),
-                'alt_sgpt':request.POST.get('alt'),
-                'ast_sgot':request.POST.get('ast'),
-                'potassium':request.POST.get('potassium'),
-                'sodium':request.POST.get('sodium'),
-                'chloride':request.POST.get('chloride'),
-                'total_calcium':request.POST.get('tca'),
-                'ionized_calcium':request.POST.get('ica'),
-                'magnesium':request.POST.get('magnesium'),
-                'phosphorus':request.POST.get('phosphorus'),
-                'total_protein':request.POST.get('tprotein'),
-                'albumin':request.POST.get('albumin'),
-                'globulin':request.POST.get('globulin'),
-                'ag_ration':request.POST.get('ag_ratio'),
-                'alkaline_phospatase':request.POST.get('alkp'),
-                'amylase':request.POST.get('amylase'),
-                'lipase':request.POST.get('lipase'),
-                'ldh':request.POST.get('ldh'),
-                'total_bilirubin':request.POST.get('tbilirubin'),
-                'direct_bilirubin':request.POST.get('dbilirubin'),
-                'indirect_bilirubin':request.POST.get('ibilirubin'),
+                'hba1c':hba1c,
+                'glucose_fbs':fbs,
+                'glucose_rbs':rbs,
+                'cholesterol':cholesterol,
+                'triglycerides':triglycerides,
+                'hdl_cholesterol':hdl_cholesterol,
+                'ldl_cholesterol':ldl_cholesterol,
+                'blood_uric':bua,
+                'blood_urea':bun,
+                'creatinine':creatinine,
+                'alt_sgpt':alt_sgpt,
+                'ast_sgot':ast_sgot,
+                'potassium':potassium,
+                'sodium':sodium,
+                'chloride':chloride,
+                'total_calcium':total_calcium,
+                'ionized_calcium':ionized_calcium,
+                'magnesium':magnesium,
+                'phosphorus':phosphorus,
+                'total_protein':total_protein,
+                'albumin':albumin,
+                'globulin':globulin,
+                'ag_ration':ag_ratio,
+                'alkaline_phospatase':alkaline_phospatase,
+                'amylase':amylase,
+                'lipase':lipase,
+                'ldh':ldh,
+                'total_bilirubin':total_bilirubin,
+                'direct_bilirubin':direct_bilirubin,
+                'indirect_bilirubin':indirect_bilirubin,
                 'perform_by':request.session['employee_id']
             }).json()
 
@@ -1383,36 +1450,37 @@ def save_chem_result(request):
                 'date':datetime.datetime.now(),
                 'last_meal':request.POST.get('chem_lastmeal'),
                 'extraction_time':request.POST.get('chem_ext_time'),
-                'hba1c':request.POST.get('hba1c'),
-                'glucose_fbs':request.POST.get('fbs'),
-                'glucose_rbs':request.POST.get('rbs'),
-                'cholesterol':request.POST.get('cholesterol'),
-                'triglycerides':request.POST.get('triglyceride'),
-                'hdl_cholesterol':request.POST.get('hdl_col'),
-                'ldl_cholesterol':request.POST.get('ldl_col'),
-                'blood_uric':request.POST.get('bua'),
-                'blood_urea':request.POST.get('bun'),
-                'creatinine':request.POST.get('crea'),
-                'alt_sgpt':request.POST.get('alt'),
-                'ast_sgot':request.POST.get('ast'),
-                'potassium':request.POST.get('potassium'),
-                'sodium':request.POST.get('sodium'),
-                'chloride':request.POST.get('chloride'),
-                'total_calcium':request.POST.get('tca'),
-                'ionized_calcium':request.POST.get('ica'),
-                'magnesium':request.POST.get('magnesium'),
-                'phosphorus':request.POST.get('phosphorus'),
-                'total_protein':request.POST.get('tprotein'),
-                'albumin':request.POST.get('albumin'),
-                'globulin':request.POST.get('globulin'),
-                'ag_ration':request.POST.get('ag_ratio'),
-                'alkaline_phospatase':request.POST.get('alkp'),
-                'amylase':request.POST.get('amylase'),
-                'lipase':request.POST.get('lipase'),
-                'ldh':request.POST.get('ldh'),
-                'total_bilirubin':request.POST.get('tbilirubin'),
-                'direct_bilirubin':request.POST.get('dbilirubin'),
-                'indirect_bilirubin':request.POST.get('ibilirubin'),
+
+                'hba1c':hba1c,
+                'glucose_fbs':fbs,
+                'glucose_rbs':rbs,
+                'cholesterol':cholesterol,
+                'triglycerides':triglycerides,
+                'hdl_cholesterol':hdl_cholesterol,
+                'ldl_cholesterol':ldl_cholesterol,
+                'blood_uric':bua,
+                'blood_urea':bun,
+                'creatinine':creatinine,
+                'alt_sgpt':alt_sgpt,
+                'ast_sgot':ast_sgot,
+                'potassium':potassium,
+                'sodium':sodium,
+                'chloride':chloride,
+                'total_calcium':total_calcium,
+                'ionized_calcium':ionized_calcium,
+                'magnesium':magnesium,
+                'phosphorus':phosphorus,
+                'total_protein':total_protein,
+                'albumin':albumin,
+                'globulin':globulin,
+                'ag_ration':ag_ratio,
+                'alkaline_phospatase':alkaline_phospatase,
+                'amylase':amylase,
+                'lipase':lipase,
+                'ldh':ldh,
+                'total_bilirubin':total_bilirubin,
+                'direct_bilirubin':direct_bilirubin,
+                'indirect_bilirubin':indirect_bilirubin,
                 # 'perfom_by':int('617116'),
                 'verified_by':request.session['employee_id']
                 # 617116
@@ -2461,15 +2529,328 @@ def labres_chem(request,toecode,orderid,encc):
         for c in chemres:
             c['date_verified'] = datetime.datetime.strptime(c['date_verified'],"%Y-%m-%dT%H:%M:%S.%fZ")
             c['date_verified']=datetime.datetime.strftime(c['date_verified'], '%b %d, %y (%I:%M %p)')
+           
+
+
+            if c['hba1c'] == ',':
+                hba1c='----------------'
+                hba1c_nv='--------------'
+            else:
+                hba1c_s=c['hba1c'].split(',')
+                hba1c=hba1c_s[0]
+                hba1c_nv=str(hba1c_s[1]+' - '+hba1c_s[2])
+
+            if c['glucose_fbs'] == ',':
+                glucose_fbs='----------------'
+                glucose_fbs_nv='--------------'
+            else:
+                glucose_fbs_s=c['glucose_fbs'].split(',')
+                glucose_fbs=glucose_fbs_s[0]
+                glucose_fbs_nv=str(glucose_fbs_s[1]+' - '+glucose_fbs_s[2])
+
+            if c['glucose_rbs'] == ',':
+                glucose_rbs='----------------'
+                glucose_rbs_nv='--------------'
+            else:
+                glucose_rbs_s=c['glucose_rbs'].split(',')
+                glucose_rbs=glucose_rbs_s[0]
+                glucose_rbs_nv=str(glucose_rbs_s[1]+' - '+glucose_rbs_s[2])
+
+            if c['cholesterol'] == ',':
+                cholesterol='----------------'
+                cholesterol_nv='--------------'
+            else:
+                cholesterol_s=c['cholesterol'].split(',')
+                cholesterol=cholesterol_s[0]
+                cholesterol_nv=str(cholesterol_s[1]+' - '+cholesterol_s[2])
+
+            if c['triglycerides'] == ',':
+                triglycerides='----------------'
+                triglycerides_nv='--------------'
+            else:
+                triglycerides_s=c['triglycerides'].split(',')
+                triglycerides=triglycerides_s[0]
+                triglycerides_nv=str(triglycerides_s[1]+' - '+triglycerides_s[2])
+
+            if c['hdl_cholesterol'] == ',':
+                hdl_cholesterol='----------------'
+                hdl_cholesterol_nv='--------------'
+            else:
+                hdl_cholesterol_s=c['hdl_cholesterol'].split(',')
+                hdl_cholesterol=hdl_cholesterol_s[0]
+                hdl_cholesterol_nv=str(hdl_cholesterol_s[1]+' - '+hdl_cholesterol_s[2])
+            
+            if c['ldl_cholesterol'] == ',':
+                ldl_cholesterol='----------------'
+                ldl_cholesterol_nv='--------------'
+            else:
+                ldl_cholesterol_s=c['ldl_cholesterol'].split(',')
+                ldl_cholesterol=ldl_cholesterol_s[0]
+                ldl_cholesterol_nv=str(ldl_cholesterol_s[1]+' - '+ldl_cholesterol_s[2])
+            
+            if c['blood_uric'] == ',':
+                blood_uric='----------------'
+                blood_uric_nv='--------------'
+            else:
+                blood_uric_s=c['blood_uric'].split(',')
+                blood_uric=blood_uric_s[0]
+                blood_uric_nv=str(blood_uric_s[1]+' - '+blood_uric_s[2])
+
+            if c['blood_urea'] == ',':
+                blood_urea='----------------'
+                blood_urea_nv='--------------'
+            else:
+                blood_urea_s=c['blood_urea'].split(',')
+                blood_urea=blood_urea_s[0]
+                blood_urea_nv=str(blood_urea_s[1]+' - '+blood_urea_s[2])
+
+            if c['creatinine'] == ',':
+                creatinine='----------------'
+                creatinine_nv='--------------'
+            else:
+                creatinine_s=c['creatinine'].split(',')
+                creatinine=creatinine_s[0]
+                creatinine_nv=str(creatinine_s[1]+' - '+creatinine_s[2])
+
+            if c['alt_sgpt'] == ',':
+                alt_sgpt='----------------'
+                alt_sgpt_nv='--------------'
+            else:
+                alt_sgpt_s=c['alt_sgpt'].split(',')
+                alt_sgpt=alt_sgpt_s[0]
+                alt_sgpt_nv=str(alt_sgpt_s[1]+' - '+alt_sgpt_s[2])
+
+            if c['ast_sgot'] == ',':
+                ast_sgot='----------------'
+                ast_sgot_nv='--------------'
+            else:
+                ast_sgot_s=c['alt_sgpt'].split(',')
+                ast_sgot=ast_sgot_s[0]
+                ast_sgot_nv=str(ast_sgot_s[1]+' - '+ast_sgot_s[2])
+
+            if c['potassium'] == ',':
+                potassium='----------------'
+                potassium_nv='--------------'
+            else:
+                potassium_s=c['potassium'].split(',')
+                potassium=potassium_s[0]
+                potassium_nv=str(potassium_s[1]+' - '+potassium_s[2])
+
+            if c['sodium'] == ',':
+                sodium='----------------'
+                sodium_nv='--------------'
+            else:
+                sodium_s=c['sodium'].split(',')
+                sodium=sodium_s[0]
+                sodium_nv=str(sodium_s[1]+' - '+sodium_s[2])
+
+            if c['chloride'] == ',':
+                chloride='----------------'
+                chloride_nv='--------------'
+            else:
+                chloride_s=c['chloride'].split(',')
+                chloride=chloride_s[0]
+                chloride_nv=str(chloride_s[1]+' - '+chloride_s[2])
+
+            if c['total_calcium'] == ',':
+                total_calcium='----------------'
+                total_calcium_nv='--------------'
+            else:
+                total_calcium_s=c['total_calcium'].split(',')
+                total_calcium=total_calcium_s[0]
+                total_calcium_nv=str(total_calcium_s[1]+' - '+total_calcium_s[2])
+
+            if c['ionized_calcium'] == ',':
+                ionized_calcium='----------------'
+                ionized_calcium_nv='--------------'
+            else:
+                ionized_calcium_s=c['ionized_calcium'].split(',')
+                ionized_calcium=ionized_calcium_s[0]
+                ionized_calcium_nv=str(ionized_calcium_s[1]+' - '+ionized_calcium_s[2])
+
+            if c['magnesium'] == ',':
+                magnesium='----------------'
+                magnesium_nv='--------------'
+            else:
+                magnesium_s=c['magnesium'].split(',')
+                magnesium=magnesium_s[0]
+                magnesium_nv=str(magnesium_s[1]+' - '+magnesium_s[2])
+
+            if c['phosphorus'] == ',':
+                phosphorus='----------------'
+                phosphorus_nv='--------------'
+            else:
+                phosphorus_s=c['phosphorus'].split(',')
+                phosphorus=phosphorus_s[0]
+                phosphorus_nv=str(phosphorus_s[1]+' - '+phosphorus_s[2])
+
+            if c['total_protein'] == ',':
+                total_protein='----------------'
+                total_protein_nv='--------------'
+            else:
+                total_protein_s=c['total_protein'].split(',')
+                total_protein=total_protein_s[0]
+                total_protein_nv=str(total_protein_s[1]+' - '+total_protein_s[2])
+
+            if c['albumin'] == ',':
+                albumin='----------------'
+                albumin_nv='--------------'
+            else:
+                albumin_s=c['albumin'].split(',')
+                albumin=albumin_s[0]
+                albumin_nv=str(albumin_s[1]+' - '+albumin_s[2])
+
+            if c['globulin'] == ',':
+                globulin='----------------'
+                globulin_nv='--------------'
+            else:
+                globulin_s=c['globulin'].split(',')
+                globulin=globulin_s[0]
+                globulin_nv=str(globulin_s[1]+' - '+globulin_s[2])
+
+            if c['ag_ration'] == ',':
+                ag_ration='----------------'
+                ag_ration_nv='--------------'
+            else:
+                ag_ration_s=c['ag_ration'].split(',')
+                globulin=ag_ration_s[0]
+                ag_ration_nv=str(ag_ration_s[1]+' - '+ag_ration_s[2])
+
+            if c['alkaline_phospatase'] == ',':
+                alkaline_phospatase='----------------'
+                alkaline_phospatase_nv='--------------'
+            else:
+                alkaline_phospatase_s=c['alkaline_phospatase'].split(',')
+                alkaline_phospatase=alkaline_phospatase_s[0]
+                alkaline_phospatase_nv=str(alkaline_phospatase_s[1]+' - '+alkaline_phospatase_s[2])
+
+            if c['amylase'] == ',':
+                amylase='----------------'
+                amylase_nv='--------------'
+            else:
+                amylase_s=c['amylase'].split(',')
+                amylase=amylase_s[0]
+                amylase_nv=str(amylase_s[1]+' - '+amylase_s[2])
+
+            if c['lipase'] == ',':
+                lipase='----------------'
+                lipase_nv='--------------'
+            else:
+                lipase_s=c['lipase'].split(',')
+                lipase=lipase_s[0]
+                lipase_nv=str(lipase_s[1]+' - '+lipase_s[2])
+
+            if c['ldh'] == ',':
+                ldh='----------------'
+                ldh_nv='--------------'
+            else:
+                ldh_s=c['ldh'].split(',')
+                ldh=ldh_s[0]
+                ldh_nv=str(ldh_s[1]+' - '+ldh_s[2])
+
+            if c['total_bilirubin'] == ',':
+                total_bilirubin='----------------'
+                total_bilirubin_nv='--------------'
+            else:
+                total_bilirubin_s=c['total_bilirubin'].split(',')
+                total_bilirubin=total_bilirubin_s[0]
+                total_bilirubin_nv=str(total_bilirubin_s[1]+' - '+total_bilirubin_s[2])
+
+            if c['direct_bilirubin'] == ',':
+                direct_bilirubin='----------------'
+                direct_bilirubin_nv='--------------'
+            else:
+                direct_bilirubin_s=c['direct_bilirubin'].split(',')
+                direct_bilirubin=direct_bilirubin_s[0]
+                direct_bilirubin_nv=str(direct_bilirubin_s[1]+' - '+direct_bilirubin_s[2])
+
+            if c['indirect_bilirubin'] == ',':
+                indirect_bilirubin='----------------'
+                indirect_bilirubin_nv='--------------'
+            else:
+                indirect_bilirubin_s=c['indirect_bilirubin'].split(',')
+                indirect_bilirubin=indirect_bilirubin_s[0]
+                indirect_bilirubin_nv=str(indirect_bilirubin_s[1]+' - '+indirect_bilirubin_s[2])
+
+            
+            ################################
+
+            data={
+                'hba1c':hba1c,
+                'hba1c_nv':hba1c_nv,
+                'glucose_fbs':glucose_fbs,
+                'glucose_fbs_nv':glucose_fbs_nv,
+                'glucose_rbs':glucose_rbs,
+                'glucose_rbs_nv':glucose_rbs_nv,
+                'cholesterol':cholesterol,
+                'cholesterol_nv':cholesterol_nv,
+                'triglycerides':triglycerides,
+                'triglycerides_nv':triglycerides_nv,
+                'hdl_cholesterol':hdl_cholesterol,
+                'hdl_cholesterol_nv':hdl_cholesterol_nv,
+                'ldl_cholesterol':ldl_cholesterol,
+                'ldl_cholesterol_nv':ldl_cholesterol_nv,
+                'blood_uric':blood_uric,
+                'blood_uric_nv':blood_uric_nv,
+                'blood_urea':blood_urea,
+                'blood_urea_nv':blood_urea_nv,
+                'creatinine':creatinine,
+                'creatinine_nv':creatinine_nv,
+                'alt_sgpt':alt_sgpt,
+                'alt_sgpt_nv':alt_sgpt_nv,
+                'ast_sgot':ast_sgot,
+                'ast_sgot_nv':ast_sgot_nv,
+                'potassium':potassium,
+                'potassium_nv':potassium_nv,
+                'sodium':sodium,
+                'sodium_nv':sodium_nv,
+                'chloride':chloride,
+                'chloride_nv':chloride_nv,
+                'total_calcium':total_calcium,
+                'total_calcium_nv':total_calcium_nv,
+                'ionized_calcium':ionized_calcium,
+                'ionized_calcium_nv':ionized_calcium_nv,
+                'magnesium':magnesium,
+                'magnesium_nv':magnesium_nv,
+                'phosphorus':phosphorus,
+                'phosphorus_nv':phosphorus_nv,
+                'total_protein':total_protein,
+                'total_protein_nv':total_protein_nv,
+                'albumin':albumin,
+                'albumin_nv':albumin_nv,
+                'globulin':globulin,
+                'globulin_nv':globulin_nv,
+                'ag_ration':ag_ration,
+                'ag_ration_nv':ag_ration_nv,
+                'alkaline_phospatase':alkaline_phospatase,
+                'alkaline_phospatase_nv':alkaline_phospatase_nv,
+                'amylase':amylase,
+                'amylase_nv':amylase_nv,
+                'lipase':lipase,
+                'lipase_nv':lipase_nv,
+                'ldh':ldh,
+                'ldh_nv':ldh_nv,
+                'total_bilirubin':total_bilirubin,
+                'total_bilirubin_nv':total_bilirubin_nv,
+                'direct_bilirubin':direct_bilirubin,
+                'direct_bilirubin_nv':direct_bilirubin_nv,
+                'indirect_bilirubin':indirect_bilirubin,
+                'indirect_bilirubin_nv':indirect_bilirubin_nv
+
+            }
+            
+            ###################################
         if chem_result['status'] == 'success':       
-            return render(request,'integrated/laboratory/result_form/chemistry.html',{'result':chemres,'age':age['data'],'ctr':ctr,'ward':ptx_req['toecode']})
+            return render(request,'integrated/laboratory/result_form/chemistry-result.html',{'result':chemres,'res_data':data,'age':age['data'],'ctr':ctr,'ward':ptx_req['toecode']})
         else:
             return HttpResponseRedirect("/errpage")
+            print('error')
     except Exception as e:
+        print(e)
         return HttpResponseRedirect("/errpage")
 
 def errpage(html):
-    htmldoc = HTML(string=html, base_url="integrated/laboratory/result_form/404.html")
+    htmldoc = html(string=html, base_url="integrated/laboratory/result_form/404.html")
     return htmldoc.write_pdf()
 
 def labres_hema(request):
@@ -3120,6 +3501,8 @@ def chem_completed(request):
     encc=request.POST.get('encc')
     ord=request.POST.get('orderid')
     modality=request.POST.get('modality')
+    normal_val=requests.post(machineAll).json()
+    data=[]
     try:
         getchemresult=requests.post(get_chem_result,data={'order_id':ord,'enccode':encc}).json()
         chem_res=getchemresult['data']
@@ -3129,16 +3512,18 @@ def chem_completed(request):
     
     try:
         get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':ord}).json()
-        data=[]
         for g in get_test['laboratory']:
-            if g['modality'] == modality and g['status'] !='CANCELLED':
+            if g['modality'] == 'CHEMI' and g['status'] !='CANCELLED':
                 key=g['prikey']
-                data.append(g['proccode'])     
-            else:
-                data=''
+                data.append(g['proccode']) 
+                # print(g['proccode'])    
+                # print(g)  
+            
     except Exception as e:
-        data=e
-    return JsonResponse({'data':data,'chemresult':chem_res})
+        print(e)
+        data=[]
+    return JsonResponse({'data':data,'chemresult':chem_res,'n_values':normal_val['data']})
+  
 
 @csrf_exempt
 def chem_onprocess(request):
@@ -3147,9 +3532,11 @@ def chem_onprocess(request):
     modality=request.POST.get('modality')
     pdata=[]
     td=[]
-    # print(encc)
-    # print(ord)
-    # print(modality)
+
+    normal_val=requests.post(machineAll).json()
+
+    # print(normal_val['data'])
+
     try:
         get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':ord}).json()
         
@@ -3159,13 +3546,11 @@ def chem_onprocess(request):
                 # td.append(g['procdesc'])
                 pdata.append(g['proccode'])   
                 # print(pdata)  
-            else:
-                data=[]
     
     except Exception as e:
         data=[]
         print(e)
-    return JsonResponse({'data':pdata,'td':td})
+    return JsonResponse({'data':pdata,'td':td,'n_values':normal_val['data']})
  
 
 @csrf_exempt

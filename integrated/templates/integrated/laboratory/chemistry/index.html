@@ -24,6 +24,7 @@
                 <div class="btn btn-group">
                   <a href="{% url 'laboratory'%}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
                   <a href="#" class="btn btn-secondary text-white chemi_link" id="RELEASED" type="button"><span class="badge bg-secondary fs-6">0</span> Released</a>
+                  <a href="#" class="btn btn-danger text-white add_machine"  type="button"><i class="fa-solid fa-plus"></i> Machine</a>
               </div>
             </div>
             <div class="row">
@@ -142,12 +143,6 @@
     
     <!-- {{p_microscopy}} -->
     <!-- ////////////////////// -->
-  
-
-        
-        <!-- {{req.patfirst}} -->
-        
-        <!-- /.container-fluid -->
 
       </div>
       <!-- End of Main Content -->
@@ -171,7 +166,6 @@
   {% include 'integrated/common/logout_modal.html' %}
   {% include 'integrated/common/scripts.html' %}
   
-  <!-- {% include 'integrated/laboratory/scripts/labscript.html' %} -->
   <script src="{% static 'integrated/laboratory/js/chemistry.js' %}"></script>
  <script>
   

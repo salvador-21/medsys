@@ -101,6 +101,10 @@ urlpatterns = [
     path('cbcup_save',laboratory.cbcup_save,name='cbcup_save'),
 
     ################# CHEMISTRY
+
+    path('getAllMachine',laboratory.getAllMachine,name='getAllMachine'),
+    path('addMachine',laboratory.addMachine,name='addMachine'),
+
     path('load_chemi',laboratory.load_chemi,name='load_chemi'),
     path('load_lastmeal',laboratory.load_lastmeal,name='load_lastmeal'),
     path('chem_sentToProcess',laboratory.chem_sentToProcess,name='chem_sentToProcess'),

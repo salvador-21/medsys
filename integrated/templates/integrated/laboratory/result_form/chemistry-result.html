@@ -1,4 +1,4 @@
-<DOCTYPE html>
+<DOCTYPE html></DOCTYPE>
     {% load static %}
     <head>
         <title>CHEMISTRY</title>
@@ -151,458 +151,281 @@
                        
                 
                     </table>
-                    
+                    <!-- {{res_data}} -->
                     <table class="w-100 result_data mb-2 table table-striped">
                         <tr class="bg-dark text-white">
                             <td class="col-3 fw-bolder" align="center" >TESTS</td>
                             <td class="col-3 fw-bolder" align="center">RESULTS</td>
-                            <td class="col-3 fw-bolder" align="center" >UNIT</td>
-                            <td class="col-3 fw-bolder" align="center">NORMAL VALUES</td>
+                            <td class="col-6 fw-bolder" align="center">NORMAL VALUES</td>
                         </tr>
                         <tr >
                             <td class="col-3 fw-bolder" align="center" >HBA1C</td>
                             <td class="col-3 fw-bolder" style="font-size: 16px;" align="center"><span class="hba1c">
-                                {% if c.hba1c == ''%}
-                               ---
-                                {%else%}
-                                {{c.hba1c}}
-
-                                {%endif%}
+                                {{ res_data.hba1c}}
                             </span></td>
-                            <td class="col-3 " align="center" >%</td>
-                            <td class="col-3" align="center" >4.5 - 6.0%</td>
+                            <td class="col-3" align="center" >
+                                {{ res_data.hba1c_nv}}
+                            </td>
                         </tr>
+                    
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Glucose FBS</td>
                             <td class="col-3 fw-bolder" align="center"><span class="fbs">
-                                {% if c.glucose_fbs == ''%}
-                                ---
-                                {%else%}
-                                {{c.glucose_fbs}}
-
-                                {%endif%}
+                                {{ res_data.glucose_fbs}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
                             <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                M 5.50-6.10 mmol/L
-                                {% elif c.patsex == 'F' %}
-                                F 4.10-5.90 mmol/L
-                                {%endif%}
+                                {{ res_data.glucose_fbs_nv}}
                             </td>
                         </tr>
                         <tr class="">
                             <td class="col-3 fw-bolder" align="center" >Glucose RBS</td>
                             <td class="col-3 fw-bolder" align="center"><span class="rbs">
-                                {% if c.glucose_rbs == ''%}
-                                ---
-                                {%else%}
-                                {{c.glucose_rbs}}
-                                {%endif%}
+                                {{ res_data.glucose_rbs}}
                             </span></td>
-                            <td class="col-3 " align="center" >mg/dl</td>
-                            <td class="col-3" align="center" >70 - 105 mg/dl</td>
+                            <td class="col-3" align="center" > {{ res_data.glucose_rbs_nv}}</td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Cholesterol</td>
                             <td class="col-3 fw-bolder" align="center"><span class="cholesterol">
-                                {% if c.cholesterol == ''%}
-                                ---
-                                {%else%}
-                                {{c.cholesterol}}
-
-                                {%endif%}
+                                {{res_data.cholesterol}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >0.00 - 5.17 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.cholesterol_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Triglycerides</td>
                             <td class="col-3 fw-bolder" align="center"><span class="triglyceride">
-                                {% if c.triglycerides == '' %}
-                                ---
-                                {%else%}
-                                {{c.triglycerides}}
-
-                                {%endif%}
+                                 {{res_data.triglycerides}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >0.00 - 1.71 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.triglycerides}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >HDL Cholesterol</td>
                             <td class="col-3 fw-bolder" align="center"><span class="hdl">
-                                {% if c.hdl_cholesterol == '' %}
-                                ---
-                                {%else%}
-                                {{c.hdl_cholesterol}}
-
-                                {%endif%}
+                                {{res_data.hdl_cholesterol}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
                             <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                MALE 0.77-1.83 mmol/L
-                                {% elif c.patsex == 'F' %}
-                                FEMALE 0.77-2.19
-                                {%endif%}
+                              {{res_data.hdl_cholesterol_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >LDL Cholesterol</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ldl">
-                                {% if c.ldl_cholesterol == '' %}
-                                ---
-                                {%else%}
-                                {{c.ldl_cholesterol}}
-
-                                {%endif%}
+                                {{res_data.ldl_cholesterol}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >0.00 - 3.36 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.ldl_cholesterol_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Blood Uric Acid</td>
                             <td class="col-3 fw-bolder" align="center"><span class="bua">
-                                {% if c.blood_uric == '' %}
-                                ---
-                                {%else%}
-                                {{c.blood_uric}}
-
-                                {%endif%}
+                                {{res_data.blood_uric}}
                             </span></td>
-                            <td class="col-3 " align="center" >umol/L</td>
                             <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                MALE 208-408 umol/L
-                                {% elif c.patsex == 'F' %}
-                                FEMALE 142-339 umol/L
-                                {%endif%}
+                                {{res_data.blood_uric_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Blood Urea Nitrogen</td>
                             <td class="col-3 fw-bolder" align="center"><span class="bun">
-                                {% if c.blood_urea == '' %}
-                                ---
-                                {%else%}
-                                {{c.blood_urea}}
-
-                                {%endif%}
+                                {{res_data.blood_urea}}
                             </span></td>
-                            <td class="col-3 " align="center" >umol/L</td>
-                            <td class="col-3" align="center" >2.81-7.19 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.blood_urea_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Creatinine</td>
                             <td class="col-3 fw-bolder" align="center"><span class="crea">
-                                {% if c.creatinine == '' %}
-                                ---
-                                {%else%}
-                                {{c.creatinine}}
-
-                                {%endif%}
+                               {{res_data.creatinine}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
                             <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                MALE 55.0-96.0 mmol/L
-                                {% elif c.patsex == 'F' %}
-                                FEMALE 40.0-66.0 mmol/L
-                                {%endif%}
+                               {{res_data.creatinine_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >ALT/SGPT</td>
                             <td class="col-3 fw-bolder" align="center"><span class="alt">
-                                {% if c.alt_sgpt == '' %}
-                                ---
-                                {%else%}
-                                {{c.alt_sgpt}}
-
-                                {%endif%}
+                               {{res_data.alt_sgpt}}
                             </span></td>
-                            <td class="col-3 " align="center" >U/L</td>
                             <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                MALE 0.00-45.00 U/L
-                                {% elif c.patsex == 'F' %}
-                                FENALE 0.00-34.00 U/L
-                                {%endif%}
+                                {{res_data.alt_sgpt_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >AST/SGOT</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ast">
-                                {% if c.ast_sgot == '' %}
-                                ---
-                                {%else%}
-                                {{c.ast_sgot}}
-
-                                {%endif%}
+                                {{res_data.ast_sgot}}
                             </span></td>
-                            <td class="col-3 " align="center" >U/L</td>
                             <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                MALE 0.00-35.00 U/L
-                                {% elif c.patsex == 'F' %}
-                                FEMALE 0.00-31.00 U/L
-                                {%endif%}
+                                {{res_data.ast_sgot_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Potassium(K)</td>
                             <td class="col-3 fw-bolder" align="center"><span class="potassium">
-                                {% if c.potassium == '' %}
-                                ---
-                                {%else%}
-                                {{c.potassium}}
-
-                                {%endif%}
+                                {{res_data.potassium}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >3.50-5.10 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.potassium_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Sodium(Na)</td>
                             <td class="col-3 fw-bolder" align="center"><span class="sodium">
-                                {% if c.sodium == '' %}
-                                ---
-                                {%else%}
-                                {{c.sodium}}
-
-                                {%endif%}
+                             {{res_data.sodium}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >135.0-150.0 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.sodium_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Chloride(Cl)</td>
                             <td class="col-3 fw-bolder" align="center"><span class="chloride">
-                                {% if c.chloride == '' %}
-                                ---
-                                {%else%}
-                                {{c.chloride}}
-
-                                {%endif%}
+                                {{res_data.chloride}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >97.0-108.0 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.chloride_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Total Calcium(Tca)</td>
                             <td class="col-3 fw-bolder" align="center"><span class="tca">
-                                {% if c.total_calcium == '' %}
-                                ---
-                                {%else%}
-                                {{c.total_calcium}}
-
-                                {%endif%}
+                                {{res_data.total_calcium}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >2.15-2.57 mmol/L</td>
+                            <td class="col-3" align="center" >
+                                {{res_data.total_calcium_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Ionized Calcium(iCa)</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ica">
-                                {% if c.ionized_calcium == '' %}
-                                ---
-                                {%else%}
-                                {{c.ionized_calcium}}
-
-                                {%endif%}
+                               {{res_data.ionized_calcium}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >1.15-1.35 mmol/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.ionized_calcium_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Magnesium(Mg)</td>
                             <td class="col-3 fw-bolder" align="center"><span class="magnesium">
-                                {% if c.magnesium == '' %}
-                                ---
-                                {%else%}
-                                {{c.magnesium}}
-
-                                {%endif%}
+                                {{res_data.magnesium}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                5.50 - 6.10 mmol/L
-                                {% elif c.patsex == 'F' %}
-                                4.10 - 5.90 mmol/L
-                                {%endif%}
+                            <td class="col-3 " align="center" >
+                                {{res_data.magnesium_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Phosporus</td>
                             <td class="col-3 fw-bolder" align="center"><span class="phosphorus">
-                                {% if c.phosphorus == '' %}
-                                ---
-                                {%else%}
-                                {{c.phosphorus}}
-
-                                {%endif%}
+                                {{res_data.phosphorus}}
                             </span></td>
-                            <td class="col-3 " align="center" >mmol/L</td>
-                            <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                MALE 0.73-1.06 mmol/L
-                                {% elif c.patsex == 'F' %}
-                                FEMALE 0.73-1.03 mmol/L
-                                {%endif%}
+                            <td class="col-3 " align="center" >
+                                {{res_data.phosphorus_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Total Protein</td>
                             <td class="col-3 fw-bolder" align="center"><span class="tprotein">
-                                {% if c.total_protein == '' %}
-                                ---
-                                {%else%}
-                                {{c.total_protein}}
-
-                                {%endif%}
+                                {{res_data.total_protein}}
                             </span></td>
-                            <td class="col-3 " align="center" >g/L</td>
-                            <td class="col-3" align="center" >60.00-80.00 g/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.total_protein_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Albumin</td>
                             <td class="col-3 fw-bolder" align="center"><span class="albumin">
-                                {% if c.albumin == '' %}
-                                ---
-                                {%else%}
-                                {{c.albumin}}
-
-                                {%endif%}
+                            {{res_data.albumin}}
                             </span></td>
-                            <td class="col-3 " align="center" >g/L</td>
-                            <td class="col-3" align="center" >38.0-54.0 g/L</td>
+                            <td class="col-3 " align="center" >
+                               {{res_data.albumin_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Globulin</td>
                             <td class="col-3 fw-bolder" align="center"><span class="globulin">
-                                {% if c.globulin == '' %}
-                                ---
-                                {%else%}
-                                {{c.globulin}}
-
-                                {%endif%}
+                                {{res_data.globulin}}
                             </span></td>
-                            <td class="col-3 " align="center" >g/L</td>
-                            <td class="col-3" align="center" >31-35 g/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.globulin_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >A/G Ratio</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ag_ratio">
-                                {% if c.ag_ration == '' %}
-                                ---
-                                {% elif c.ag_ratio == 'undefined' %}
-                                ---
-                                {%else%}
-                                {{c.ag_ration}}
-
-                                {%endif%}
+                                {{res_data.ag_ration}}
                             </span></td>
-                            <td class="col-3 " align="center" >?</td>
-                            <td class="col-3" align="center" >1.1-1.5</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.ag_ration_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Alkaline Phospatase</td>
                             <td class="col-3 fw-bolder" align="center"><span class="aklp">
-                                {% if c.alkaline_phospatase == '' %}
-                                ---
-                                {%else%}
-                                {{c.alkaline_phospatase}}
-
-                                {%endif%}
+                               {{res_data.alkaline_phospatase}}
                             </span></td>
-                            <td class="col-3 " align="center" >U/L</td>
-                            <td class="col-3" align="center" >
-                                {% if c.patsex == 'M'%}
-                                MALE 53.00-128.00 U/L
-                                {% elif c.patsex == 'F' %}
-                                FEMALE 42.00-98.00 U/L
-                                {%endif%}
+                            <td class="col-3 " align="center" >
+                                {{res_data.alkaline_phospatase_nv}}
                             </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Amylase</td>
                             <td class="col-3 fw-bolder" align="center"><span class="amylase">
-                                {% if c.amylase == '' %}
-                                ---
-                                {%else%}
-                                {{c.amylase}}
-
-                                {%endif%}
+                                {{res_data.amylase}}
                             </span></td>
-                            <td class="col-3 " align="center" >U/L</td>
-                            <td class="col-3" align="center" >0-100.0 U/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.amylase_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Lipase</td>
                             <td class="col-3 fw-bolder" align="center"><span class="lipase">
-                                {% if c.lipase == '' %}
-                                ---
-                                {%else%}
-                                {{c.lipase}}
-
-                                {%endif%}
+                                {{res_data.lipase}}
                             </span></td>
-                            <td class="col-3 " align="center" >U/L</td>
-                            <td class="col-3" align="center" >13-60 U/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.lipase_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >LDH</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ldh">
-                                {% if c.ldh == '' %}
-                                ---
-                                {%else%}
-                                {{c.ldh}}
-
-                                {%endif%}
+                                {{res_data.ldh}}
                             </span></td>
-                            <td class="col-3 " align="center" >U/L</td>
-                            <td class="col-3" align="center" >0-480 U/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.ldh_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Total Bilirubin</td>
                             <td class="col-3 fw-bolder" align="center"><span class="tbili">
-                                {% if c.total_bilirubin == '' %}
-                                ---
-                                {%else%}
-                                {{c.total_bilirubin}}
-
-                                {%endif%}
+                                {{res_data.total_bilirubin}}
                             </span></td>
-                            <td class="col-3 " align="center" >umol/L</td>
-                            <td class="col-3" align="center" >0.00-21.00 umol/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.total_bilirubin_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Direct Bilirubin</td>
                             <td class="col-3 fw-bolder" align="center"><span class="dbili">
-                                {% if c.direct_bilirubin == '' %}
-                                ---
-                                {%else%}
-                                {{c.direct_bilirubin}}
-
-                                {%endif%}
+                                {{res_data.direct_bilirubin}}
                             </span></td>
-                            <td class="col-3 " align="center" >umol/L</td>
-                            <td class="col-3" align="center" >0.00-3.40 umol/L</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.direct_bilirubin_nv}}
+                            </td>
                         </tr>
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Indirect Bilirubin</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ibili">
-                                {% if c.indirect_bilirubin == '' %}
-                                ---
-                                {%else%}
-                                {{c.indirect_bilirubin}}
-
-                                {%endif%}
+                                {{res_data.indirect_bilirubin}}
                             </span></td>
-                            <td class="col-3 " align="center" >umol/L</td>
-                            <td class="col-3" align="center" >------------</td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.indirect_bilirubin_nv}}
+                            </td>
                         </tr>
                     </table>
 
@@ -683,7 +506,7 @@
             $('.lm').text(clm)
             $('.xt').text(xttt)
 
-            window.print()
+            // window.print()
            })
          
       </script>
