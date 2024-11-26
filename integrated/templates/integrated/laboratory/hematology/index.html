@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 {% load static %}
-{% include 'integrated/common/head.html' with page=page %}
+
 {% include 'integrated/common/lab_head.html' with page=page %}
+{% include 'integrated/common/head.html' with page=page %}
 
 <style>
   @keyframes shake {
@@ -172,8 +173,7 @@
 
       </div>
 
-
-    
+     
       {% include 'integrated/laboratory/lab_modals/hema_modal.html' with page=page %}
       {% include 'integrated/common/footer.html' %}
 

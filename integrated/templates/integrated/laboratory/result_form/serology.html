@@ -30,7 +30,7 @@
         /* padding: 10px; */
         /* border: 5px red solid; */
         height: 256mm;
-        background-image:url("{% static 'integrated/img/lab-bg.png'%}") ;
+        background-image:url("http://173.10.7.2/medsys-static-files/integrated/img/lab-bg.png") ;
         /* outline: 1cm #FFEAEA solid; */
         background-repeat: no-repeat; background-size: cover; background-position: center center;
     }
@@ -77,8 +77,8 @@
                  <div class="header" style="height: 100px;">
                     <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
                         <tr>
-                        <td><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
-                        <td><img src="{% static 'integrated/img/doh.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/doh.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
                         <td style="text-align: center;padding: 0px;">
                           <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
                           <span class="fw-bolder" style="font-size: 12px;">Formerly( Bicol Sanitarium )</span><br>
@@ -90,7 +90,7 @@
                     </table>
                    
                  </div>
-       
+                 <!-- {{test}} -->
                  <div class="content" style="height: 950px;padding: 0px;margin: 0px;">
                     <h4 class="text-center fw-bolder mb-4" >SEROLOGY</h4>
                     <table class="w-100 ptx_data mb-2" >
@@ -131,12 +131,12 @@
                        
                     </table>
 
-                    <table class="w-100 result_data mb-2 table table-striped">
-                        <tr class="bg-secondary text-white">
+                    <table class="w-100 result_data mb-2 table table-striped mt-4">
+                        <tr class="fw-bolder">
                             <td colspan="6" class=" fw-bolder" align="center" >RAPID TEST KITS</td>
                             
                         </tr>
-                        <tr>
+                        <tr class="bg-secondary text-white">
                             <td colspan="2" class="fw-bolder" align="center" >Tests</td>
                                 <td class="fw-bolder" align="center" >Result</td>
                                 <td class="" align="center" >Kit Used</td>
@@ -196,7 +196,7 @@
                             <td class="col-2 " align="center" >{{test.hav_igg_lot}}</td>
                             <td class="col-2 " align="center" >{{test.hav_igg_exp}}</td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="2" class="col-2 fw-bolder" align="center" >Hbs Antibody</td>
                             <td class="col-2 fw-bolder" align="center"><span class="">
                                 {% if test.hbhs == '' %}
@@ -208,7 +208,7 @@
                             <td class="col-2 " align="center">{{test.hbhs_kit}}</td>
                             <td class="col-2 " align="center" >{{test.hbhs_lot}}</td>
                             <td class="col-2 " align="center" >{{test.hbhs_exp}}</td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td colspan="2" class="col-2 fw-bolder" align="center" >Anti HCV</td>
                             <td class="col-2 fw-bolder" align="center"><span class="">
@@ -225,20 +225,26 @@
                         
                     </table>
 
-                    <table class="w-100 result_data mb-2 table table-striped">
-                        <tr class="bg-secondary text-white">
+                    <table class="w-100 result_data mb-2 table table-striped mt-4">
+                        <tr class="fw-bolder">
                             <td colspan="6" class=" fw-bolder" align="center" >ECLIA</td>
                             
                         </tr>
-                        <tr>
+                        <tr class="bg-secondary text-white">
                             <td  class="fw-bolder" align="center" >Tests</td>
-                                <td  colspan="2" class="fw-bolder" align="center" >Result</td>
+                                <td   class="fw-bolder" align="center" >Result</td>
                                 <td class="fw-bolder" align="center" >References</td>
                         </tr>
                         <tr>
                             <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center" >Hbs Antibody</td>
-                            <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center"><span class="">----------</span></td>
-                            <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center">----------</td>
+                            <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center"><span class="">
+                                {% if test.hbhs == '' %}
+                                --------
+                                {% else %}
+                                {{test.hbhs}}
+                                {% endif %}
+                            </span></td>
+                            <!-- <td rowspan="4" style="vertical-align : middle;text-align:center;"  class="col-2 fw-bolder" align="center">----------</td> -->
                            
                         </tr>
                         <tr>
@@ -274,7 +280,8 @@
                                 <p>Lic. No.-------</p>
                             </td>
                             <td>
-                                <p style="margin-bottom: 50px;"></p>
+                                <!-- <img src="{% static 'integrated/laboratory/signature/ibarrientos.png' %}" style="width: 200px;height: 50px;margin-bottom: -10px;"> -->
+                                <img src="http://173.10.7.2/medsys-static-files/integrated/laboratory/signature/ibarrientos.png" style="width: 200px;height: 50px;margin-bottom: -10px;">
                                 <p class="fw-bolder mb-0">RAYMUNDO B. IBARRIENTOS, MD.</p>
                                 <p>Lic. No. 0078995</p>
                             </td>
@@ -293,7 +300,7 @@
                             <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
                             <td width="20%" align="center"><span>Rev 8</span></td>
                             <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
-                            <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                            <td width="25%" align="right"><img src="http://173.10.7.2/medsys-static-files/integrated/img/padabrghgmc.png" style="width: 150px; height: 20px;margin: 0px;" /></td>
                         </tr>
                     </table>
 

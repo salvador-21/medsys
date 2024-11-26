@@ -17,7 +17,7 @@
       </tr>
     <tr>
       <td colspan="2">NAME: <span class="fw-bolder o_ptx"> </span></td>
-      <td colspan="2">CONTROL NO.: <span class="fw-bolder text-danger o_ctr fs-4">INP-23-000001</span></td>
+      <td colspan="2">CONTROL NO.: <span class="fw-bolder text-danger o_ctr fs-4">INP-23-000001</span>&nbsp; <i class="fa fa-edit ctr_update" aria-hidden="true"></i> </td>
     </tr>
     <tr>
       <td>DOB: <span class="fw-bolder o_dob">-----</span></td>
@@ -141,20 +141,11 @@
     
 </div>
 <h4 class="text-center fw-bolder bg-dark text-white mb-3">LABORATORY CHARGE DETAILS</h4>
-<!-- ////////////////////////// -->
 <form id="release_frm">
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text fw-bolder">ENCCODE:</span>
-    </div>
-    <input type="text" class="form-control" readonly name="r_encc" id="r_encc">
-</div>
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text fw-bolder">ORDER ID:</span>
-    </div>
-    <input type="text" class="form-control" readonly name="r_orderid" id="r_orderid">
-</div>
+  
+    <input type="hidden" class="form-control" readonly name="r_encc" id="r_encc">
+    <input type="hidden" class="form-control" readonly name="r_orderid" id="r_orderid">
+
 <div class="input-group mb-3">
   <div class="input-group-prepend">
     <span class="input-group-text fw-bolder">TOTAL AMOUNT</span>
@@ -190,14 +181,9 @@
   <input type="text" class="form-control"  name="r_test" id="r_test">
 </div>
 </form>
-
-<!-- ///////////////////////// -->
-  
-
         </div>
         <div class="modal-footer">
           <div class="btn btn-group">
-            <!-- <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button> -->
             <button class="btn btn-success" type="submit" form="release_frm">Charge Now!</button>
           </div>
           
@@ -205,3 +191,33 @@
       </div>
     </div>
   </div>
+
+
+<!-- Update Ctr -->
+
+<div class="modal fade" id="ctr_update_modal"  data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-user" aria-hidden="true"></i> | Laboratory Charge</h5>
+        <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+  <div class="modal-body">
+<h4 class="text-center fw-bolder bg-dark text-white">Control No. Update</h4>
+<input type="hidden" class="form-control encc_input">
+<input type="hidden" class="form-control orderid_input">
+<div class="input-group mb-3">
+<div class="input-group-prepend">
+  <span class="input-group-text fw-bolder">Control No.:</span>
+</div>
+<input type="text" class="form-control ctr_new"  name="ctr_new" id="ctr_new">
+<button class="btn btn-success update_ctr" type="submit" >Update</button>
+</div>
+
+<!-- ///////////////////////// -->
+      </div>
+    </div>
+  </div>
+</div>

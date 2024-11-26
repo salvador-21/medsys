@@ -1,0 +1,456 @@
+<DOCTYPE html></DOCTYPE>
+    {% load static %}
+    <head>
+        <title>FECALYSIS</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <style>
+            body {
+        margin: 0;
+        padding: 0;
+        /* background-color: #FAFAFA; */
+        font: 12pt "Times New Roman";
+    }
+    * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    .page {
+        width: 21cm;
+        min-height: 29.7cm;
+        margin: 1cm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 5px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        
+       
+    }
+    .subpage {
+        padding: 1cm;
+        /* padding: 10px; */
+        /* border: 5px red solid; */
+        height: 297mm;
+        /* outline: 1cm #FFEAEA solid; */
+        background-image:url("http://173.10.7.2/medsys-static-files/integrated/img/lab-bg.png") ;
+        background-repeat: no-repeat; background-size: cover; background-position: center center;
+    }
+    
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    @media print {
+        .page {
+            margin: 0;
+            border: initial;
+            border-radius: initial;
+            width: initial;
+            min-height: initial;
+            height: 297mm;
+            box-shadow: initial;
+            background: initial;
+            page-break-after: always;
+        }
+    }
+    .ptx_data td {
+        border: 0px;
+        padding: 4px;
+  /* border: .5px solid rgb(196, 192, 192);
+  border-collapse: collapse; */
+}
+.result_data td {
+  border: .5px solid rgb(196, 192, 192);
+  border-collapse: collapse;
+  padding: 1.5px 2px ;
+}
+.staff_data td {
+  border: .5px solid rgb(196, 192, 192);
+  border-collapse: collapse;
+}
+
+  button,
+  textarea,
+  input,
+  select,
+  a, table,td{
+   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+   -webkit-tap-highlight-color: transparent;
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+    user-select: none;
+  
+  }
+
+        </style>
+    </head>
+    <body  oncontextmenu="return false">
+
+      {% for r in data.result %}
+        <div class="book">
+            <div class="page">
+                <div class="subpage">
+                 <div class="header" style="height: 100px;">
+                    <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
+                        <tr>
+                        <td style="padding-bottom: 4px;"><img src="http://173.10.7.2/medsys-static-files/integrated/img/doh.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td style="padding-bottom: 4px;"><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td style="text-align: center;padding: 0px;">
+                          <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45);margin-left: -50px;position: relative;">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
+                          <span class="fw-bolder" style="font-size: 12px;margin-left: -50px;position: relative;">Formerly( Bicol Sanitarium )</span><br>
+                          <span style="font-size: 10px;margin-left: -50px;position: relative;">San Pedro, Cabusao, Camarines Sur</span><br>
+                          <span style="font-size: 10px;margin-left: -50px;position: relative;">Telephone Nos.: (054) 473-2244; 472-4422, 881-1033, 881-1761</span><br>
+                          <span style="font-size: 10px;margin-left: -50px;position: relative;">Email Address: bicolsan@yahoo.com; brghgmc@gmail.com</span>
+                        </td>
+                        </tr>
+                    </table>
+              
+                      
+                 </div>
+
+                 <div class="content" style="height: 800px;padding: 0px;margin-top: -20px;">
+                    <h3 class="text-center fw-bolder mt-4 mb-4" >FECALYSIS</h3>
+
+                    <table class="w-100 ptx_data mb-4" style="margin-top:-20px">
+                        <tr>
+                            <td align="right" colspan="7" style="font-size: 12;" >Result Date:</td>
+                            <td class="#" colspan="2" style="font-size: 12px;border-bottom: .5px solid black;"><span class="fw-bolder">{{data.result_date}}</span></td>
+                        </tr>
+                        <tr>
+                            <td align="right" colspan="7" style="font-size: 12;" >Control No.:</td>
+                            <td class="#" colspan="2"  style="font-size: 14px;border-bottom: .5px solid black;"><span class="fw-bolder text-danger">{{data.ctr_no}}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bolder" align="right" style="font-size: 12px;border: 0px; width: 50px;">Patient:</td>
+                            <td class="#" align="left" style="font-size: 14px;border-bottom: .5px solid black;"><span class="fw-bolder">{{data.patient}} </span></td>
+                            <td class="fw-bolder " align="right" style="font-size: 12px;">Age:</td>
+                            <td class="" style="font-size: 12px;border-bottom: .5px solid black;"><span class="fw-bolder">{{data.age}}</span></td>
+                            <td class="fw-bolder " align="right" style="font-size: 12px;">Sex:</td>
+                            <td class="" style="font-size: 12px;border-bottom: .5px solid black;"><span class="fw-bolder">
+                                {% if data.gender == 'M' %}
+                                MALE
+                                {% elif data.gender == 'F' %}
+                                FEMALE
+                                {% else %}
+                                -----------
+                                {% endif %}
+                            </span></td>
+                            <td class="fw-bolder " align="right" style="font-size: 12px;">Civil Status:</td>
+                            <td class="#" style="font-size: 11px;border-bottom: .5px solid black;"><span class="fw-bolder">
+                                {% if data.cstat == 'S' %}
+                                SINGLE
+                                {% elif data.cstat == 'M' %}
+                                MARRIED
+                                {% elif data.cstat == 'D' %}
+                                DEVORCED
+                                {% else %}
+                                -----------
+                                {% endif %}
+                            </span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bolder" align="right" style="font-size: 11px;border: 0px; width: 20px;">Ward:</td>
+                            <td class="#" align="left" style="font-size: 12px;border-bottom: .5px solid black;"><span class="fw-bolder">{{data.ward}}</span></td>
+                            <td class="fw-bolder " colspan="2" align="right" style="font-size: 12px;">Requesting Doctor:</td>
+                            <td class="" colspan="2" style="font-size: 11px;border-bottom: .5px solid black;"><span class="fw-bolder">{{r.physician}}</span></td>
+                            <td class="fw-bolder " align="right" style="font-size: 12px;">Hospital No.:</td>
+                            <td class="" style="font-size: 11px;border-bottom: .5px solid black;"><span class="fw-bolder">{{data.hosno}}</span></td>
+                        </tr>
+                       
+                       
+                
+                    </table>
+                    <!-- {{res_data}} -->
+                    <table class="w-100 result_data mt-4 mb-2 table table-striped">
+                        <tr  class="bg-secondary text-white">
+                            <td colspan="2" class="col-6 fw-bolder fs-4" align="center" >GROSS</td>
+                        </tr>
+               
+                        <tr>
+                            <td class="col-3 fw-bolder" align="center" >COLOR</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                               {% if r.feccolor == '' or r.feccolor == 'null' %}
+                               -------------
+                               {% else %}
+                                {{r.feccolor}}
+                               {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td  class="col-3 fw-bolder" align="center" >CONSISTENCY</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecon == '' or r.fecon == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecon}}
+                                {% endif %}
+                            </td>
+                    
+                        </tr>
+
+                        <tr>
+                            <td class="col-3 fw-bolder" align="center" >OCCULT BLOOD</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecocbld == '' or r.fecocbld == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecocbld}}
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <table class="w-100 result_data mt-4 mb-4 table table-striped">
+                        <tr  class="bg-secondary text-white">
+                            <td colspan="3" class="col-6 fw-bolder fs-4" align="center" >MICROSCOPIC</td>
+                        </tr>
+               
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center" >RBC</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecrbc == '' or r.fecrbc == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecrbc}}
+                                {% endif %}
+                                
+                            </td>
+                            <td class="col-3" align="left">/HPF</td>
+                        </tr>
+                        <tr>
+                            <td  class="col-6 fw-bolder" align="center" >WBC</td>
+                            <td  class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecwbc == '' or r.fecwbc == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecwbc}}
+                                {% endif %}
+                                
+                            </td>
+                            <td class="col-3" align="left">/HPF</td>
+                        </tr>
+                        <tr>
+                            <td class="col-3 fw-bolder" align="center" >YEAST CELLS</td>
+                            <td  class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecyeast == '' or r.fecyeast == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecyeast}}
+                                {% endif %}
+                            </td>
+                            <td class="col-3">/HPF</td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-3 fw-bolder" align="center" >BACTERIA</td>
+                            <td colspan="2" class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecbac == '' or r.fecbac == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecbac}}
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-3 fw-bolder" align="center" >FAT GLOBULES</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecfat == '' or r.fecfat == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecfat}}
+                                {% endif %}
+                            </td>
+                            <td class="col-3">/LPF</td>
+                        </tr>
+
+                    </table>
+
+                        <!-- parasites -->
+                    <table class="w-100 result_data mt-4 mb-2 table table-striped">
+                        <tr  class="bg-secondary text-white">
+                            <td colspan="3" class="col-6 fw-bolder fs-4" align="center" >PARASITES</td>
+                        </tr>
+               
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center" >ASCARIS LUMBRICOIDES</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecascaris == '' or r.fecascaris == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecascaris}}
+                                {% endif %}
+                                 </td>
+                                <td class="col-3">/LPF</td>
+                        </tr>
+                        <tr>
+                            <td class="col-3 fw-bolder" align="center" >HOOKWORM</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fechookworm == '' or r.fechookworm == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fechookworm}}
+                                {% endif %}
+                                </td>
+                                <td class="col-3">/LPF</td>
+                        </tr>
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center" >ENTAMOEBA HISTOLYTICA CYST</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fechisto == '' or r.fechisto == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fechisto}}
+                                {% endif %}
+                            </td>
+                            <td class="col-3">/HPF</td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center" >ENTAMOEBA COLI CYST</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.feccoli == '' or r.feccoli == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.feccoli}}
+                                {% endif %}
+                            </td>
+                            <td class="col-3">/HPF</td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center">TRINCHURIS TRICHURA</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fectri == '' or r.fectri == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fectri}}
+                                {% endif %}
+                            </td>
+                            <td class="col-3">/LPF</td>
+                        </tr>
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center">ENTEROBIUS VERMICULARIS</td>
+                            <td class="col-3 fw-bolder text-secondary" align="left" >
+                                {% if r.fecvermi == '' or r.fecvermi == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecvermi}}
+                                {% endif %}
+                            </td>
+                            <td class="col-3">/LPF</td>
+
+                        </tr>
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center">OTHERS</td>
+                            <td colspan="2" class="col-3 fw-bolder text-secondary" align="left " > 
+                                {% if r.feothr == '' or r.feothr == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.feothr}}
+                                {% endif %}    
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="col-6 fw-bolder" align="center" >NOTE</td>
+                            <td colspan="2" class="col-3 fw-bolder text-secondary" align="left " > 
+                                {% if r.fecnote == '' or r.fecnote == 'null' %}
+                                -------------
+                                {% else %}
+                                 {{r.fecnote}}
+                                {% endif %}       
+                            </td>
+                            
+                        </tr>
+
+                    </table>
+                </div>
+
+                <div class="footer" style="height: 85px;">
+
+                    <table class="w-100 staff_data" style="margin-top: 10px;">
+                        <tr class="bg-secondary text-white fw-bolder">
+                            <td>Perfomed By:</td>
+                            <td>Verified By:</td>
+                            <td>Approved By:</td>
+                        </tr>
+                        <tr class="text-center" style="height: 80px;">
+                            <td >
+                                <p style="margin-bottom: 30px;"></p>
+                                <p class="fw-bolder mb-0" style="font-size: 14px;">
+                                {% if r.perform_by == ' ' %}
+                                   -------
+                                {%else%}
+                                    {{r.perform_by}}
+                                {%endif%}
+                                
+                                    </p>
+                                <p>Lic. No. -------</p>
+                            </td>
+                            <td style="padding: 0px;">
+                                <p style="margin-bottom: 30px;"></p>
+                                <p class="fw-bolder mb-0" style="font-size: 14px;">
+                                    {% if r.verify_by == ' ' %}
+                                   -------
+                                {%else%}
+                                    {{r.verify_by}}
+                                {%endif%}
+                                </p>
+                                <p>Lic. No. -------</p>
+                            </td>
+                            <td>
+                                <!-- <p style="margin-bottom: 30px;"></p> -->
+                                <img src="http://173.10.7.2/medsys-static-files/integrated/laboratory/signature/ibarrientos.png" style="width: 200px;height: 50px;margin-bottom: -10px;">
+                                <p class="fw-bolder mb-0" style="font-size: 14px;">RAYMUNDO B. IBARRIENTOS, MD.</p>
+                                <p>Lic. No. 0078995</p>
+                            </td>
+                        </tr>
+                        <tr class="text-center fw-bolder">
+                            <td>Medical Technologist</td>
+                            <td>Medical Technologist</td>
+                            <td>Pathologist</td>
+                        </tr>
+                    </table>
+                    <table style="font-size: 12px;width: 100%;border-top: 4px solid rgb(14, 14, 187);font-style: italic;">
+                        <tr>
+                            <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
+                            <td width="20%" align="center"><span>Rev 8</span></td>
+                            <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
+                            <td width="25%" align="right"><img src="http://173.10.7.2/medsys-static-files/integrated/img/padabrghgmc.png" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                        </tr>
+                    </table>
+
+                </div>
+               <input type="hidden" id="lm" value="{{c.last_meal}}">
+               <input type="hidden" id="xt" value="{{c.extraction_time}}">
+               
+            </div>
+
+        </div>
+
+        {% endfor %}
+       
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script>
+           $(document).ready(function() {
+            lm=$('#lm').val()
+            xt=$('#xt').val()
+            lmc=new Date(lm)
+            clm=lmc.toLocaleString()
+            xtt=new Date(xt)
+            xttt=xtt.toLocaleString()
+            console.log(xt)
+            $('.lm').text(clm)
+            $('.xt').text(xttt)
+
+            // window.print()
+           })
+         
+      </script>
+
+    </body>
+</html>

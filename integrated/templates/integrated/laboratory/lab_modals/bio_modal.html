@@ -9,7 +9,7 @@
         </div>
         <div class="modal-body">
           <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
-          <table class="mb-2 table table-bordered w-100 p-2">
+          <table class="mb-2 table-bordered w-100 p-2">
             <tr>
               <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder im_hosno"> 230000000000001</span></td></tr>
             <tr>
@@ -17,7 +17,7 @@
               <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder im_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
             <tr>
               <td> GENDER: <span class=" fw-bolder im_gender">MALE</span></td>
-              <td> AGE: <span class=" fw-bolder im_age">123</span></td>
+              <td> BIRTHDATE: <span class=" fw-bolder im_age">123</span></td>
               <td> CIVIL STATUS: <span class=" fw-bolder im_stat">SINGLE</span></td>
             </tr>
             <tr>
@@ -30,8 +30,8 @@
           </table>
           <h4 class="text-center fw-bolder bg-dark text-white">-- BACTERIOLOGY RESULT DETAILS --</h4>
           <form id="bio_frm">
-           <table class="table table-bordered P-0">
-            <thead>
+           <table class=" table-bordered P-0 w-100 mb-2">
+            <thead class="bg-info text-center text-white">
               <th colspan="2">TESTS</th>
               <th>RESULTS</th>
             </thead>
@@ -41,13 +41,13 @@
                 <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="3">SALMOGEN</td>
             </tr>
             <tr class="salmogen_tr" hidden>
-                <td >IgM</td>
+                <td class="text-center" >IgM</td>
                 <td>
                 <input type="text" step="any" class="form-control mb-0" id="sal_igg" name="sal_igg" placeholder="HbsAg">
                 </td>
             </tr>
             <tr class="salmogen_tr" hidden>
-                <td>IgG</td>
+                <td class="text-center">IgG</td>
                 <td>
                    <input type="text" step="any" class="form-control mb-0" id="sal_igm" name="sal_igm" placeholder="HbsAg">
                 </td>
@@ -58,19 +58,19 @@
                 <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="4">DENGUE TEST</td>
             </tr>
             <tr class="dengue_tr" hidden>
-                <td>IgG</td>
+                <td class="text-center">IgG</td>
                 <td>
                   <input type="text" step="any" class="form-control mb-0" id="dt_igg" name="dt_igg" placeholder="Dengue IgG">
                 </td>
             </tr>
             <tr class="dengue_tr" hidden>
-                <td>IgM</td>
+                <td class="text-center">IgM</td>
                 <td>
                  <input type="text" step="any" class="form-control mb-0" id="dt_igm" name="dt_igm" placeholder="Dengue IgM">
                 </td>
             </tr>
             <tr class="dengue_tr" hidden>
-                <td>NS1</td>
+                <td class="text-center">NS1</td>
                 <td>
                  <input type="text" step="any" class="form-control mb-0" id="dt_ns1" name="dt_ns1" placeholder="Dengue NS1">
                 </td>
@@ -80,13 +80,13 @@
                 <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="3">MALARIA RAPID TEST</td>
             </tr>
             <tr class="malaria_tr" hidden>
-                <td>P.f.</td>
+                <td class="text-center">P.f.</td>
                 <td>
                   <input type="text" step="any" class="form-control mb-0" id="mal_pf" name="mal_pf" placeholder="HbsAg">
                 </td>
             </tr>
             <tr class="malaria_tr" hidden>
-                <td>Pan</td>
+                <td class="text-center">Pan</td>
                 <td>
                  <input type="text" step="any" class="form-control mb-0" id="mal_pan" name="mal_pan" placeholder="HbsAg">
                 </td>
@@ -96,19 +96,19 @@
                 <td style="vertical-align : middle;text-align:center;" class="fs-4 fw-bolder" rowspan="4">GRAM STAIN</td>
             </tr>
             <tr class="gram_tr" hidden>
-                <td>Cells</td>
+                <td class="text-center">Cells</td>
                 <td>
                   <input type="text" step="any" class="form-control mb-0" id="gram_ep" name="gram_ep" placeholder="Gram Ep">
                 </td>
             </tr>
             <tr class="gram_tr" hidden>
-                <td>Neg</td>
+                <td class="text-center">Neg</td>
                 <td>
                  <input type="text" step="any" class="form-control mb-0" id="gram_neg" name="gram_neg" placeholder="Gram Neg">
                 </td>
             </tr>
             <tr class="gram_tr" hidden>
-                <td>Pos</td>
+                <td class="text-center">Pos</td>
                 <td>
                  <input type="text" step="any" class="form-control mb-0" id="gram_pos" name="gram_pos" placeholder="Gram Pos">
                 </td>
@@ -152,6 +152,7 @@
            </div>
            <input type="text" hidden class="form-control" id="perform_id" name="perform_id" readonly >
            <input type="text" hidden  class="form-control action"  name="action">
+           <input type="text" hidden class="form-control procode"  name="procode">
            <input type="text" hidden  class="form-control i_encc" placeholder="Enccode" name="i_encc">
            <input type="text" hidden  class="form-control i_orderid" placeholder="Order Id" name="i_orderid">
            <input type="text" hidden  class="form-control i_hpercode" placeholder="Hpercode" name="i_hpercode">

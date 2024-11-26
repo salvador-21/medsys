@@ -19,7 +19,7 @@
               <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder im_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
             <tr>
               <td> GENDER: <span class=" fw-bolder im_gender">MALE</span></td>
-              <td> AGE: <span class=" fw-bolder im_age">123</span></td>
+              <td> BIRTHDATE: <span class=" fw-bolder im_dob">123</span></td>
               <td> CIVIL STATUS: <span class=" fw-bolder im_stat">SINGLE</span></td>
             </tr>
             <tr>
@@ -64,7 +64,7 @@
             </tr>
             <!-- ////////////// -->
 
-            <tr class="tr_syp" hidden>
+            <tr class="tr_syp" >
               <td><p class="fs-5 fw-bolder">Syphilis Test </p></td>
               <td>
                   <input type="text" step="any" class="form-control" id="syp" name="syp" placeholder="Syphilis Test">
@@ -167,13 +167,13 @@
               
               </div>
            </div>
-           <input type="text" hidden class="form-control" id="perform_id" name="perform_id" readonly >
-           <input type="text" hidden readonly class="form-control action"  name="action">
-           <input type="text" hidden readonly class="form-control i_encc" placeholder="Enccode" name="i_encc">
-           <input type="text" hidden readonly class="form-control i_orderid" placeholder="Order Id" name="i_orderid">
-           <input type="text" hidden readonly class="form-control i_hpercode" placeholder="Hpercode" name="i_hpercode">
-           <input type="text" hidden readonly class="form-control i_ctr" placeholder="Hpercode" name="i_ctr">
-           <input type="text" hidden readonly class="form-control i_key" placeholder="key" name="i_key">
+           <input type="text"  class="form-control" id="perform_id" name="perform_id" readonly >
+           <input type="text" hidden  readonly class="form-control action"  name="action">
+           <input type="text" hidden  readonly class="form-control i_encc" id="i_encc" placeholder="Enccode" name="i_encc">
+           <input type="text" hidden  readonly class="form-control i_orderid" placeholder="Order Id" name="i_orderid">
+           <input type="text" hidden  readonly class="form-control i_hpercode" placeholder="Hpercode" name="i_hpercode">
+           <input type="text" hidden  readonly class="form-control i_ctr" placeholder="Hpercode" name="i_ctr">
+           <input type="text" hidden  readonly class="form-control i_key" placeholder="key" name="i_key">
   
           
         </div>
@@ -195,7 +195,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> CBC RESULT</h5>
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> SEROLOGY</h5>
           <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
@@ -210,7 +210,7 @@
               <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder sero_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
             <tr>
               <td> GENDER: <span class=" fw-bolder sero_gender">MALE</span></td>
-              <td> AGE: <span class=" fw-bolder sero_age">123</span></td>
+              <td> BIRTDATE: <span class=" fw-bolder sero_dob">123</span></td>
               <td> CIVIL STATUS: <span class=" fw-bolder sero_stat">SINGLE</span></td>
             </tr>
             <tr>
@@ -254,4 +254,5 @@
       </div>
     </div>
   </div>
+
   

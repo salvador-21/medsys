@@ -18,7 +18,7 @@
                 <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-microscope"></i> | SEROLOGY</h1>
                 <div class="btn btn-group">
                   <a href="{% url 'laboratory'%}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
-                  <a href="#" class="btn btn-secondary text-white sero_link" id="RELEASED" type="button"><i class="fa-solid fa-upload"></i> Released</a>
+                  <a href="#" class="btn btn-secondary text-white sero_link" id="RELEASED" type="button"><span id="treleased">0</span><i class="fa-solid fa-upload"></i> Released</a>
               </div>
             </div>
             <div class="row">
@@ -74,7 +74,7 @@
                               <i class="fas fa-id-card-alt font-large-2 primary float-left" aria-hidden="true"></i>
                             </div>
                             <div class="media-body text-right">
-                              <h3><i class="fa-solid fa-user"></i> <span id="tcompleted">0</span></h3>
+                              <h3><i class="fa-solid fa-user"></i> <span id="ttoverify">0</span></h3>
                               <span class="fw-bolder h5">TO VERIFY REQUEST</span>
                             </div>
                           </div>
@@ -94,7 +94,7 @@
                               <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
                             </div>
                             <div class="media-body text-right">
-                              <h3><i class="fa-solid fa-user"></i> <span id="treleased">0</span></h3>
+                              <h3><i class="fa-solid fa-user"></i> <span id="tcompleted">0</span></h3>
                               <span class="fw-bolder h5">COMPLETED REQUEST</span>
                             </div>
                           </div>

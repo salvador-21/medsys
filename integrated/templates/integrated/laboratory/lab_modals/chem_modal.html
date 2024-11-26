@@ -20,11 +20,14 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td><input type="text" class="form-control machine_id" hidden  name="machine_id" >
+                      <td>
+                        <input type="text" class="form-control machine_id" hidden  name="machine_id" >
+                        <input type="text" class="form-control machine_modality" hidden value="CHEMI"  name="machine_modality" >
                         <input type="text" class="form-control machine_name" placeholder="Machine Name"  name="machine_name" required></td>
                       <td>
                         <select class="form-control form-control-sm test_name" name="test_name" required>
                           <option value="">Select Here</option>
+                          <option value="ALP">ALP</option>
                           <option value="HBA1C">HBA1C</option>
                           <option value="FBS">FBS</option>
                           <option value="RBS">RBS</option>
@@ -45,6 +48,7 @@
                           <option value="Total Protein">Total Protein</option>
                           <option value="Albumin">Albumin</option>
                           <option value="Globulin">Globulin</option>
+                          <option value="GGT">GGT</option>
                           <option value="A/G Ratio">A/G Ratio</option>
                           <option value="ALKP">ALKP</option>
                           <option value="Amylase">Amylase</option>
@@ -58,6 +62,8 @@
                           <option value="HBA1C">HBA1C</option>
                           <option value="Sodium">Sodium</option>
                           <option value="Chloride">Chloride</option>
+                          <option value="Ferritin">Ferritin</option>
+                          <option value="Cortisol">Cortisol</option>
                       </select>
                       </td>
                       <td><input type="text" class="form-control normal_values" placeholder="Normal Values"  name="normal_values" required></td></td>
@@ -116,7 +122,9 @@
               <td colspan="2"> CONTROL NO.: <span class="fs-4 text-danger fw-bolder chem_ctr">OP23-000001</span></td>
             <tr>
             <tr>
-              <td colspan="3"> PATIENT: <span class="fs-5 fw-bolder chem_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+              <td colspan="2"> PATIENT: <span class="fs-5 fw-bolder chem_patient"> CECILIO, SALVADOR BALONCIO</span></td>
+              <td colspan=""> ORDER CODE: <span class=" fw-bolder pchem_orderid"> </span></td>
+            </tr>
             <tr>
               <td> GENDER: <span class=" fw-bolder chem_gender">MALE</span></td>
               <td> AGE: <span class=" fw-bolder chem_age">123</span></td>
@@ -153,11 +161,11 @@
                     <input type="text"  hidden class="form-control chem_lastmeal" name="chem_lastmeal">
                     <input type="text"  hidden class="form-control chem_ext_time" name="chem_ext_time">
 
-                    <input type="text"   class="form-control chem_action" name="chem_action">
-                    <input type="text"   class="form-control chem_orderid" name="chem_orderid">
+                    <input type="text" hidden  class="form-control chem_action" name="chem_action">
+                    <input type="text" hidden  class="form-control chem_orderid" name="chem_orderid">
                     <!-- <input type="text" class="form-control chem_proccode" name="chem_proccode"> -->
                     <input type="text"  hidden  class="form-control chem_prikey" name="chem_prikey">
-                    <input type="text"   class="form-control chem_encc" name="chem_encc">
+                    <input type="text" hidden  class="form-control chem_encc" name="chem_encc">
                     <input hidden class="form-control form-control-sm chem_hpercode" name="chem_hpercode">
   
                   </div>
@@ -193,7 +201,10 @@
               <td colspan="2"> CONTROL NO.: <span class="fs-4 text-danger fw-bolder pchem_ctr">OP23-000001</span></td>
             <tr>
             <tr>
-              <td colspan="3"> PATIENT: <span class="fs-5 fw-bolder pchem_patient"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+              <td colspan="2"> PATIENT: <span class="fs-5 fw-bolder pchem_patient"> CECILIO, SALVADOR BALONCIO</span></td>
+              
+            </tr>
+
             <tr>
               <td> GENDER: <span class=" fw-bolder pchem_gender">MALE</span></td>
               <td> AGE: <span class=" fw-bolder pchem_age">123</span></td>

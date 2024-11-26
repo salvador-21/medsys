@@ -30,7 +30,7 @@
         /* padding: 10px; */
         /* border: 5px red solid; */
         height: 256mm;
-        background-image:url("{% static 'integrated/img/lab-bg.png'%}") ;
+        background-image:url("http://173.10.7.2/medsys-static-files/integrated/img/lab-bg.png") ;
         /* outline: 1cm #FFEAEA solid; */
         background-repeat: no-repeat; background-size: cover; background-position: center center;
     }
@@ -77,8 +77,8 @@
                  <div class="header" style="height: 100px;">
                     <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
                         <tr>
-                        <td><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
-                        <td><img src="{% static 'integrated/img/doh.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/doh.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
                         <td style="text-align: center;padding: 0px;">
                           <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
                           <span class="fw-bolder" style="font-size: 12px;">Formerly( Bicol Sanitarium )</span><br>
@@ -99,7 +99,7 @@
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">PATIENT:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patlast}}, {{ptx.patfirst}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">RESULT DATE:</td>
-                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ test.date_verified}}</span></td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ result.dateverify}}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">HOSP NO.:</td>
@@ -127,10 +127,10 @@
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">Notes:</td>
                             <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder text-danger">
-                                {% if test.note == '' %}
+                                {% if result.notes == '' %}
                                 N/A
                                 {% else %}
-                                {{test.note}}
+                                {{result.notes}}
                                 {% endif %}
                             </span></td>
                         </tr>
@@ -141,246 +141,344 @@
                         <tr class="bg-dark text-white">
                             <td class="col-2 fw-bolder" align="center" >TESTS</td>
                             <td class="col-2 fw-bolder" align="center">RESULT</td>
-                            <td class="col-2 fw-bolder" align="center" >UNIT</td>
-                            <td class="col-2 fw-bolder" align="center" >RANGE</td>
+                            <td class="col-2 fw-bolder" align="center" >NORMAL VALUES</td>
                             
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >Troponin I</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.tropinin_i == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.trop == '' %}
                                 ------
                                 {% else %}
-                                {{ test.tropinin_i}}
+                                {{ result.trop}}
                                 {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">ng/Ml</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                0 - 0.120 
+                            </span> - <i>{{ result.trop_flag}}</i>
+                        </td>
+                            <td class="col-2" align="center" >
+                                <i>
+                                {% if result.trop_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.trop_nv}}
+                                {% endif %}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >CK_MB</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.ck_mb == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.ckmb == '' %}
                                 ------
                                 {% else %}
-                                {{ test.ck_mb}}
+                                {{ result.ckmb}}
                                 {% endif%}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">ng/Ml</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                0 - 24
+                            </span> - <i>{{ result.ckmb_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.ckmb_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.ckmb_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >TSH</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.tsh == '' %}
-                                ------
-                                {% else%}
-                                {{ test.tsh}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">μlU/Ml</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                0.3 - 4.5
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-2 fw-bolder" align="center" >CA-125</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.ca_125 == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.tsh == '' %}
                                 ------
                                 {% else %}
-                                {{ test.ca_125}}
+                                {{ result.tsh}}
                                 {% endif%}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">U/Ml</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                0 - 35
+                            </span> - <i>{{ result.tsh_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.tsh_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.tsh_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >FT4</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.ft4 == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.ft4 == '' %}
                                 ------
                                 {% else %}
-                                {{ test.ft4}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">μlU/Ml</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                8.9 - 17.2
+                                {{ result.ft4}}
+                                {% endif%}
+                            </span> - <i>{{ result.ft4_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.ft4_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.ft4_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >FT3</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.ft3 == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.ft3 == '' %}
                                 ------
-                                {% else%}
-                                {{ test.ft3}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">pg/Ml</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                2.0 - 4.2
+                                {% else %}
+                                {{ result.ft3}}
+                                {% endif%}
+                            </span> - <i>{{ result.ft3_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.ft3_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.ft3_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >T4</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.t4 == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.t4 == '' %}
                                 ------
                                 {% else %}
-                                {{ test.t4}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">nmol/L</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                57.9 - 150.6
+                                {{ result.t4}}
+                                {% endif%}
+                            </span> - <i>{{ result.t4_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.t4_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.t4_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >T3</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.t3 == ''%}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.t3 == '' %}
                                 ------
                                 {% else %}
-                                {{ test.t3}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">nmol/L</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                1.23 - 3.08
+                                {{ result.t3}}
+                                {% endif%}
+                            </span> - <i>{{ result.t3_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.t3_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.t3_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >ASO</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.aso == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.aso == '' %}
                                 ------
                                 {% else %}
-                                {{ test.aso}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">IU/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                < 200
+                                {{ result.aso}}
+                                {% endif%}
+                            </span> - <i>{{ result.aso_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.aso_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.aso_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >CRP</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.crp == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.crp == '' %}
                                 ------
                                 {% else %}
-                                {{ test.crp}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">ug/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                < 10
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-2 fw-bolder" align="center" >hsCRP</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.hscrp == '' %}
+                                {{ result.crp}}
+                                {% endif%}
+                            </span> - <i>{{ result.crp_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.crp_nv == '' %}
                                 ------
                                 {% else %}
-                                {{ test.hscrp}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">ug/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                < 10
+                                {{ result.crp_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >Procalcitonin</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.procalcitonin == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.procal == '' %}
                                 ------
                                 {% else %}
-                                {{ test.procalcitonin}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">ng/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                < 0.5
+                                {{ result.procal}}
+                                {% endif%}
+                            </span> - <i>{{ result.procal_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.procal_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.procal_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
-                            <td class="col-2 fw-bolder" align="center" >Rheumatoid Factor IgM</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.reheu == '' %}
+                            <td class="col-2 fw-bolder" align="center" >Rheumatoid Factor</td>
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.rheu == '' %}
                                 ------
                                 {% else %}
-                                {{ test.reheu}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">IU/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                < 8.0
+                                {{ result.rheu}}
+                                {% endif%}
+                            </span> - <i>{{ result.rheu_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.rheu_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.rheu_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >PSA</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.psa == '' %}
-                                -------
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.psa == '' %}
+                                ------
                                 {% else %}
-                                {{ test.psa}}
+                                {{ result.psa}}
                                 {% endif%}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">ng/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                0 - 4
+                            </span> - <i>{{ result.psa_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.psa_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.psa_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >pro-BNP</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.pro_bnp == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.probnp == '' %}
                                 ------
                                 {% else %}
-                                {{ test.pro_bnp}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">pg/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                                {% if ptx.patage < 75 %}
-                               < 75 y/o = 0 - 300 
-                               {% elif ptx.patage > 75 %}
-                               > 75 y/o = 0 - 450
-                                {% endif %}
+                                {{ result.probnp}}
+                                {% endif%}
+                            </span> - <i>{{ result.probnp_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.probnp_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.probnp_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >CEA</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">
-                                {% if test.cea == '' %}
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.cea == '' %}
                                 ------
                                 {% else %}
-                                {{ test.cea}}
-                                {% endif %}
-                            </span></td>
-                            <td class="col-2 fw-bolder" align="center">pg/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                              < 5.0
-
+                                {{ result.cea}}
+                                {% endif%}
+                            </span> - <i>{{ result.cea_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.cea_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.cea_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         <tr>
                             <td class="col-2 fw-bolder" align="center" >ANA</td>
-                            <td class="col-2 fw-bolder" align="center"><span class=""> ------- </span></td>
-                            <td class="col-2 fw-bolder" align="center">pg/mL</td>
-                            <td class="col-2 fw-bolder" align="center" >
-                              < 5.0
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.ana == '' %}
+                                ------
+                                {% else %}
+                                {{ result.ana}}
+                                {% endif%}
+                            </span> - <i>{{ result.ana_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.ana_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.ana_nv}}
+                                {% endif%}
+                                </i>
+                            </td>
+                        </tr>
 
+                        <tr>
+                            <td class="col-2 fw-bolder" align="center" >CA-19-9</td>
+                            <td class="col-2 " align="center">
+                                <span class="fw-bolder">
+                                {% if result.ca19 == '' %}
+                                ------
+                                {% else %}
+                                {{ result.ca19}}
+                                {% endif%}
+                            </span> - <i>{{ result.ca19_flag}}<i>
+                        </td>
+                            <td class="col-2 " align="center">
+                                <i>
+                                {% if result.ca19_nv == '' %}
+                                ------
+                                {% else %}
+                                {{ result.ca19_nv}}
+                                {% endif%}
+                                </i>
                             </td>
                         </tr>
                         
@@ -397,16 +495,16 @@
                         <tr class="text-center" style="height: 100px;">
                             <td >
                                 <p style="margin-bottom: 50px;"></p>
-                                <p class="fw-bolder mb-0">{{ test.perform_by_name}}</p>
+                                <p class="fw-bolder mb-0">{{ result.performby}}</p>
                                 <p>Lic. No. -------</p>
                             </td>
                             <td style="padding: 0px;">
                                 <p style="margin-bottom: 50px;"></p>
-                                <p class="fw-bolder mb-0">{{test.verified_by_name}}</p>
+                                <p class="fw-bolder mb-0">{{result.verifyby}}</p>
                                 <p>Lic. No.-------</p>
                             </td>
                             <td>
-                                <p style="margin-bottom: 50px;"></p>
+                                <img src="http://173.10.7.2/medsys-static-files/integrated/laboratory/signature/ibarrientos.png" style="width: 200px;height: 50px;margin-bottom: -10px;">
                                 <p class="fw-bolder mb-0">RAYMUNDO B. IBARRIENTOS, MD.</p>
                                 <p>Lic. No. 0078995</p>
                             </td>
@@ -425,7 +523,7 @@
                             <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
                             <td width="20%" align="center"><span>Rev 8</span></td>
                             <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
-                            <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                            <td width="25%" align="right"><img src="http://173.10.7.2/medsys-static-files/integrated/img/padabrghgmc.png" style="width: 150px; height: 20px;margin: 0px;" /></td>
                         </tr>
                     </table>
 

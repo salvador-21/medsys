@@ -32,6 +32,21 @@ urlpatterns = [
     path('laboratoryer', main.laboratory_er, name='laboratoryer'),
     path('search_patient',laboratory.search_patient,name='search_patient'),
 
+
+
+    ############################## MICROSCOPY UPDATE
+    path('micro_test',laboratory.micro_test,name='micro_test'),
+    path('micro_update_stat',laboratory.micro_update_stat,name='micro_update_stat'),
+    path('getua_result',laboratory.getua_result,name='getua_result'),
+    path('getfa_result',laboratory.getfa_result,name='getfa_result'),
+
+
+    ######################## REPORTS
+
+    path('reports',laboratory.reports,name='reports'),
+    path('load_request',laboratory.load_request,name='load_request'),
+  
+
     ######################## PRINT C
     path('makepdf',laboratory.makepdf,name='makepdf'),
     path('print_c/<str:encc>/<str:orderid>',laboratory.print_c,name='print_c'),
@@ -116,7 +131,7 @@ urlpatterns = [
     ################ SENT TEST TO PROCESS
     path('sent_to_process',laboratory.sent_to_process,name='sent_to_process'),
 
-    # ////ajax
+    # ////
     path('get_micro',laboratory.get_micro,name='get_micro'),
     path('load_microscopy',laboratory.load_microscopy,name='load_microscopy'),
     path('get_request',laboratory.get_request,name='get_request'),
@@ -150,12 +165,22 @@ urlpatterns = [
     path('lab_result',laboratory.result_temp,name='result_temp'),
     path('result_template',laboratory.result_template,name='result_template'),
     # ///////////result template
-    path('laboratory/result/rapidtest/<str:toecode>/<str:orderid>/<str:encc>/<str:prikey>',lab_result.result_RDT,name='result_RDT'),
-    path('laboratory/result/urinalysis/<str:encc>/<str:orderid>',lab_result.result_Urinalysis,name='result_Urinalysis'),
+    # path('laboratory/result/rapidtest/<str:toecode>/<str:orderid>/<str:encc>/<str:prikey>',lab_result.result_RDT,name='result_RDT'),
+    path('laboratory/result/rapidtest/<str:toecode>/<str:orderid>/<str:encc>/<str:prikey>',laboratory.result_rapid,name='result_rapid'),
+    path('laboratory/result/urinalysis/<str:encc>/<str:orderid>/<str:wardname>/<str:doctor>',laboratory.result_Urinalysis,name='result_Urinalysis'),
     path('laboratory/result/fecalysis/<str:encc>/<str:orderid>/<str:proccode>/<str:toecode>/<str:ward>',laboratory.result_Fecalysis,name='result_Fecalysis'),
     # ///////////// HEMATHOLOGY
-     path('laboratory/result/hematology',lab_result.result_hematology,name='result_hematology'),
-     path('laboratory/result/coagulation',lab_result.result_coagulation,name='result_coagulation'),
+    path('laboratory/result/hematology',lab_result.result_hematology,name='result_hematology'),
+    path('gethematest',laboratory.gethematest,name='gethematest'),
+    path('hematest',laboratory.hematest,name='hematest'),
+    path('load_hemaMachine',laboratory.load_hemaMachine,name='load_hemaMachine'),
+
+    path('save_hema',laboratory.save_hema,name='save_hema'),
+
+    path('hema_machine',laboratory.hema_machine,name='hema_machine'),
+    
+
+     path('laboratory/result/coagulation',laboratory.coag_hema_result,name='coag_hema_result'),
      path('laboratory/result/obf_hematology',lab_result.result_obf_hematology,name='result_obf_hematology'),
      path('hema_onprocess',laboratory.hema_onprocess,name='hema_onprocess'),
      path('get_hema_count',laboratory.get_hema_count,name='get_hema_count'),
@@ -169,6 +194,7 @@ urlpatterns = [
     path('save_bio',laboratory.save_bio,name='save_bio'),
     path('get_bactiview',laboratory.get_bactiview,name='get_bactiview'),
     path('get_bactiResult',laboratory.get_bactiResult,name='get_bactiResult'),
+    path('bacte_check_res',laboratory.bacte_check_res,name='bacte_check_res'),
     
     #  ///////////////////IMMUNOLOGY
 
@@ -179,6 +205,7 @@ urlpatterns = [
     path('get_immunoResult',laboratory.get_immunoResult,name='get_immunoResult'),
     path('get_immunview',laboratory.get_immunview,name='get_immunview'),
     path('immuno_ToProcess',laboratory.immuno_ToProcess,name='immuno_ToProcess'),
+    path('get_immunores',laboratory.get_immunores,name='get_immunores'),
 
 
     #################### SEROLOGY
@@ -197,6 +224,7 @@ urlpatterns = [
     ######################### LABORATORY KIT
     path('lab_kit',laboratory.lab_kit,name='lab_kit'),
     path('load_kit',laboratory.load_kit,name='load_kit'),
+    path('update_kit',laboratory.update_kit,name='update_kit'),
     
 
     path('<str:enctr>/patientlabcharges', main.patient_laboratory_charges, name='patientlabcharges'),

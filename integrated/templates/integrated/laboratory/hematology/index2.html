@@ -2,6 +2,11 @@
 {% load static %}
 {% include 'integrated/common/lab_head.html' with page=page %}
 {% include 'integrated/common/head.html' with page=page %}
+<style>
+  /* ///////////////////////// */
+
+/* ///////////////////////// */
+</style>
 <body id="page-top">
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -15,18 +20,18 @@
         <div class="container-fluid">
           <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-microscope"></i> | IMMUNOSEROLOGY</h1>
+                <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-microscope"></i> | HEMATOLOGY</h1>
                 <div class="btn btn-group">
                   <a href="{% url 'laboratory'%}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
-                  <a href="#" class="btn btn-secondary text-white immuno_link" id="RELEASED" type="button"><i class="fa-solid fa-upload"></i> Released</a>
-                  <a href="#" class="btn btn-danger text-white immuno_machine"  type="button"><i class="fa-solid fa-plus"></i> Machine</a>
+                  <a href="#" class="btn btn-secondary text-white hema_link" id="RELEASED" type="button"><span class="badge bg-secondary fs-6">0</span> Released</a>
+                  <a href="#" class="btn btn-danger text-white add_machine"  type="button"><i class="fa-solid fa-plus"></i> Machine</a>
               </div>
             </div>
             <div class="row">
               <div class="container-fluid row">
                 
-                  <div class="col-xl-3 col-sm-6 col-12"> 
-                    <div class="card immuno_link bg-dark text-white" id="PENDING">
+                <div class="col-xl-3 col-sm-6 col-12"> 
+                    <div class="card hema_link bg-dark text-white" id="PENDING">
     
                       <div class="card-content">
                         <div class="card-body">
@@ -43,10 +48,10 @@
                         </div>
                       </div>
                     </div>
-                  
                   </div>
+
                   <div class="col-xl-3 col-sm-6 col-12"> 
-                    <div class="card immuno_link" id="ONPROCESS">
+                    <div class="card hema_link" id="ONPROCESS">
                      
                       <div class="card-content">
                         <div class="card-body">
@@ -65,7 +70,7 @@
                  
                   </div>
                   <div class="col-xl-3 col-sm-6 col-12"> 
-                    <div class="card immuno_link" id="TOVERIFY">
+                    <div class="card hema_link" id="TOVERIFY">
                       <div class="card-content">
                         <div class="card-body">
                           <div class="media d-flex">
@@ -85,7 +90,7 @@
                   </div>
                   
                   <div class="col-xl-3 col-sm-6 col-12"> 
-                    <div class="card immuno_link" id="COMPLETED">
+                    <div class="card hema_link" id="COMPLETED">
                          
                       <div class="card-content">
                         <div class="card-body">
@@ -104,42 +109,52 @@
                     </div>
                  
                   </div>
+                 
+                  </div>
 
                <!-- Nav tabs -->
       <!-- /////////////// -->
       <h1 class="h3 mb-4 text-gray-800"><i class="fa-solid fa-users"></i> | <span id="r_display" class="bg-dark text-white pb-2 rounded w-100"> PENDING REQUEST</span></h1>
       <div class="input-group mb-3">
-        <input type="date" class="form-control col-3" >
-        <button class="btn btn-primary">Load</button>
+        <input type="date" id="date_search" class="form-control col-3" >
+        <button class="btn btn-primary push" >Load</button>
         <div class="input-group-prepend">
        
           <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
         </div>
-        <input type="text" class="form-control" id="immuno_search" placeholder="Search Patient">
+        <input type="text" class="form-control" id="hema_search" placeholder="Search Patient">
     </div>
   
-    <table class="table table-hover table-striped" id="tbl-pending" style="cursor: pointer;">
+    <table class="table table-hover table-striped mb-4" id="tbl-pending" style="cursor: pointer;">
         <thead>
             <tr>
               <th>#</th>
                 <th>CONTROL NO</th>
-                <th>Request Date/Time</th>
+                <th>Received Date</th>
                 <th>Patient Name</th>
                 <th>Ward</th>
-                <th>Status</th>
-                <!-- <th class="text-center">Action</th> -->
+                <th>Physician</th>
+                <th>Laboratory Test</th>
             </tr>
         </thead>
-        <tbody id="immuno_request_tbl">
-      
+        <tbody id="hema_request_tbl">
+          
 
         </tbody>
     </table>
+    <div class="loader" hidden="true"></div>
+    
+    <!-- {{p_microscopy}} -->
+    <!-- ////////////////////// -->
 
       </div>
-      {% include 'integrated/laboratory/lab_modals/immuno_modal.html' with page=page %}
-      {% include 'integrated/common/footer.html' %}
+      <!-- End of Main Content -->
 
+         
+      {% include 'integrated/laboratory/lab_modals/hema_modal.html' with page=page %}
+      {% include 'integrated/common/rfid_patient_search_modal.html' with page=page%}
+      {% include 'integrated/common/footer.html' %}
+    
     </div>
     <!-- End of Content Wrapper -->
 
@@ -152,12 +167,13 @@
   </a>
   
   {% include 'integrated/common/logout_modal.html' %}
+  {% include 'integrated/common/scripts.html' %}
+  
+  <script src="{% static 'integrated/laboratory/js/hematology.js' %}"></script>
+ <script>
+  
 
-
-  <script>
-    
-  </script>
-  <script src="{% static 'integrated/laboratory/js/immuno.js' %}"></script>
+ </script>
   
 </body>
 

@@ -20,7 +20,7 @@
                 
                 <div class="btn btn-group">
                   <a href="{% url 'laboratory'%}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
-                  <a href="#" class="btn btn-secondary text-white bacte_link" id="RELEASED" type="button"><span class="badge bg-secondary fs-6">0</span> Released</a>
+                  <a href="#" class="btn btn-secondary text-white bacte_link" id="RELEASED" type="button"><span class="badge bg-secondary fs-6 rapid_rel">0</span> Released</a>
               </div>
             </div>
             <div class="row">
@@ -107,27 +107,28 @@
 
                <!-- Nav tabs -->
       <!-- /////////////// -->
-
-
+                  {% for k in skit %}
+                  
+                  
       <h1 class="h3 mb-2 text-gray-800"><i class="fa-solid fa-users"></i> | (<span class="total">0</span>)</h1>
       <div class="input-group mb-3 w-100">
         <div class="input-group-prepend">
           <span class="input-group-text fw-bolder bg-dark fw-bolder text-white"><i class="fa fa-virus float-left" aria-hidden="true"> </i>&nbsp; KIT USED:</span>
         </div>
-        <input type="text" style="width: 300px;" class="form-control" value="{{kit}}" id="bacte_kit" readonly>
+        <input type="text" style="width: 300px;" class="form-control" value="{{k.kit_name}}" id="bacte_kit" readonly>
         <div class="input-group-prepend">
           <span class="input-group-text fw-bolder bg-dark fw-bolder text-white"><i class="fa fa-virus float-left" aria-hidden="true"> </i>&nbsp; LOT NO.:</span>
         </div>
-        <input type="text" class="form-control" value="{{lotno}}" id="bacte_lotno" readonly>
+        <input type="text" class="form-control" value="{{k.lot_no}}" id="bacte_lotno" readonly>
         <div class="input-group-prepend bg-secondary">
           <span class="input-group-text bg-dark fw-bolder text-white"><i class="fa fa-calendar  float-left" aria-hidden="true"> </i>&nbsp; EXPIRY DATE:</span>
         </div>
-        <input type="text" class="form-control" value="{{expiry}}" id="bacte_expiry" readonly >
+        <input type="text" class="form-control" value="{{k.expiry_date}}" id="bacte_expiry" readonly >
         <div class="input-group-prepend bg-secondary">
           <!-- <span class="input-group-text bg-dark fw-bolder text-white">CHANGE:</span> -->
           <button class="btn btn-primary kit_change">CHANGE</button>
         </div>
-
+        {% endfor %}
     </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend">

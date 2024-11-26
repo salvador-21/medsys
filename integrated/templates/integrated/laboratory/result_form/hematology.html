@@ -30,7 +30,7 @@
         /* padding: 10px; */
         /* border: 5px red solid; */
         height: 256mm;
-        background-image:url("{% static 'integrated/img/lab-bg.png'%}") ;
+        background-image:url("http://173.10.7.2/medsys-static-files/integrated/img/lab-bg.png") ;
         /* outline: 1cm #FFEAEA solid; */
         background-repeat: no-repeat; background-size: cover; background-position: center center;
     }
@@ -73,8 +73,8 @@
                  <div class="header" style="height: 100px;">
                     <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
                         <tr>
-                        <td><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
-                        <td><img src="{% static 'integrated/img/doh.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/doh.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
                         <td style="text-align: center;padding: 0px;">
                           <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
                           <span class="fw-bolder" style="font-size: 12px;">Formerly( Bicol Sanitarium )</span><br>
@@ -278,7 +278,7 @@
                                 <p>Lic. No. 0078995</p>
                             </td>
                             <td>
-                                <p style="margin-bottom: 50px;"></p>
+                                <img src="http://173.10.7.2/medsys-static-files/integrated/laboratory/signature/ibarrientos.png" style="width: 200px;height: 50px;margin-bottom: -10px;">
                                 <p class="fw-bolder mb-0">RAYMUNDO B. IBARRIENTOS, MD.</p>
                                 <p>Lic. No. 0078995</p>
                             </td>
@@ -297,7 +297,8 @@
                             <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
                             <td width="20%" align="center"><span>Rev 8</span></td>
                             <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
-                            <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                            <!-- <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td> -->
+                            <td width="25%" align="right"><img src="http://173.10.7.2/medsys-static-files/integrated/img/padabrghgmc.png" style="width: 150px; height: 20px;margin: 0px;" /></td>
                         </tr>
                     </table>
 
@@ -306,68 +307,11 @@
             </div>
            
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+   
         <script>
 
             // ///////////////
-            const rbc = [100,200,300,400,500,600,700,800,900,1000];
-
-            new Chart("lineChart", {
-            type: "line",
-            data: {
-                labels: rbc,
-                datasets: [{ 
-                data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-                borderColor: "red",
-                fill: false
-                }, { 
-                data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-                borderColor: "green",
-                fill: false
-                }, { 
-                data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-                borderColor: "blue",
-                fill: false
-                }]
-            },
-            options: {
-                legend: {display: false}
-            }
-            });
-
-
-            // //////////////////////
-            const xValues = [];
-            const yValues = [];
-            generateData("Math.sin(x)", 0, 10, 0.5);
-
-            new Chart("myChart", {
-            type: "line",
-            data: {
-                labels: xValues,
-                datasets: [{
-                fill: false,
-                pointRadius: 4,
-                borderColor: "gray",
-                data: yValues
-                }]
-            },    
-            options: {
-                legend: {display: false},
-                title: {
-                display: true,
-                text: "y = sin(x)",
-                fontSize: 16
-                }
-            }
-            });
-            function generateData(value, i1, i2, step = 1) {
-            for (let x = i1; x <= i2; x += step) {
-                yValues.push(eval(value));
-                xValues.push(x);
-            }
-            }
-            // /////////////////////////
+        
     
       </script>
 

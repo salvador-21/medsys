@@ -77,8 +77,8 @@
                  <div class="header" style="height: 100px;">
                     <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
                         <tr>
-                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
                         <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/doh.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
                         <td style="text-align: center;padding: 0px;">
                           <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
                           <span class="fw-bolder" style="font-size: 12px;">Formerly( Bicol Sanitarium )</span><br>
@@ -92,14 +92,17 @@
                  </div>
              
                  <div class="content" style="height: 950px;padding: 0px;margin: 0px;">
-                    <h4 class="text-center fw-bolder mb-4" >BACTERIOLOGY</h4>
-                    <table class="w-100 ptx_data mb-2" >
+                    <h4 class="text-center fw-bolder mb-4" >RAPID ANTIGEN TEST for SARS-CoV-19</h4>
+
+                    <!-- {{test}} -->
+                 
+                    <table class="w-100 ptx_data  " style="margin-top: 50px;" >
                         
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">PATIENT:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patlast}}, {{ptx.patfirst}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">RESULT DATE:</td>
-                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ test.verify_date}}</span></td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ release_date}}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">HOSP NO.:</td>
@@ -111,190 +114,80 @@
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">GENDER:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patsex}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">WARD:</td>
-                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ward}}</span></td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{result.wardname}}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">AGE:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patage}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">PHYSICIAN:</td>
-                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{doctor}}</span></td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{result.physician}}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">DOB:</td>
                             <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.birthdate}}</span></td>
                         </tr>
-                     
-                        <tr>
-                            <td class="fw-bolder col-1" align="right" style="font-size: 12px;">Notes:</td>
-                            <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder text-danger">{{test.note}}</span></td>
-                        </tr>
-                       
                     </table>
-                    <!-- {{test}} -->
                     <table class="w-100 result_data mb-2 table table-striped">
-                        <tr class="bg-secondary text-white">
-                            <td colspan="2" class=" fw-bolder" align="center" >TESTS</td>
-                            <td colspan="" class=" fw-bolder" align="center" >RESULTS</td>
+                        <tr class="">
+                            <td width="4" class=" fw-bolder " align="left" >CONTACT NO.:</td>
+                            <td width="8" class=" fw-bolder" align="left" >{{result.contact_no}}</td>
                         </tr>
-                        <tr>
-                            <td style="vertical-align : middle;text-align:center;"  rowspan="3" class="fw-bolder" align="center" >SALMOGEN / TYPHIDOT</td>
-                        </tr>
-                       <tr>
-                        <td class="fw-bolder" align="center" >IgG</td>
-                        <td class="fw-bolder" align="center" > -------- </td>
-                       </tr>
-                       <tr>
-                        <td class="fw-bolder" align="center" >IgM</td>
-                        <td class="fw-bolder" align="center" > -------- </td>
-                       </tr>
-                       <tr>
-                        <td style="vertical-align : middle;text-align:center;" rowspan="4" class="fw-bolder" align="center" >DENGUE TEST</td>
-                     </tr>
-                     <tr>
-                      <td class="fw-bolder" align="center" >IgG</td>
-                      <td class="fw-bolder" align="center" > 
-                        {% if test.dengue_igg == '' %}
-                        --------
-                        {% else %}
-                        {{ test.dengue_igg}}
-                        {% endif %}
-                    </td>
-                     </tr>
-                     <tr>
-                      <td class="fw-bolder" align="center" >IgM</td>
-                      <td class="fw-bolder" align="center" > 
-                        {% if test.dengue_igm == '' %}
-                        --------
-                        {% else %}
-                        {{ test.dengue_igm}}
-                        {% endif %}    
-                    </td>
-                     </tr>
-                     <tr>
-                      <td class="fw-bolder" align="center" >NS1</td>
-                      <td class="fw-bolder" align="center" >
-                        {% if test.dengue_ns1 == '' %}
-                        --------
-                        {% else %}
-                        {{ test.dengue_ns1}}
-                        {% endif %}
-
-                      </td>
-                     </tr>
-                     <tr>
-                        <td style="vertical-align : middle;text-align:center;" rowspan="3" class="fw-bolder" align="center" >MALARIA RAPID TEST</td>
-                     </tr>
-                     <tr>
-                      <td class="fw-bolder" align="center" >P.f.</td>
-                      <td class="fw-bolder" align="center" >   
-                        {% if test.malaria_pf == '' %}
-                        --------
-                        {% else %}
-                        {{ test.malaria_pf}}
-                        {% endif %} 
-                    </td>
-                     </tr>
-                     <tr>
-                      <td class="fw-bolder" align="center" >Pan</td>
-                      <td class="fw-bolder" align="center" >
-
-                        {% if test.malaria_pan == '' %}
-                        --------
-                        {% else %}
-                        {{ test.malaria_pan}}
-                        {% endif %}
-                      </td>
-                     </tr>
-
-                     <tr>
-                        <td style="vertical-align : middle;text-align:center;" rowspan="4" class="fw-bolder" align="center" >GRAM STAIN</td>
-                     </tr>
-                     <tr>
-                      <td colspan="2" class="fw-bolder" align="center" > 
-                        {% if test.gram_ep == '' %}
-                        --------
-                        {% else %}
-                        {{ test.gram_ep}}
-                        {% endif %}
-
-                      </td>
-                     </tr>
-                     <tr>
-                      <td colspan="2" class="fw-bolder" align="center" > 
-                        {% if test.gram_negative == '' %}
-                        --------
-                        {% else %}
-                        {{ test.gram_negative}}
-                        {% endif %}    
-                    </td>
-                     </tr>
-                     <tr>
-                        <td colspan="2" class="fw-bolder" align="center" > 
-
-                            {% if test.gram_positive  == '' %}
-                        --------
-                        {% else %}
-                        {{ test.gram_positive }}
-                        {% endif %}    
-                        </td>
-                       </tr>
-                     <tr>
-                        <td  class="fw-bolder" align="center" >KOH</td>
-                        <td colspan="2" class="fw-bolder" align="center" >
-                            {% if test.koh == '' %}
-                        --------
-                        {% else %}
-                        {{ test.koh}}
-                        {% endif %}        
-                        </td>
-                     </tr>
-                     <tr>
-                        <td  class="fw-bolder" align="center" >ACID FAST STAIN</td>
-                        <td colspan="2" class="fw-bolder" align="center" >
-                            {% if test.acid_fast == '' %}
-                        --------
-                        {% else %}
-                        {{ test.acid_fast}}
-                        {% endif %}    
-                        </td>
-                     </tr>
-
-                     <tr>
-                        <td style="vertical-align : middle;text-align:center;" rowspan="4" class="fw-bolder" align="center" >SKIN SLIT</td>
-                     </tr>
-                     <tr>
-                      <td colspan="2" class="fw-bolder" align="center" > 
-                        {% if test.skin_slit == '' %}
-                        --------
-                        {% else %}
-                        {{ test.skin_slit}}
-                        {% endif %}      
-                    </td>
-                     </tr>
-                     <tr>
-                      <td colspan="2" class="fw-bolder" align="center" > -------- </td>
-                     </tr>
-                     <tr>
-                        <td colspan="2" class="fw-bolder" align="center" > -------- </td>
-                       </tr>
-                       <tr>
-                        <td  class="fw-bolder" align="center" >B.I.</td>
-                        <td colspan="2" class="fw-bolder" align="center" > 
-                            {% if test.bi == '' %}
-                            --------
-                            {% else %}
-                            {{ test.bi}}
-                            {% endif %}    
-                        </td>
-                     </tr>
-                     
-                   
-                        
-                        
                     </table>
 
 
-                    <table class="w-100 staff_data" style="margin-top: 50px;">
+                    <table class="w-100 result_data mb-4 table table-striped">
+                        <tr class="bg-secondary text-white">
+                            <td width="4" class=" fw-bolder" align="center" >TESTS</td>
+                            <td width="8" class=" fw-bolder" align="center" >RESULTS</td>
+                        </tr>
+                        <tr>
+                            <td style="height: 80px; vertical-align: middle; " class="text-center fs-6 fw-bold">{{result.test_type}}</td>
+                            <td style="height: 80px;vertical-align: middle; font-size: 40px;" class="text-center fw-bolder" >
+                                <!-- {{result.result}} -->
+                                 {% if result.result == 'POSITIVE'%}
+                                 <span class="text-danger">{{result.result}}</span>
+                                 {% else %}
+
+                                    {{result.result}}
+                                    <!-- <span class="text-danger"></span> -->
+                                 
+                                 {% endif %}
+                           
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="w-100 result_data mb-2 table table-striped">
+                        <tr class="">
+                            <td width="4" class=" fw-bolder " align="left" >KIT USED:</td>
+                            <td width="8" class=" fw-bolder" align="left" >{{result.kit_used}}</td>
+                        </tr>
+                    </table>
+
+                    <table class="w-100 result_data mb-2 table table-striped">
+                        <tr class="">
+                            <td width="4" class=" fw-bolder " align="left" >LOT NUMBER:</td>
+                            <td width="8" class=" fw-bolder" align="left" >{{result.lot_no}}</td>
+                        </tr>
+                    </table>
+                    <table class="w-100 result_data mb-2 table table-striped">
+                        <tr class="">
+                            <td width="4" class=" fw-bolder " align="left" >EXPIRY DATE:</td>
+                            <td width="8" class=" fw-bolder" align="left" >{{result.expiry_date}}</td>
+                        </tr>
+                    </table>
+
+                    <table class="w-100 result_data mb-4 table table-striped mt-4">
+                        <tr class="">
+                            <td class="bg-secondary text-white fw-bolder" align="center" >REMARKS</td>
+                        </tr>
+                        <tr>
+                            <td style="height: 80px; vertical-align: middle; " class="text-center fs-6 fw-bold">{{result.remarks}} </td>
+                        </tr>
+                    </table>
+
+
+                    <table class="w-100 staff_data" style="margin-top: 100px;">
                         <tr class="bg-secondary text-white fw-bolder">
                             <td>Perfomed By:</td>
                             <td>Verified By:</td>
@@ -303,12 +196,12 @@
                         <tr class="text-center" style="height: 100px;">
                             <td >
                                 <p style="margin-bottom: 50px;"></p>
-                                <p class="fw-bolder mb-0">{{ test.perform_by_name}}</p>
+                                <p class="fw-bolder mb-0">{{ result.perform_by}}</p>
                                 <p>Lic. No. -------</p>
                             </td>
                             <td style="padding: 0px;">
                                 <p style="margin-bottom: 50px;"></p>
-                                <p class="fw-bolder mb-0">{{test.verified_by_name}}</p>
+                                <p class="fw-bolder mb-0">{{result.verified_by}}</p>
                                 <p>Lic. No.-------</p>
                             </td>
                             <td>

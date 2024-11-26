@@ -131,7 +131,7 @@
              </div>
              <div class="form-group col-4 ">
               <label class="mb-0" >KETONE:</label>
-              <select class="form-control form-control-sm ketone" name="ketone">
+              <select class="form-control form-control-sm ketone" disabled name="ketone">
                   <option value="">Select Here</option>
                   <option value="NEGATIVE">NEGATIVE</option>
                   <option value="TRACE">TRACE</option>
@@ -194,7 +194,7 @@
              </div>
              <div class="form-group col-6 ">
               <label class="mb-0" >PROTIEN:</label>
-              <select class="form-control form-control-sm protein" name="protein">
+              <select class="form-control form-control-sm mlprotein" name="mlprotein">
                   <option value="">Select Here</option>
                   <option value="NEGATIVE">NEGATIVE</option>
                   <option value="TRACE">TRACE</option>
@@ -310,33 +310,41 @@
               <label class="mb-0" >RBC CAST:</label>
               <input class="form-control form-control-sm crbc" name="crbc">
              </div>
-             <!-- <div class="form-group col-4 ">
-              <label class="mb-0" >PREGNANCY TEST:</label>
-              <select class="form-control form-control-sm pregnancy" name="pregnancy">
+             <h5 class="text-center fw-bolder bg-dark text-white p-2">PREGNANCY TEST</h5>
+             <div class="form-group col-12 ">
+              <label class="mb-0" >PREGNANCY RESULT:</label>
+              <select class="form-control form-control-sm pregnancy" disabled name="pregnancy">
                   <option value="">Select Here</option>
                   <option value="NEGATIVE">NEGATIVE</option>
                   <option value="POSITIVE">POSITIVE</option>
               </select>
-             </div> -->
-             <div class="form-group col-4 ">
-              <label class="mb-0" >OTHERS:</label>
+             </div>
+
+             <div class="form-group col-12 ">
+              <label class="mb-0" >NOTES:</label>
               <input class="form-control form-control-sm others" name="others">
              </div>
-             <div class="form-group col-4 ">
+
+             <div class="form-group col-12 perfor_input" hidden>
+              <label class="mb-0" >PERFORM BY:</label>
+              <input  disabled class="form-control form-control-sm performby" name="performby">
+              <input hidden class="form-control form-control-sm performbyId" name="performbyId">
+             </div>
+             <!-- <div class="form-group col-4 ">
               <label class="mb-0" >NOTES:</label>
               <input class="form-control form-control-sm notes" name="notes">
               
-             </div>
+             </div> -->
              <!-- ///////////// -->
               </div>
                 
                 <div class="form-group">
-                  <input hidden  class="form-control form-control-sm orderid" name="orderid">
-                  <input hidden  class="form-control form-control-sm proccode" name="proccode">
-                  <input hidden  class="form-control form-control-sm hpercode" name="hpercode">
-                  <input hidden  class="form-control form-control-sm prikey" name="prikey">
-                  <input hidden  class="form-control form-control-sm encc" name="encc">
-                  <input hidden class="form-control form-control-sm stype" name="stype">
+                  <input hidden   class="form-control form-control-sm orderid" name="orderid">
+                  <input hidden   class="form-control form-control-sm proccode" name="proccode">
+                  <input hidden   class="form-control form-control-sm hpercode" name="hpercode">
+                  <input hidden   class="form-control form-control-sm prikey" name="prikey">
+                  <input hidden   class="form-control form-control-sm encc" name="encc">
+                  <input hidden  class="form-control form-control-sm stype" name="stype">
        
     
                   </div>
@@ -344,8 +352,9 @@
         </div>
         <div class="modal-footer">
           <div class="btn btn-group">
+            <span class="msg text-danger mr-2"></span>
             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-            <button class="btn btn-success " type="submit" form="add_ua_res">Save and Send</button>
+            <button class="btn btn-success  ua_sub_btn" type="submit" form="add_ua_res">Save and Send</button>
           </div>
           
         </div>
@@ -353,6 +362,10 @@
       </div>
     </div>
   </div>
+
+
+
+
 
   <!-- /////////// Urinalysis Add Result/////////////// -->
 <div class="modal fade" id="res_urinalysis_verify" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -666,7 +679,7 @@
               <label class="mb-0" >RBC CAST:</label>
               <input class="form-control form-control-sm vcrbc" name="vcrbc">
              </div>
-             <div class="form-group col-4 ">
+             <div class="form-group col-6 ">
               <label class="mb-0" >PREGNANCY TEST:</label>
               <select class="form-control form-control-sm vpregnancy" name="vpregnancy">
                   <option value="">Select Here</option>
@@ -674,15 +687,15 @@
                   <option value="POSITIVE">POSITIVE</option>
               </select>
              </div>
-             <div class="form-group col-4 ">
+             <div class="form-group col-6 ">
               <label class="mb-0" >OTHERS:</label>
               <input class="form-control form-control-sm vothers" name="vothers">
              </div>
-             <div class="form-group col-4 ">
+             <!-- <div class="form-group col-4 ">
               <label class="mb-0" >NOTES:</label>
               <input class="form-control form-control-sm vnotes" name="vnotes">
               
-             </div>
+             </div> -->
   
   
              <div class="form-group col-12 ">
@@ -854,9 +867,10 @@
                   <option value="WATERY">WATERY</option>
               </select>
              </div>
+             
              <div class="form-group col-4 ">
               <label class="mb-0" >OCCULT BLOOD:</label>
-              <select class="form-control form-control-sm occult_blood" name="occult_blood">
+              <select class="form-control form-control-sm occult_blood" disabled name="occult_blood">
                   <option value="">Select Here</option>
                   <option value="NEGATIVE">NEGATIVE</option>
                   <option value="POSITIVE">POSITIVE</option>
@@ -875,7 +889,7 @@
              </div>
              <div class="form-group col-4 ">
               <label class="mb-0" >YEAST CELLS:</label>
-              <select class="form-control form-control-sm yeast_cell" name="yeast_cell">
+              <select class="form-control form-control-sm yeast" name="yeast">
                   <option value="">Select Here</option>
                   <option value="RARE">RARE</option>
                   <option value="FEW">FEW</option>
@@ -930,13 +944,13 @@
               <label class="mb-0" >ENTEROBIUS VERMICULARIS:</label>
               <input class="form-control form-control-sm vermi" name="vermi">
              </div>
+             
+
              <div class="form-group col-6 ">
-              <label class="mb-0" >OTHERS:</label>
-              <select class="form-control form-control-sm other" name="other">
-                  <option value="">Select Here</option>
-                  <option value="NO OVA PARASITE SEEN">NO OVA PARASITE SEEN</option>
-              </select>
+              <label class="mb-0" >OTHERS</label>
+              <input class="form-control form-control-sm other" value="NO OVA PARASITE SEEN" name="other"> 
              </div>
+
              <div class="form-group col-6 ">
               <label class="mb-0" >NOTE:</label>
               <input class="form-control form-control-sm note" name="note"> 
@@ -945,7 +959,7 @@
              <div class="form-group col-12 perform_field" hidden>
               <label class="mb-0" >PERFORMED BY:</label>
               <input class="form-control form-control-sm performBy" readonly name="performBy">
-              <input class="form-control form-control-sm performById" name="performById"> 
+              <input hidden class="form-control form-control-sm performById" name="performById"> 
              </div>
              
              
@@ -953,13 +967,13 @@
              <!-- ///////////// -->
               </div>
               <div class="form-group">
-                <input hidden class="form-control form-control-sm action" id="action" name="action">
-                <input hidden class="form-control form-control-sm orderid" name="orderid">
-                <input hidden class="form-control form-control-sm hpercode" name="hpercode">
-                <input hidden class="form-control form-control-sm proccode" name="proccode">
-                <input hidden class="form-control form-control-sm encc" name="encc">
-                <input hidden class="form-control form-control-sm prikey" name="prikey">
-                <input hidden class="form-control form-control-sm stype" name="stype">
+                <input hidden   class="form-control form-control-sm action" id="action" name="action">
+                <input hidden   class="form-control form-control-sm orderid" name="orderid">
+                <input hidden   class="form-control form-control-sm hpercode" name="hpercode">
+                <input hidden   class="form-control form-control-sm proccode" name="proccode">
+                <input hidden   class="form-control form-control-sm encc" name="encc">
+                <input hidden   class="form-control form-control-sm prikey" name="prikey">
+                <input hidden   class="form-control form-control-sm stype" name="stype">
   
                 </div>
                 
@@ -968,7 +982,7 @@
         <div class="modal-footer">
           <div class="btn btn-group">
             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-            <button class="btn btn-primary"readonly id="fecal_btn" type="submit" form="fecalysis_frm">Submit</button>
+            <button class="btn btn-primary"  id="fecal_btn" type="submit" form="fecalysis_frm">Submit</button>
           </div>
           
         </div>
@@ -1015,7 +1029,7 @@
               </div>
               <div class="form-group perform_field" hidden>
                 <input type="text" class="form-control performBy" readonly name="performBy">
-                <input type="text" class="form-control performById" readonly name="performById">
+                <input type="hidden" class="form-control performById" readonly name="performById">
                 </div>
   
                 <div class="form-group">
@@ -1039,5 +1053,76 @@
     </div>
   </div>
   <!-- ////////////////////// -->
+
+
+
+
+
+  <!-- modal new -->
+  <div class="modal fade" id="toprocess_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"><i class="fa fa-vial-virus" aria-hidden="true"></i> SEND TO PROCCESS</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-center fw-bolder bg-dark text-white">PATIENT INFORMATION</h4>
+          <table class="mb-2 table-bordered w-100 p-2">
+            <tr>
+              <td colspan="3"> HOSPITAL NO.: <span class="fs-6 fw-bolder hpercode"> 230000000000001</span></td></tr>
+            <tr>
+            <tr>
+              <td colspan="3"> PATIENT: <span class="fs-6 fw-bolder uptx"> CECILIO, SALVADOR BALONCIO</span></td></tr>
+            <tr>
+              <td> GENDER: <span class=" fw-bolder gender">MALE</span></td>
+              <td> AGE: <span class=" fw-bolder age">123</span></td>
+              <td> CIVIL STATUS: <span class=" fw-bolder cstat">SINGLE</span></td>
+            </tr>
+            <tr>
+              <td> WARD: <span class=" fw-bolder uward">OPD</span></td>
+              <td colspan="2"> REQUESTED: <span class=" fw-bolder urec">07/21/1990</span></td>
+            </tr>
+            <tr>
+              <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder uctr">OP23-000001</span></td>
+            </tr>
+          </table>
+          <h4 class="text-center fw-bolder bg-dark text-white">-- MICROSCOPY TEST --</h4>
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <td>#</td>
+                <td>DESCRIPTION</td>
+              </tr>
+            </thead>
+            
+            <tbody id="micro_toproc_tbl">
+            </tbody>
+          </table>
+
+
+            <form id="toprocess_frm">
+                <div class="form-group">
+                  <input hidden type="text"  class="form-control micro_type" name="micro_type">
+                    <input hidden type="text"  class="form-control micro_orderid" name="micro_orderid">
+                    <input hidden type="text"  class="form-control micro_encc" name="micro_encc">
+                    <input hidden class="form-control form-control-sm micro_action"  name="micro_action">
+  
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="toprocess_frm">Submit to Process</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
 
 

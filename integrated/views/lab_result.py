@@ -1007,7 +1007,7 @@ def result_obf_hematology(request):
 
 
 ####################################### URINALYSIS RESULT
-def result_Urinalysis(request,encc,orderid):
+def result_Urinalysis(request,encc,orderid,wardname,doctor):
     getuaresult=requests.post(get_urinalysis,data={'order_id':orderid}).json()
     ptx_req=requests.post(get_lab_request, data={'enccode':encc,'order_id':orderid}).json()
 
@@ -1031,6 +1031,7 @@ def result_Urinalysis(request,encc,orderid):
     logo = ImageReader(static_root + '/integrated/img/brghgmclogo.png')
     logo1 = ImageReader(static_root + '/integrated/img/dohlogo.png')
     padaba = ImageReader(static_root + '/integrated/img/pagpadaba.png')
+    esig = ImageReader(static_root + '/integrated/img/pagpadaba.png')
     response = HttpResponse(content_type='application/pdf')
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer)
@@ -1353,6 +1354,7 @@ def result_Urinalysis(request,encc,orderid):
 
     p.setFont("Times-Roman", 10, leading=None)
     p.drawString(5.5*inch, 0.75*inch, "Approved by:")
+    p.drawImage(esig, 6.25*inch, 0.70*inch, mask='auto', width=90, height=10)
     p.drawString(5.75*inch, 0.45*inch, "_______________________________")
     p.drawString(5.75*inch, 0.55*inch,"RAYMUNDO B. IBARRIENTOS,MD")
     p.setFont("Times-Italic", 8, leading=None)

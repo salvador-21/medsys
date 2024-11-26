@@ -16,7 +16,7 @@
 
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <button  href="#"class="btn btn-sm btn-primary toreleased_btn" >Release</button></div>
+            <button  href="#"class="btn btn-sm btn-primary toreleased_btn" >Release </button></div>
             <input class="form-control" id="search_torel" placeholder="Search Result" type="text">
           </div>
 
@@ -75,9 +75,9 @@
               <textarea class="form-control" required style="width:100%" name="en_remarks"></textarea>
             </div>
             <div class="form-group">
-              <input class="form-control" readonly style="width:100%" id="en_key" name="en_key">
-              <input class="form-control" readonly style="width:100%" id="en_orderid" name="en_orderid">
-              <input class="form-control" readonly style="width:100%" id="en_encc" name="en_encc">
+              <input class="form-control" hidden style="width:100%" id="en_key" name="en_key">
+              <input class="form-control" hidden style="width:100%" id="en_orderid" name="en_orderid">
+              <input class="form-control" hidden style="width:100%" id="en_encc" name="en_encc">
             </div>
           </form>
       </div>
@@ -285,25 +285,18 @@
             <th>Received</th>
             <th>Laboratory Name</th>
             <th>Price</th>
-            <th>Remarks</th>
             <th>Status</th>
             <th class="text-center"></th>
         </tr>
     </thead>
     <tbody id="view_request">
-      <tr>
-        <td>1</td>
-        <td></td>
-        <td ><span class="fs-5 fw-bolder ">Urinalysis</span> </td>
-        <td>1125</td>
-        <td><span class="badge bg-dark">No Sample</span></td>
-        <td><button class="btn btn-primary btn-sm">Accept</button></td>
-        <td><button class="btn btn-dark btn-sm">Endorse</button></td>
-      </tr>
-    
 
     </tbody>
     </table>
+    <h4 class="text-center fw-bolder bg-dark text-white col-4" style="margin-bottom: -10px;">-- REMARKS --</h4>
+    <textarea class="form-control r_remarks text-center fw-bolder fs-4"  id="r_remarks" readonly>
+
+    </textarea>
     
     <div class="vloader" style="
       border: 16px solid #f3f3f3;

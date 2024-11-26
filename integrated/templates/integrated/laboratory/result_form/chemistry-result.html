@@ -32,7 +32,7 @@
         /* border: 5px red solid; */
         height: 297mm;
         /* outline: 1cm #FFEAEA solid; */
-        background-image:url("{% static 'integrated/img/lab-bg.png'%}") ;
+        background-image:url("http://173.10.7.2/medsys-static-files/integrated/img/lab-bg.png") ;
         background-repeat: no-repeat; background-size: cover; background-position: center center;
     }
     
@@ -85,23 +85,24 @@
 
         </style>
     </head>
-    <body  oncontextmenu="return false">
+    <!-- <body  oncontextmenu="return false"> -->
+        <body>
     
-        {% for c in result%}
+        {% for c in result %}
         <div class="book">
             <div class="page">
                 <div class="subpage">
                  <div class="header" style="height: 100px;">
                     <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
                         <tr>
-                        <td style="padding-bottom: 4px;"><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
-                        <td style="padding-bottom: 4px;"><img src="{% static 'integrated/img/doh.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td style="padding-bottom: 4px;"><img src="http://173.10.7.2/medsys-static-files/integrated/img/doh.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td style="padding-bottom: 4px;"><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
                         <td style="text-align: center;padding: 0px;">
-                          <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
-                          <span class="fw-bolder" style="font-size: 12px;">Formerly( Bicol Sanitarium )</span><br>
-                          <span style="font-size: 10px;">San Pedro, Cabusao, Camarines Sur</span><br>
-                          <span style="font-size: 10px;">Telephone Nos.: (054) 473-2244; 472-4422, 881-1033, 881-1761</span><br>
-                          <span style="font-size: 10px;">Email Address: bicolsan@yahoo.com; brghgmc@gmail.com</span>
+                          <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45);margin-left: -50px;position: relative;">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
+                          <span class="fw-bolder" style="font-size: 12px;margin-left: -50px;position: relative;">Formerly( Bicol Sanitarium )</span><br>
+                          <span style="font-size: 10px;margin-left: -50px;position: relative;">San Pedro, Cabusao, Camarines Sur</span><br>
+                          <span style="font-size: 10px;margin-left: -50px;position: relative;">Telephone Nos.: (054) 473-2244; 472-4422, 881-1033, 881-1761</span><br>
+                          <span style="font-size: 10px;margin-left: -50px;position: relative;">Email Address: bicolsan@yahoo.com; brghgmc@gmail.com</span>
                         </td>
                         </tr>
                     </table>
@@ -121,7 +122,7 @@
                             <td class="#" colspan="2"  style="font-size: 14px;border-bottom: .5px solid black;"><span class="fw-bolder text-danger">{{ctr}}</span></td>
                         </tr>
                         <tr>
-                            <td class="fw-bolder" align="right" style="font-size: 11px;border: 0px; width: 50px;">Fullname:</td>
+                            <td class="fw-bolder" align="right" style="font-size: 11px;border: 0px; width: 50px;">Patient:</td>
                             <td class="#" align="left" style="font-size: 14px;border-bottom: .5px solid black;"><span class="fw-bolder">{{c.patlast}}, {{c.patfirst}} {{c.patmiddle}} </span></td>
                             <td class="fw-bolder " align="right" style="font-size: 10px;">Age:</td>
                             <td class="" style="font-size: 11px;border-bottom: .5px solid black;"><span class="fw-bolder">{{age}}</span></td>
@@ -153,208 +154,279 @@
                     </table>
                     <!-- {{res_data}} -->
                     <table class="w-100 result_data mb-2 table table-striped">
-                        <tr class="bg-dark text-white">
+                        <tr class="bg-secondary text-white">
                             <td class="col-3 fw-bolder" align="center" >TESTS</td>
                             <td class="col-3 fw-bolder" align="center">RESULTS</td>
                             <td class="col-6 fw-bolder" align="center">NORMAL VALUES</td>
                         </tr>
-                        <tr >
+                        {% if res_data.hba1c != ''%}
+                        <tr 
+                        >
                             <td class="col-3 fw-bolder" align="center" >HBA1C</td>
-                            <td class="col-3 fw-bolder" style="font-size: 16px;" align="center"><span class="hba1c">
-                                {{ res_data.hba1c}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.hba1c}}</span> - <i>{{res_data.hba1c_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{ res_data.hba1c_nv}}
                             </td>
                         </tr>
-                    
-                        <tr>
+                        {% endif %}
+                        {% if res_data.glucose_fbs != '' %}
+                        <tr
+                      
+                        >
                             <td class="col-3 fw-bolder" align="center" >Glucose FBS</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="fbs">
-                                {{ res_data.glucose_fbs}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.glucose_fbs}}</span> - <i>{{res_data.glucose_fbs_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{ res_data.glucose_fbs_nv}}
                             </td>
                         </tr>
-                        <tr class="">
+                        {% endif %}
+                        {% if res_data.glucose_rbs != '' %}
+                        <tr 
+                      
+                        >
                             <td class="col-3 fw-bolder" align="center" >Glucose RBS</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="rbs">
-                                {{ res_data.glucose_rbs}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.glucose_rbs}}</span> - <i>{{res_data.glucose_rbs_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" > {{ res_data.glucose_rbs_nv}}</td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        
+                        {% if res_data.cholesterol != '' %}
+                        <tr 
+                        >
                             <td class="col-3 fw-bolder" align="center" >Cholesterol</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="cholesterol">
-                                {{res_data.cholesterol}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.cholesterol}}</span> - <i>{{res_data.cholesterol_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.cholesterol_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.triglycerides != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Triglycerides</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="triglyceride">
-                                 {{res_data.triglycerides}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.triglycerides}}</span> - <i>{{res_data.triglycerides_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
-                                {{res_data.triglycerides}}
+                                {{res_data.triglycerides_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.hdl_cholesterol != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >HDL Cholesterol</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="hdl">
-                                {{res_data.hdl_cholesterol}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.hdl_cholesterol}}</span> - <i>{{res_data.hdl_cholesterol_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                               {{res_data.hdl_cholesterol_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.ldl_cholesterol != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >LDL Cholesterol</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="ldl">
-                                {{res_data.ldl_cholesterol}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.ldl_cholesterol}}</span> - <i>{{res_data.ldl_cholesterol_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.ldl_cholesterol_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.blood_uric != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Blood Uric Acid</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="bua">
-                                {{res_data.blood_uric}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.blood_uric}}</span> - <i>{{res_data.blood_uric_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.blood_uric_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.blood_urea != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Blood Urea Nitrogen</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="bun">
-                                {{res_data.blood_urea}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.blood_urea}}</span> - <i>{{res_data.blood_urea_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.blood_urea_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif%}
+                        {% if res_data.creatinine != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Creatinine</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="crea">
-                               {{res_data.creatinine}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.creatinine}}</span> - <i>{{res_data.creatinine_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                {{res_data.creatinine_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.alt_sgpt != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >ALT/SGPT</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="alt">
-                               {{res_data.alt_sgpt}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.alt_sgpt}}</span> - <i>{{res_data.alt_sgpt_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.alt_sgpt_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.ast_sgot != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >AST/SGOT</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="ast">
-                                {{res_data.ast_sgot}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.ast_sgot}}</span> - <i>{{res_data.ast_sgot_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.ast_sgot_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                     
+                        {% if res_data.potassium != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Potassium(K)</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="potassium">
-                                {{res_data.potassium}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.potassium}}</span> - <i>{{res_data.potassium_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.potassium_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.sodium != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Sodium(Na)</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="sodium">
-                             {{res_data.sodium}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.sodium}}</span> - <i>{{res_data.sodium_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.sodium_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.chloride != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Chloride(Cl)</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="chloride">
-                                {{res_data.chloride}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.chloride}}</span> - <i>{{res_data.chloride_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.chloride_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.total_calcium != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Total Calcium(Tca)</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="tca">
-                                {{res_data.total_calcium}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.total_calcium}}</span> - <i>{{res_data.total_calcium_flag}}</i>
+                            </td>
                             <td class="col-3" align="center" >
                                 {{res_data.total_calcium_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.ionized_calcium != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Ionized Calcium(iCa)</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="ica">
-                               {{res_data.ionized_calcium}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.ionized_calcium}}</span> - <i>{{res_data.ionized_calcium_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.ionized_calcium_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.magnesium != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Magnesium(Mg)</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="magnesium">
-                                {{res_data.magnesium}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.magnesium}}</span> - <i>{{res_data.magnesium_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.magnesium_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.phosphorus != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Phosporus</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="phosphorus">
-                                {{res_data.phosphorus}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.phosphorus}}</span> - <i>{{res_data.phosphorus_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.phosphorus_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.total_protein != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Total Protein</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="tprotein">
-                                {{res_data.total_protein}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.total_protein}}</span> - <i>{{res_data.total_protein_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.total_protein_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.albumin != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Albumin</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="albumin">
-                            {{res_data.albumin}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.albumin}}</span> - <i>{{res_data.albumin_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                {{res_data.albumin_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.globulin != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Globulin</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="globulin">
-                                {{res_data.globulin}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.globulin}}</span> - <i>{{res_data.globulin_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.globulin_nv}}
                             </td>
                         </tr>
+                        {% endif %}
+                        <!-- no test -->
+                        {% if res_data.ag_ration != '' %}
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >A/G Ratio</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ag_ratio">
@@ -364,60 +436,120 @@
                                 {{res_data.ag_ration_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+
+                        {% if res_data.alkaline_phospatase != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Alkaline Phospatase</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="aklp">
-                               {{res_data.alkaline_phospatase}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.alkaline_phospatase}}</span> - <i>{{res_data.alkaline_phospatase_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.alkaline_phospatase_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.amylase != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Amylase</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="amylase">
-                                {{res_data.amylase}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.amylase}}</span> - <i>{{res_data.amylase_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.amylase_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.lipase != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Lipase</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="lipase">
-                                {{res_data.lipase}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.lipase}}</span> - <i>{{res_data.lipase_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.lipase_nv}}
                             </td>
                         </tr>
+                        {% endif %}
+
+                        {% if res_data.ggt != '' %}
                         <tr>
-                            <td class="col-3 fw-bolder" align="center" >LDH</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="ldh">
-                                {{res_data.ldh}}
+                            <td class="col-3 fw-bolder" align="center" >GGT</td>
+                            <td class="col-3 fw-bolder" align="center"><span class="lipase">
+                                {{res_data.ggt}}
                             </span></td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.ggt_nv}}
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                        {% if res_data.ldh != '' %}
+                        <tr
+                        >
+                            <td class="col-3 fw-bolder" align="center" >LDH</td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.ldh}}</span> - <i>{{res_data.ldh_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.ldh_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.ferritin != '' %}
+                        <tr
+                        >
+                            <td class="col-3 fw-bolder" align="center" >Ferritin</td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.ferritin}}</span> - <i>{{res_data.ferritin_flag}}</i>
+                            </td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.ferritin_nv}}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        
+                        {% if res_data.cortisol != '' %}
+                        <tr
+                        >
+                            <td class="col-3 fw-bolder" align="center" >Cortisol</td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.cortisol}}</span> - <i>{{res_data.cortisol_flag}}</i>
+                            </td>
+                            <td class="col-3 " align="center" >
+                                {{res_data.cortisol_nv}}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        
+                        {% if res_data.total_bilirubin != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Total Bilirubin</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="tbili">
-                                {{res_data.total_bilirubin}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.total_bilirubin}}</span> - <i>{{res_data.total_bilirubin_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.total_bilirubin_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        {% endif %}
+                        {% if res_data.direct_bilirubin != '' %}
+                        <tr
+                        >
                             <td class="col-3 fw-bolder" align="center" >Direct Bilirubin</td>
-                            <td class="col-3 fw-bolder" align="center"><span class="dbili">
-                                {{res_data.direct_bilirubin}}
-                            </span></td>
+                            <td class="col-3" align="center">
+                                <span class="fw-bolder">{{ res_data.direct_bilirubin}}</span> - <i>{{res_data.direct_bilirubin_flag}}</i>
+                            </td>
                             <td class="col-3 " align="center" >
                                 {{res_data.direct_bilirubin_nv}}
                             </td>
                         </tr>
+                        {% endif %}
+                        {% if res_data.indirect_bilirubin != '' %}
                         <tr>
                             <td class="col-3 fw-bolder" align="center" >Indirect Bilirubin</td>
                             <td class="col-3 fw-bolder" align="center"><span class="ibili">
@@ -427,6 +559,8 @@
                                 {{res_data.indirect_bilirubin_nv}}
                             </td>
                         </tr>
+                        {% endif %}
+                      
                     </table>
 
                     
@@ -463,7 +597,8 @@
                             </td>
                             <td>
                                 <!-- <p style="margin-bottom: 30px;"></p> -->
-                                <img src="{% static 'integrated/laboratory/signature/ibarrientos.png'%}" style="width: 200px;height: 50px;margin-bottom: -10px;">
+                                <img src="http://173.10.7.2/medsys-static-files/integrated/laboratory/signature/ibarrientos.png" style="width: 200px;height: 50px;margin-bottom: -10px;">
+                                <!-- <img src="http://173.10.7.2/medsys-static-files/integrated/laboratory/signature/ibarrientos.png" style="width: 200px;height: 50px;margin-bottom: -10px;"> -->
                                 <p class="fw-bolder mb-0" style="font-size: 14px;">RAYMUNDO B. IBARRIENTOS, MD.</p>
                                 <p>Lic. No. 0078995</p>
                             </td>
@@ -479,7 +614,7 @@
                             <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
                             <td width="20%" align="center"><span>Rev 8</span></td>
                             <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
-                            <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                            <td width="25%" align="right"><img src="http://173.10.7.2/medsys-static-files/integrated/img/padabrghgmc.png" style="width: 150px; height: 20px;margin: 0px;" /></td>
                         </tr>
                     </table>
 
@@ -491,7 +626,7 @@
            
         </div>
         {%endfor%}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+       
        
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script>

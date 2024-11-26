@@ -1,6 +1,79 @@
 <!-- add kit form -->
 
-<div class="modal fade" id="addkitform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="updatekitform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">UPDATE KIT FORM</h5>
+          <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="updatekit_frm" action="#" method="post">
+                {% csrf_token %}
+                <input type="text" class="form-control ukitid" name="ukitid" id="ukitid">
+                <div class="form-group">
+                    <label>Kit Name:</label>
+                    <input type="text" class="form-control ukit_name" name="ukit_name" id="ukit_name" required>
+                    <!-- <select class="form-control" style="width:100%" id="kitname" name="kitname">
+                        <option value="">Please choose</option>
+                       
+                    </select> -->
+                </div>
+                <div class="form-group">
+                    <label>Lot No.:</label>
+                    <input type="text" class="form-control ulot_no" name="ulot_no" id="ulot_no" required >
+                </div>
+                <div class="form-group">
+                    <label>Expiry Date:</label>
+                    <input type="date" class="form-control uexpiry_date" name="uexpiry_date" id="uexpiry_date" required >
+                </div>
+                <!-- <div class="form-group">
+                    <input type="text" value="BACTI" class="form-control modality" name="modality" readonly >
+                </div> -->
+                <div class="input-group mb-3 ">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text  fw-bolder">MODALITY</span>
+                  </div>
+                  <!-- <input type="text" class="form-control" name="rdt_result" id="rdt_result" placeholder="Rapid Test Result"> -->
+                  <select class="form-control  fw-bolder" required name="umodality" id="umodality">
+                      <option value="">Please Select Result</option>
+                      <option value="BACTI">BACTI</option>
+                      <option value="SEROLOGY">SEROLOGY</option>
+                  </select>
+              </div>
+
+              <div class="input-group mb-3 ">
+                <div class="input-group-prepend">
+                  <span class="input-group-text  fw-bolder">STATUS</span>
+                </div>
+                <!-- <input type="text" class="form-control" name="rdt_result" id="rdt_result" placeholder="Rapid Test Result"> -->
+                <select class="form-control  fw-bolder" required name="ustatus" id="ustatus">
+                    <option value="">Please Select Result</option>
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
+                </select>
+            </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-group">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-success" type="submit" form="updatekit_frm">Update Kit</button>
+
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ////////////// Update Kit -->
+
+  <div class="modal fade" id="addkitform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -13,20 +86,20 @@
             <form id="addkit_frm" action="#" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="disc-type">Kit Name:</label>
-                    <input type="text" class="form-control kit_name" name="kit_name" required>
+                    <label>Kit Name:</label>
+                    <input type="text" class="form-control kit_name" name="kit_name" id="kit_name" required>
                     <!-- <select class="form-control" style="width:100%" id="kitname" name="kitname">
                         <option value="">Please choose</option>
                        
                     </select> -->
                 </div>
                 <div class="form-group">
-                    <label for="disc-type">Lot No.:</label>
-                    <input type="text" class="form-control lot_no" name="lot_no" required >
+                    <label>Lot No.:</label>
+                    <input type="text" class="form-control lot_no" name="lot_no" id="lot_no" required >
                 </div>
                 <div class="form-group">
-                    <label for="disc-type">Expiry Date:</label>
-                    <input type="date" class="form-control expiry_date" name="expiry_date" required >
+                    <label>Expiry Date:</label>
+                    <input type="date" class="form-control expiry_date" name="expiry_date" id="expiry_date" required >
                 </div>
                 <!-- <div class="form-group">
                     <input type="text" value="BACTI" class="form-control modality" name="modality" readonly >

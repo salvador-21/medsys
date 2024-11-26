@@ -117,7 +117,7 @@
                  <div class="content" style="height: 670px;padding: 0px;margin-top: -25px;">
                     <h6 class="text-center fw-bolder " >LABORATORY REQUEST</h6>
                     <h5 class="text-center  mb-4" style="margin-top: -10px;">( {{ward}} )</h5>
-                    {% for p in ptx %}
+                 
                     <table class="w-100  mb-2" style="margin-top:-20px">
                         <tr>
                             <td align="right" colspan="4" style="font-size: 11;" >Request Date: <span class="vval" >07-28-2024</span></td>
@@ -126,8 +126,8 @@
                             <td align="right" colspan="4" style="font-size: 11;" >Control No.: <span class="vval"  >{{ ctr }}</span></td>
                         </tr>
                         <tr>
-                            <td class="fw-bolder col-6" align="left" style="font-size: 11px;border: 0px; width: 50px;">Patient: <span class="vval fw-bolder">{{ p.patlast }}, {{ p.patfirst}}</span></td>
-                            <td class="fw-bolder col-1" align="right" style="font-size: 10px;">Age: <span class="vval">{{p.patage}}</span></td>
+                            <td class="fw-bolder col-6" align="left" style="font-size: 11px;border: 0px; width: 50px;">Patient: <span class="vval fw-bolder">{{ptxdata.name}}</span></td>
+                            <td class="fw-bolder col-1" align="right" style="font-size: 10px;">Age: <span class="vval">{{ptx.patage}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 10px;">Sex: <span class="vval">
                                 {% if p.patsex == 'M' %}
                                 MALE
@@ -146,7 +146,7 @@
                             </span></td>
                         </tr>
                         <tr>
-                            <td class="fw-bolder " align="left" style="font-size: 10px;">Hospital No.: <span class="vval">{{p.hpercode}}</span></td>
+                            <td class="fw-bolder " align="left" style="font-size: 10px;">Hospital No.: <span class="vval">{{ptxdata.hosno}}</span></td>
                             <td class="fw-bolder " colspan="3"  align="left" style="font-size: 10px;">Requesting Doctor: <span class="vval">{{doctor}}</span></td>
                            
                         </tr>
@@ -155,10 +155,10 @@
                             <td align="left" colspan="3" style="font-size: 12;border-bottom: 1px solid black;" >Extraction Time.:<span class="vval"></span></td>
                             
                         </tr>
-                       
+                      
                 
                     </table>
-                    {% endfor %}
+                   
                     <table class="w-100 result_data mb-2 table table-striped">
                         <tr class="bg-dark text-white">
                             <td class="col-3 fw-bolder" align="center" >LABORATORY TESTS</td>

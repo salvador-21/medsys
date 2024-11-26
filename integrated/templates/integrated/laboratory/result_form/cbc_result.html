@@ -30,7 +30,8 @@
         /* padding: 10px; */
         /* border: 5px red solid; */
         height: 256mm;
-        background-image:url("{% static 'integrated/img/lab-bg.png'%}") ;
+        /* background-image:url("{% static 'integrated/img/lab-bg.png'%}") ; */
+        background-image:url("http://173.10.7.2/medsys-static-files/integrated/img/lab-bg.png") ;
         /* outline: 1cm #FFEAEA solid; */
         background-repeat: no-repeat; background-size: cover; background-position: center center;
     }
@@ -77,8 +78,10 @@
                  <div class="header" style="height: 100px;">
                     <table style="border-bottom: 4px solid rgb(14, 14, 187);width: 100%;">
                         <tr>
-                        <td><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
-                        <td><img src="{% static 'integrated/img/doh.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <!-- <td><img src="{% static 'integrated/img/brghgmclogo.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="{% static 'integrated/img/doh.png'%}" style="width: 70px; height: 70px;margin: 0px;" /></td> -->
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/brghgmclogo.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
+                        <td><img src="http://173.10.7.2/medsys-static-files/integrated/img/doh.png" style="width: 70px; height: 70px;margin: 0px;" /></td>
                         <td style="text-align: center;padding: 0px;">
                           <span style="font-weight: bolder;font-size: 14px;color:rgb(3, 87, 45)">BICOL REGION GENERAL HOSPITAL AND GERIATRIC MEDICAL CENTER</span><br>
                           <span class="fw-bolder" style="font-size: 12px;">Formerly( Bicol Sanitarium )</span><br>
@@ -121,13 +124,16 @@
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">DOB:</td>
-                            <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{patient.birthdate}}</span></td>
+                            <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">
+                                {{patient.birthdate|slice:9}}
+                                <!-- {{patient.birthdate}} -->
+                            </span></td>
                         </tr>
                      
-                        <tr>
+                        <!-- <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">Notes:</td>
                             <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder text-danger">{{ r.note}}</span></td>
-                        </tr>
+                        </tr> -->
                        
                     </table>
 
@@ -139,297 +145,139 @@
                             <td class="col-2 fw-bolder" align="center" >RANGE</td>
                             
                         </tr>
-                        <tr>
+                        <tr
+                
+                        >
                             <td class="col-2 fw-bolder" align="center" >Hemoglobin</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.hemoglobin}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.hemoglobin_res}}</span> - <i>{{r.hemoglobin_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">g/dL</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if patient.patage < 1 %}
-                                    4.00 - 6.00
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                    4.10 - 5.50
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                     4.00 - 5.40
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                        4.00 - 5.40
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                    11.5 - 15.2
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                    13.0 - 17.0
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.hemoglobin_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+               
+                        >
                             <td class="col-2 fw-bolder" align="center" >Hematocrit</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.hematocrit}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.hematocrit_res}}</span> - <i>{{r.hematocrit_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">%</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                    44.0 - 64.0
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                36.0 - 44.0
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                    36.0 - 44.0
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                37.0 - 45.0
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                35.0 - 46.0
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                39.0 - 52.0
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.hematocrit_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+    
+                        >
                             <td class="col-2 fw-bolder" align="center" >RBC Count</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.rbc_count}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.rbc_count_res}}</span> - <i>{{r.rbc_count_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">10<sup>6</sup>/μL</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                4.00 - 6.00
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                4.10 - 5.50
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                4.10 - 5.50
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                4.00 - 5.40
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                3.80 - 5.20
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                4.20 - 6.00
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.rbc_count_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >MCV</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.mcv}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.mcv_res}}</span> - <i>{{r.mcv_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">μm<sup>3</sup></td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                100.0 - 112.0
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                73.0 - 89.0
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                73.0 - 89.0
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                77.0 - 91.0
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                77.0 - 97.0
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                76.0 - 100.0
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.mcv_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >MCH</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.mch}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.mch_res}}</span> - <i>{{r.mch_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">pg</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                30.0 - 38.0
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                30.0 - 38.0
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                24.0 - 30.0
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                24.0 - 30.0
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                26.0 - 34.0
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                26.0 - 34.0
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.mch_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >MCHC</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.mchc}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.mchc_res}}</span> - <i>{{r.mchc_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">g/dL</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                32.0 - 36.0
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                32.0 - 36.0
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                32.0 - 36.0
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                32.0 - 36.0
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                32.0 - 35.0
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                32.0 - 35.0
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.mchc_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >WBC Count</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.wbc_count}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.wbc_count_res}}</span> - <i>{{r.wbc_count_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">10<sup>3</sup>/μL</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                10.00 - 26.00
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                5.00 - 15.00
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                5.00 - 15.00
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                4.50 - 13.50
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                3.50 - 10.00
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                3.50 - 10.00
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.wbc_count_nv}}
                             </td>
                         </tr>
                         <tr class="bg-secondary text-white">
-                            <td class="col-2 fw-bolder " align="center" >Differential Count:</td>
-                            <td class="col-2 fw-bolder" align="center"><span class=""></span></td>
-                            <td class="col-2 fw-bolder" align="center"></td>
-                            <td class="col-2 fw-bolder" align="center" ></td>
+                            <td colspan="4" class="" align="left" >Differential Count</td>
+                           
                         </tr>
                     
-                        <tr>
+                        <tr
+                 
+                        >
                             <td class="col-2 fw-bolder" align="center" >- Neutrophil</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.neutrophil}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.neutrophil_res}}</span> - <i>{{r.neutrophil_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">%</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                6.00 - 26.00
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                1.50 - 8.50
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                1.50 - 8.50
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                1.80 - 8.00
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                1.60 - 7.00
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                1.60 - 7.00
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.neutrophil_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+                 
+                        >
                             <td class="col-2 fw-bolder" align="center" >- Lymphocytes</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.lymphocytes}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.lymphocytes_res}}</span> - <i>{{r.lymphocytes_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">%</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                2.00 - 11.00
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                2.00 - 8.00
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                2.00 - 8.00
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                1.50 - 6.50
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                1.00 - 3.00
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                1.00 - 3.00
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.lymphocytes_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >- Monocytes</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.monocytes}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.monocytes_res}}</span> - <i>{{r.monocytes_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">%</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                0.40 - 3.10
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                0.00 - 0.80
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                0.00 - 0.80
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                0.00 - 0.80
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                0.20 - 0.80
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                0.20 - 0.80
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.monocytes_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >- Eosinophil</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.eosinophil}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.eosinophil_res}}</span> - <i>{{r.eosinophil_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">%</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                0.00 - 0.85
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                0.00 - 0.65
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                0.00 - 0.65
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                0.00 - 0.60
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                0.00 - 0.50
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                0.00 - 0.50
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.eosinophil_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >-Basophils</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.basophils}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.basophils_res}}</span> - <i>{{r.basophils_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">%</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                0.00 - 0.65
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                0.00 - 0.20
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                0.00 - 0.20
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                0.00 - 0.20
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                                0.00 - 0.15
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                0.00 - 0.15
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.basophils_nv}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr
+
+                        >
                             <td class="col-2 fw-bolder" align="center" >Platelet Count</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.platelet_count}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.platelet_count_res}}</span> - <i>{{r.platelet_count_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">10<sup>3</sup>/μL</td>
                             <td class="col-2 fw-bolder" align="center" >
-                                {% if ppatient.patage < 1 %}
-                                200 - 400
-                                {% elif patient.patage >= 1 and patient.patage <= 2 %}
-                                200 - 400
-                                {% elif patient.patage >= 3 and patient.patage <= 5 %}
-                                200 - 400
-                                {% elif patient.patage >= 6 and patient.patage <= 10 %}
-                                200 - 400
-                                {% elif patient.patage > 10 and patient.patsex == 'F' %}
-                               150 - 400
-                                {% elif patient.patage > 10 and patient.patsex == 'M' %}
-                                150 - 400
-                                {% else %}
-                                   ------
-                                {% endif %}
+                                {{ r.platelet_count_nv}}
                             </td>
                         </tr>
                         <tr>
@@ -437,11 +285,17 @@
                             <td colspan="3" class="col-2 fw-bolder" align="center"><span class="">{{ r.blood_group}}</span></td>
                         </tr>
 
-                        <tr>
+                        <tr
+                        >
                             <td class="col-2 fw-bolder" align="center" >Reticulocytes</td>
-                            <td class="col-2 fw-bolder" align="center"><span class="">{{ r.reticulocytes_count}}</span></td>
+                            <td class="col-2 " align="center"><span class="fw-bolder">{{ r.reticulocytes_count_res}}</span> - <i>{{r.reticulocytes_count_flag}}</i></td>
                             <td class="col-2 fw-bolder" align="center">10<sup>6</sup>/μL</td>
-                            <td class="col-2 fw-bolder" align="center" >4.20 - 6.00</td>
+                            <td class="col-2 fw-bolder" align="center" >{{ r.reticulocytes_count_res}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="col-2 fw-bolder bg-secondary text-white" align="center" >Notes</td>
+                            <td colspan="3" class="col-2 fw-bolder" align="left"><i class="">{{ r.notes}}</i></td>
                         </tr>
                         
 
@@ -468,7 +322,8 @@
                                 <p>Lic. No.-------</p>
                             </td>
                             <td>
-                                <img src="{% static 'integrated/laboratory/signature/ibarrientos.png'%}" style="width: 200px;height: 50px;margin-bottom: -10px;">
+                                <!-- <img src="{% static 'integrated/laboratory/signature/ibarrientos.png'%}" style="width: 200px;height: 50px;margin-bottom: -10px;"> -->
+                                <img src="http://173.10.7.2/medsys-static-files/integrated/laboratory/signature/ibarrientos.png" style="width: 200px;height: 50px;margin-bottom: -10px;">
                                 <p class="fw-bolder mb-0">RAYMUNDO B. IBARRIENTOS, MD.</p>
                                 <p>Lic. No. 0078995</p>
                             </td>
@@ -487,7 +342,8 @@
                             <td width="30%"><span>BRGHGMC-F-MS-LAB-001</span></td>
                             <td width="20%" align="center"><span>Rev 8</span></td>
                             <td width="25%"><span>Effectivity Date: May 2, 2023</span></td>
-                            <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td>
+                            <!-- <td width="25%" align="right"><img src="{% static 'integrated/img/padabrghgmc.png'%}" style="width: 150px; height: 20px;margin: 0px;" /></td> -->
+                            <td width="25%" align="right"><img src="http://173.10.7.2/medsys-static-files/integrated/img/padabrghgmc.png" style="width: 150px; height: 20px;margin: 0px;" /></td>
                         </tr>
                     </table>
 

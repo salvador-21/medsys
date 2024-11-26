@@ -45,12 +45,17 @@ import pytesseract
 from django_xhtml2pdf.utils import generate_pdf
 from django_xhtml2pdf.utils import pdf_decorator
 from django.utils.timezone import localdate
+from django.utils import dateparse
+
 
 
 
 static_root = "http://173.10.7.2/medsys-static-files"
-# root = "http://173.10.2.108:9092/"
-root = "http://172.22.10.11:9091/"
+# live
+root = "http://173.10.2.108:9092/"
+# root = "http://172.22.10.11:9091/"
+
+# static=173.10.7.2
 
 
 all_patients_api = root + "api/enc/getAllEncounter"
@@ -82,6 +87,7 @@ get_age=root+"api/patients/age"
 #CHEMISTRY API
 save_chem=root+"api/laboratory/chemistryResult"
 get_chem_result=root+"api/laboratory/getChemistryResult"
+
 #HEMATHOLOGY
 save_cbc_result=root+"api/laboratory/hemaResult"
 get_cbc_result=root+"api/laboratory/getHemaResult"
@@ -117,12 +123,70 @@ getbacti_result=root+"api/laboratory/getBactiResult"
 #MACHINE_CHEM
 
 machineAll=root+"api/laboratory/getAllMachineChem"
+
 #machine_name,test_name,normal_values
 su_machine=root+"api/laboratory/machineChem"
 
 
 
 
+############################## REPORTS
+
+def reports(request):
+
+    return render(request,'integrated/laboratory/reports/index.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], })
+
+@csrf_exempt
+def load_request(request):
+    rdata=[]
+
+    request=requests.post(doctorsOrderPatient).json()
+    for r in request['data']:
+        get_test = requests.post(get_lab_request, data={'enccode':r['enccode'],'order_id':r['order_id']}).json()
+        for p in get_test['details']:
+            patient=p['patlast']+', '+p['patfirst']
+            ward=p['wardname']
+        for g in get_test['laboratory']:
+            if g['status'] == 'RELEASED':
+                dt1 = datetime.datetime.strptime(g['datemod'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                dt2 = datetime.datetime.strptime(g['dodate'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                dt1r=datetime.datetime.strftime(dt1, '%b %d, %y (%I:%M %p)')
+                dt2r=datetime.datetime.strftime(dt2, '%b %d, %y (%I:%M %p)')
+                interval = int(dt1.timestamp()) - int(dt2.timestamp())
+                time_str = time.strftime("%H:%M", time.gmtime(interval))
+
+                res={
+                    'control_no':g['control_no'],
+                    'received':dt2r,
+                    'released':dt1r,
+                    'interval':time_str,
+                    'patient':patient,
+                    'ward':ward,
+                    'test':g['procdesc'],
+                    'status':g['status']
+                }
+                rdata.append(res)
+                # print(str(dt1r)+' - '+str(dt2r)+' - '+str(time_str))
+         
+
+    return JsonResponse({'data':rdata})
+
+ 
+############################## HEMA MACHINE
+@csrf_exempt
+def hema_machine(request):
+    machine_id=request.POST.get('machine_id')
+    machine_name=request.POST.get('machine_name')
+    test_name=request.POST.get('test_name')
+    normal_values=request.POST.get('normal_values')
+    modality=request.POST.get('machine_modality')
+    
+    if machine_id is None:
+        addmachine=requests.post(su_machine,data={'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values,'modality':modality}).json()
+    else:
+        addmachine=requests.post(su_machine,data={'machine_id':machine_id,'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values,'modality':modality}).json()
+    data=addmachine['status']
+    return JsonResponse({'data':data})
 ############################## CHEM MACHINE
 @csrf_exempt
 def getAllMachine(request):
@@ -136,10 +200,11 @@ def addMachine(request):
     machine_name=request.POST.get('machine_name')
     test_name=request.POST.get('test_name')
     normal_values=request.POST.get('normal_values')
+    modality=request.POST.get('machine_modality')
     if machine_id is None:
-        addmachine=requests.post(su_machine,data={'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values}).json()
+        addmachine=requests.post(su_machine,data={'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values,'modality':modality}).json()
     else:
-        addmachine=requests.post(su_machine,data={'machine_id':machine_id,'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values}).json()
+        addmachine=requests.post(su_machine,data={'machine_id':machine_id,'machine_name':machine_name,'test_name':test_name,'normal_values':normal_values,'modality':modality}).json()
     data=addmachine['status']
     return JsonResponse({'data':data})
 ############################## UPDATE CONTROL NUMBER
@@ -149,7 +214,6 @@ def update_ctr(request):
     encc=request.POST.get('encc')
     orderid=request.POST.get('orderid')
     nctr=request.POST.get('nctr')
-
     try:
         update_ctr=requests.post(save_new_control_no,data={'enccode':encc,'order_id':orderid,'control_no':nctr}).json()
         data=update_ctr['status']
@@ -190,96 +254,281 @@ def release_test(request):
 ############################### GET TO RELEASE TEST
 def torealese_cnt(request):
     torel=[]
-    doctOrder = requests.post(doctorsOrderPatient).json()
-    labrequest=doctOrder['data']
-    for i in labrequest:
-        if i['toecode'] != 'OPD':
-            i['enccode'] = i['enccode'].replace("/", "-")
-            ordid=i['order_id']
-            enctr=i['enccode']
-            if i['received_datetime'] is not None:
-                i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
-                i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
-            get_examination = requests.post(get_lab_request, data={'enccode': enctr,'order_id':ordid}).json()
-            details=get_examination['details']
-            for d in details:
-        
-                test_=get_examination['laboratory']
-                for e in test_:
-                
-                    if e['status'] == 'COMPLETED':
-                        data={
-                            'ctr':e['control_no'],
-                            'patient':d['patlast']+', '+d['patfirst'],
-                            'labtest':e['procdesc'],
-                            # 'wardname':d['wardname'],
-                            'date':e['datemod'],
-                            'encc':i['enccode'],
-                            'orderid':i['order_id'],
-                            'toecode':i['toecode']
-                        }
-                        torel.append(data)
-    if len(torel) == 0:
-        data=0
-    else:
-        data=len(torel)
+    micro=requests.post(getLab_modality,data={'modality':'MICRO','status':'COMPLETED'}).json()
+    chemi=requests.post(getLab_modality,data={'modality':'CHEMI','status':'COMPLETED'}).json()
+    hemat=requests.post(getLab_modality,data={'modality':'HEMAT','status':'COMPLETED'}).json()
+    serol=requests.post(getLab_modality,data={'modality':'SEROL','status':'COMPLETED'}).json()
+    bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':'COMPLETED'}).json()
+    immuno=requests.post(getLab_modality,data={'modality':'IMMUN','status':'COMPLETED'}).json()
+    thyro=requests.post(getLab_modality,data={'modality':'THYRO','status':'COMPLETED'}).json()
+    cardi=requests.post(getLab_modality,data={'modality':'CARDI','status':'COMPLETED'}).json()
+    blgas=requests.post(getLab_modality,data={'modality':'BLGAS','status':'COMPLETED'}).json()
+    tumor=requests.post(getLab_modality,data={'modality':'TUMOR','status':'COMPLETED'}).json()
+
+    tmicro=[]
+    for c in micro['data']:
+        if c['toecode'] != 'OPD':
+            tmicro.append(c['proccode'])
+
+    tchemi=[]
+    for c in chemi['data']:
+        if c['toecode'] != 'OPD':
+            tchemi.append(c['proccode'])
+
+    themat=[]
+    for c in hemat['data']:
+        if c['toecode'] != 'OPD':
+            themat.append(c['proccode'])
     
+    tserol=[]
+    for c in serol['data']:
+        if c['toecode'] != 'OPD':
+            tserol.append(c['proccode'])
+
+    tbacti=[]
+    for c in bacti['data']:
+        if c['toecode'] != 'OPD':
+            tbacti.append(c['proccode'])
     
+    timmuno=[]
+    for c in immuno['data']:
+        if c['toecode'] != 'OPD':
+            timmuno.append(c['proccode'])
+
+    tthyro=[]
+    for c in thyro['data']:
+        if c['toecode'] != 'OPD':
+            tthyro.append(c['proccode'])
+    
+    tcardi=[]
+    for c in cardi['data']:
+        if c['toecode'] != 'OPD':
+            tcardi.append(c['proccode'])
+
+    tblgas=[]
+    for c in blgas['data']:
+        if c['toecode'] != 'OPD':
+            tblgas.append(c['proccode'])
+    
+    ttumor=[]
+    for c in tumor['data']:
+        if c['toecode'] != 'OPD':
+            ttumor.append(c['proccode'])
+   
+    data=len(tmicro) + len(tchemi) + len(themat) + len(tserol) + len(tbacti) + len(timmuno) + len(tthyro) + len(tcardi) + len(tblgas) + len(ttumor)
+
     return JsonResponse({'data':data})
 
 @csrf_exempt
 def get_torelease(request):
     torel=[]
     ward=''
-    doctOrder = requests.post(doctorsOrderPatient).json()
-    labrequest=doctOrder['data']
-    for i in labrequest:
-        if i['toecode'] != 'OPD':
-            i['enccode'] = i['enccode'].replace("/", "-")
-            ordid=i['order_id']
-            enctr=i['enccode']
-            if i['received_datetime'] is not None:
-                i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
-                i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
-            get_examination = requests.post(get_lab_request, data={'enccode': enctr,'order_id':ordid}).json()
-            details=get_examination['details']
-            # print(details)
-            for d in details:
-                try:
-                    ward=d['wardname']
-                except Exception as e:
-                    ward=d['tsdesc']
-                test_=get_examination['laboratory']
-            
-                for e in test_:
-                    if len(test_) > 0:
-                        try:
-                            e['dodate'] = datetime.datetime.strptime(e['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-                            e['dodate']=datetime.datetime.strftime(e['dodate'], '%b %d, %y (%I:%M %p)')
-                            dodate=e['dodate']
-                        except Exception as err:
-                            dodate=''
-                        
-                    else:
-                        dodate=''
-                    if e['status'] == 'COMPLETED':
-                        data={
-                            'prikey':e['prikey'],
-                            'proccode':e['proccode'],
-                            'ctr':e['control_no'],
-                            'patient':d['patlast']+', '+d['patfirst'],
-                            'labtest':e['procdesc'],
-                            'ward':ward,
-                            'date':e['datemod'],
-                            'encc':i['enccode'],
-                            'orderid':i['order_id'],
-                            'dodate':dodate,
-                            'toecode':i['toecode']
-                        }
-                        torel.append(data)
-            
-    data=torel
-    return JsonResponse({'data':data})
+    get_micro=requests.post(getLab_modality,data={'modality':'MICRO','status':'COMPLETED'}).json()
+    get_chemi=requests.post(getLab_modality,data={'modality':'CHEMI','status':'COMPLETED'}).json()
+    get_hemat=requests.post(getLab_modality,data={'modality':'HEMAT','status':'COMPLETED'}).json()
+    get_serol=requests.post(getLab_modality,data={'modality':'SEROL','status':'COMPLETED'}).json()
+    get_bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':'COMPLETED'}).json()
+    get_immuno=requests.post(getLab_modality,data={'modality':'IMMUN','status':'COMPLETED'}).json()
+    get_thyro=requests.post(getLab_modality,data={'modality':'THYRO','status':'COMPLETED'}).json()
+    get_cardi=requests.post(getLab_modality,data={'modality':'CARDI','status':'COMPLETED'}).json()
+    get_blgas=requests.post(getLab_modality,data={'modality':'BLGAS','status':'COMPLETED'}).json()
+    get_tumor=requests.post(getLab_modality,data={'modality':'TUMOR','status':'COMPLETED'}).json()
+
+  
+    if len(get_chemi['data']) > 0:
+       
+        for c in get_chemi['data']:
+            # print(c)
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            cdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(cdata)
+    
+    if len(get_micro['data']) > 0:
+        for c in get_micro['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            mdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(mdata)
+
+    if len(get_hemat['data']) > 0:
+        for c in get_hemat['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            hdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(hdata)
+
+    if len(get_serol['data']) > 0:
+        for c in get_serol['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            sdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(sdata)
+
+    if len(get_bacti['data']) > 0:
+        for c in get_bacti['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            bdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(bdata)
+    
+    if len(get_immuno['data']) > 0:
+        for c in get_immuno['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            idata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(idata)
+
+    if len(get_thyro['data']) > 0:
+        for c in get_thyro['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            tdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(tdata)
+
+    if len(get_cardi['data']) > 0:
+        for c in get_cardi['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            cdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(cdata)
+
+    if len(get_blgas['data']) > 0:
+        for c in get_blgas['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            bdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(bdata)
+
+    if len(get_tumor['data']) > 0:
+        for c in get_tumor['data']:
+            c['dodate'] = datetime.datetime.strptime(c['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            c['dodate']=datetime.datetime.strftime(c['dodate'], '%b %d, %y (%I:%M %p)')
+            tdata={
+                'prikey':c['prikey'],
+                'proccode':c['proccode'],
+                'ctr':c['control_no'],
+                'patient':c['patlast']+', '+c['patfirst'],
+                'labtest':c['procdesc'],
+                'ward':c['wardname'],
+                'date':c['received_datetime'],
+                'encc':c['enccode'],
+                'orderid':c['lab_order_id'],
+                'dodate':c['dodate'],
+                'toecode':c['toecode']
+                }
+            torel.append(tdata)
+
+    
+    return JsonResponse({'data':torel})
 
 #################################### BACTERIOLOGY
 
@@ -305,15 +554,20 @@ def get_bactiResult(request):
 def get_bactiview(request):
     encc=request.POST.get('encc')
     orderid=request.POST.get('orderid')
+    procode=request.POST.get('procode')
+    rtype=request.POST.get('rtype')
     gdata=[]
     try:
         get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
         for s in get_test['laboratory']:
-            if s['modality'] == 'BACTI':
-                gdata.append(s)
-                data = gdata
+            if s['modality'] == 'BACTI' and s['proccode'] != 'LABOR0051':
+                # print(s['proccode']+'-'+s['procdesc'])
+                if s['status'] == rtype:
+                    gdata.append(s)
+                    data = gdata
     except Exception as e:
         data='potaka'
+    
     return JsonResponse({'data':data})
 
 
@@ -327,10 +581,12 @@ def load_biology(request):
         if i['proccode'] != 'LABOR0051':
             cc=cc + 1
             i['enccode'] = i['enccode'].replace("/", "-")
-            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %y (%I:%M %p)')
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
+            i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
+            i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
+            # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+            # i['uomcode']=age['data']
             hdata.append(i)
     return JsonResponse({'data':hdata})
 
@@ -340,18 +596,43 @@ def bio_sentToProcess(request):
     encc=request.POST.get('encc')
     ord=request.POST.get('orderid')
     key=request.POST.get('key')
-    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':ord}).json()
-    for g in get_test['laboratory']:
-        if g['modality'] == 'BACTI':
-            try:
+    procode=request.POST.get('procode')
+    # samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':ord, 'status':'ONPROCESS'}).json()
+    # data=samplemodality['status']
+    data=procode
+    if procode == 'LABOR00343' or procode == 'LABOR00338':
+        get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':ord}).json()
+        for g in get_test['laboratory']:
+            if g['proccode'] == 'LABOR00343' or g['proccode'] == 'LABOR00338':
                 samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':ord, 'status':'ONPROCESS','receive':g['received_specimen']}).json()
                 data=samplemodality['status']
-            except Exception as e:
-                data=e
-        else:
-            data=''
-    data=get_test['laboratory']
+                 
+    else:
+        samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':ord, 'status':'ONPROCESS'}).json()
+        data=samplemodality['status']
+    # if procode == 'LABOR00343' or procode == 'LABOR00338':
+    #     get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':ord}).json()
+    #     for g in get_test['laboratory']:
+    #         if g['proccode '] == 'LABOR00343' or g['proccode'] == 'LABOR00338':
+    #                 try:
+    #                     samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':ord, 'status':'ONPROCESS','receive':g['received_specimen']}).json()
+    #                     data=samplemodality['status']
+    #                 except Exception as e:
+    #                     data=e
+    #                 print(data)
+    # else:
+    #     samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':ord, 'status':'ONPROCESS'}).json()
+    #     data=samplemodality['status']
+    #     print(data)
+   
     return JsonResponse({'data':data}) 
+
+@csrf_exempt
+def bacte_check_res(request):
+    orderid=request.POST.get('orderid')
+    bacti_res=requests.post(getbacti_result, data={'order_id': orderid}).json()
+    return JsonResponse({'data':bacti_res['data']})
+
 
 @csrf_exempt
 def save_bio(request):
@@ -361,7 +642,15 @@ def save_bio(request):
     hosno=request.POST.get('i_hpercode')
     key=request.POST.get('i_key')
     ctr=request.POST.get('i_ctr')
+    procode=request.POST.get('procode')
+    # bacti_res=requests.post(getbacti_result, data={'order_id': orderid}).json()
+    # for b in bacti_res['data']:
+    #     print(b['salmogen_igg'])
+
+
+
     if action == 'insert':
+
         try:
             s_biology=requests.post(su_microbio,data={
             'enccode':request.POST.get('i_encc'),
@@ -387,19 +676,30 @@ def save_bio(request):
             if s_biology['status'] == 'success':
                 get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
                 for g in get_test['laboratory']:
-                    if g['modality'] == 'BACTI':
-                        try:
-                            samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
+                    if g['modality'] == 'BACTI' and g['proccode'] != 'LABOR0051' and g['status'] == 'ONPROCESS':
+                        if procode == 'LABOR00338' or procode == 'LABOR00343':
+                            try:
+                                samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
+                                data=samplemodality['status']
+                            except Exception as e:
+                                data=e
+                        else:
+                            samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
                             data=samplemodality['status']
-                        except Exception as e:
-                            data=e
-                    else:
-                        data=''
+
             else:
                 data='error add Result'
         except Exception as e:
             data='failed'
     elif action == 'verify':
+        # get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+        # for g in get_test['laboratory']:
+        #     try:
+        #         samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'PENDING','receive':g['received_specimen']}).json()
+        #         data=samplemodality['status']
+        #     except Exception as e:
+        #         data=e
+                   
         try:
             v_biology=requests.post(su_microbio,data={
             'enccode':request.POST.get('i_encc'),
@@ -425,14 +725,16 @@ def save_bio(request):
             if v_biology['status'] == 'success':
                 get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
                 for g in get_test['laboratory']:
-                    if g['modality'] == 'BACTI':
-                        try:
-                            samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'COMPLETED','receive':g['received_specimen']}).json()
+                    if g['modality'] == 'BACTI' and g['proccode'] != 'LABOR0051' and g['status'] == 'TOVERIFY':
+                        if procode == 'LABOR00338' or procode == 'LABOR00343':
+                            try:
+                                samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'COMPLETED','receive':g['received_specimen']}).json()
+                                data=samplemodality['status']
+                            except Exception as e:
+                                data=e
+                        else:
+                            samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':orderid, 'status':'COMPLETED','receive':g['received_specimen']}).json()
                             data=samplemodality['status']
-                        except Exception as e:
-                            data=e
-                    else:
-                        data=''
             else:
                 data='error add Result'
         except Exception as e:
@@ -465,6 +767,21 @@ def bacte_result(request):
 @csrf_exempt
 def load_sero(request):
     stat=request.POST.get('type')
+
+    # pending=requests.post(getLab_modality,data={'modality':'SEROL','status':'PENDING'}).json()
+    # onprocess=requests.post(getLab_modality,data={'modality':'SEROL','status':'ONPROCESS'}).json()
+    # toverify=requests.post(getLab_modality,data={'modality':'SEROL','status':'TOVERIFY'}).json()
+    # completed=requests.post(getLab_modality,data={'modality':'SEROL','status':'COMPLETED'}).json()
+    # released=requests.post(getLab_modality,data={'modality':'SEROL','status':'RELEASED'}).json()
+
+    # count={
+    #     'pending':len(pending['data']),
+    #     'onprocess':len(onprocess['data']),
+    #     'toverify':len(toverify['data']),
+    #     'completed':len(completed['data']),
+    #     'released':len(released['data']),
+    # }
+    count=[]
     get_sero=requests.post(getLab_modality,data={'modality':'SEROL','status':stat}).json()
     hdata=[]
     test=0
@@ -472,7 +789,6 @@ def load_sero(request):
     encc=''
     ntest=0
     for i in get_sero['data']:
-        
         
         i['procdesc']=ntest
         if encc != i['enccode']:
@@ -487,13 +803,16 @@ def load_sero(request):
             i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %Y (%I:%M %p)')
 
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
+            i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
+
+            # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+            # i['uomcode']=age['data']
             hdata.append(i)
         else:
             test=test + 1            
-        
-    return JsonResponse({'data':hdata})
+    
+    return JsonResponse({'data':hdata,'count':count})
 
 @csrf_exempt
 def get_seroview(request):
@@ -557,51 +876,62 @@ def save_sero(request):
 
     if action == 'insert':
     # data=s_exp
-        s_sero=requests.post(su_sero,data={
-            'enccode':encc,
-            'order_id':orderid,
-            'control_no':ctr,
-            'hbsag':request.POST.get('hbsag'),
-            'hbsag_kit':request.POST.get('hbsag_kit'),
-            'hbsag_lot':request.POST.get('hbsag_lotno'),
-            'hbsag_exp':request.POST.get('hbsag_expiry'),
-            'syph':request.POST.get('syp'),
-            'syph_kit':request.POST.get('syp_kit'),
-            'syph_lot':request.POST.get('syp_lotno'),
-            'syph_exp':request.POST.get('syp_expiry'),
-            'hav_igm':request.POST.get('hav_igm'),
-            'hav_igm_kit':request.POST.get('hav_kit'),
-            'hav_igm_lot':request.POST.get('hav_lotno'),
-            'hav_igm_exp':request.POST.get('hav_expiry'),
+        try:
+            s_sero=requests.post(su_sero,data={
+                'enccode':encc,
+                'order_id':orderid,
+                'control_no':ctr,
+                'hbsag':request.POST.get('hbsag'),
+                'hbsag_kit':request.POST.get('hbsag_kit'),
+                'hbsag_lot':request.POST.get('hbsag_lotno'),
+                'hbsag_exp':request.POST.get('hbsag_expiry'),
+                'syph':request.POST.get('syp'),
+                'syph_kit':request.POST.get('syp_kit'),
+                'syph_lot':request.POST.get('syp_lotno'),
+                'syph_exp':request.POST.get('syp_expiry'),
+                'hav_igm':request.POST.get('hav_igm'),
+                'hav_igm_kit':request.POST.get('hav_kit'),
+                'hav_igm_lot':request.POST.get('hav_lotno'),
+                'hav_igm_exp':request.POST.get('hav_expiry'),
 
-            'hav_igg':request.POST.get('hav_igg'),
-            'hav_igg_kit':request.POST.get('hav_kit'),
-            'hav_igg_lot':request.POST.get('hav_lotno'),
-            'hav_igg_exp':request.POST.get('hav_expiry'),
+                'hav_igg':request.POST.get('hav_igg'),
+                'hav_igg_kit':request.POST.get('hav_kit'),
+                'hav_igg_lot':request.POST.get('hav_lotno'),
+                'hav_igg_exp':request.POST.get('hav_expiry'),
 
-            'hbhs':request.POST.get('hbs'),
-            'hbhs_kit':request.POST.get('hbs_kit'),
-            'hbhs_lot':request.POST.get('hbs_lotno'),
-            'hbhs_exp':request.POST.get('hbs_expiry'),
+                'hbhs':request.POST.get('hbs'),
+                'hbhs_kit':request.POST.get('hbs_kit'),
+                'hbhs_lot':request.POST.get('hbs_lotno'),
+                'hbhs_exp':request.POST.get('hbs_expiry'),
 
-            'hcv':request.POST.get('hcv'),
-            'hcv_kit':request.POST.get('hcv_kit'),
-            'hcv_lot':request.POST.get('hcv_lotno'),
-            'hcv_exp':request.POST.get('hcv_expiry'),
-            'perform_by':request.session['employee_id'],
-            'perform_date': datetime.datetime.strftime(datetime.datetime.now(), "%Y/%m/%d"),
-            'verified_by':'',
-            'verify_date':datetime.datetime.strftime(datetime.datetime.now(), "%Y/%m/%d")
-        }).json()
-        if s_sero['status'] == 'success':
-            get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
-            for g in get_test['laboratory']:
-                if g['modality'] == 'SEROL':
-                    try:
-                        samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
-                        data=samplemodality['status']
-                    except Exception as e:
-                        data='Failed Add Status'
+                'hcv':request.POST.get('hcv'),
+                'hcv_kit':request.POST.get('hcv_kit'),
+                'hcv_lot':request.POST.get('hcv_lotno'),
+                'hcv_exp':request.POST.get('hcv_expiry'),
+                'perform_by':request.session['employee_id'],
+                'perform_date': datetime.datetime.strftime(datetime.datetime.now(), "%Y/%m/%d"),
+                'verified_by':'',
+                'verify_date':datetime.datetime.strftime(datetime.datetime.now(), "%Y/%m/%d")
+            }).json()
+            if s_sero['status'] == 'success':
+                get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+                for g in get_test['laboratory']:
+                    if g['modality'] == 'SEROL':
+                        try:
+                            samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
+                            data=samplemodality['status']
+                        except Exception as e:
+                            print(e)
+                            data='Failed Add Status'
+                    else:
+                        data='potaka'
+            else:
+                print(s_sero)
+                data=s_sero
+
+        except Exception as e:
+            print(e)
+            data=e
                 
 
     elif action == 'verify':
@@ -658,6 +988,8 @@ def save_sero(request):
 def get_seroResult(request):
     orderid=request.POST.get('orderid')
     sero_res=requests.post(getsero_result, data={'order_id': orderid}).json()
+    
+
     return JsonResponse({'data':sero_res['data']})
 
 def serology_result(request,ward,physician,orderid,encc):
@@ -665,6 +997,7 @@ def serology_result(request,ward,physician,orderid,encc):
     get_examination = requests.post(get_lab_request, data={'enccode': encc,'order_id':orderid}).json()
     ptx=get_examination['details']
     sero_res=requests.post(getsero_result, data={'order_id': orderid}).json()
+    # print(sero_res)
     return render(request,'integrated/laboratory/result_form/serology.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'test':sero_res['data'][0],'ptx':ptx[0],'ward':ward,'doctor':physician})
 
 
@@ -677,14 +1010,14 @@ def immuno_ToProcess(request):
     try:
         get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':ord}).json()
         for g in get_test['laboratory']:
-            if g['modality'] == 'IMMUN' or g['modality'] == 'THYRO' or g['modality'] == 'CARDI' or g['modality'] == 'BLGAS' or g['modality'] == 'TUMOR':
-                try:
-                    samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':ord, 'status':'ONPROCESS','receive':g['received_specimen']}).json()
-                    data=samplemodality['status']
-                except Exception as e:
-                    data=e
-            else:
-                data=''
+            if g['status'] == 'PENDING':
+                if g['modality'] == 'IMMUN' or g['modality'] == 'THYRO' or g['modality'] == 'CARDI' or g['modality'] == 'BLGAS' or g['modality'] == 'TUMOR':
+                    try:
+                        samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':ord, 'status':'ONPROCESS','receive':g['received_specimen']}).json()
+                        data=samplemodality['status']
+                    except Exception as e:
+                        data=e
+            
     except Exception as e:
         data=e
     return JsonResponse({'data':data}) 
@@ -694,16 +1027,26 @@ def immuno_ToProcess(request):
 def get_immunview(request):
     encc=request.POST.get('encc')
     orderid=request.POST.get('orderid')
+    rtype=request.POST.get('rtype')
+    n_values=[]
     gdata=[]
+    print(encc)
+    machine=requests.post(machineAll).json()
+    for m in machine['data']:
+        if m['modality'] == 'IMMUN':
+            n_values.append(m)
+
     try:
         get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
         for s in get_test['laboratory']:
-            if s['modality'] == 'IMMUN' or s['modality'] == 'THYRO' or s['modality'] == 'CARDI' or s['modality'] == 'BLGAS' or s['modality'] == 'TUMOR':
-                gdata.append(s)
-                data = gdata
+            if s['status'] == rtype:
+                if s['modality'] == 'IMMUN' or s['modality'] == 'THYRO' or s['modality'] == 'CARDI' or s['modality'] == 'BLGAS' or s['modality'] == 'TUMOR':
+                    gdata.append(s)
+                    # print(s['proccode']+' - '+s['modality']+' - '+s['procdesc'])
+                    data = gdata
     except Exception as e:
         data=e
-    return JsonResponse({'data':data})
+    return JsonResponse({'data':data,'n_values':n_values})
 
 
 def lab_immuno(request):
@@ -711,13 +1054,34 @@ def lab_immuno(request):
     return render(request,'integrated/laboratory/immuno/index.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name']})
 
 @csrf_exempt
+def get_immunores(request):
+    encc=request.POST.get('encc')
+    orderid=request.POST.get('orderid')
+    rtype=request.POST.get('rtype')
+    imres=[]
+    n_values=[]
+    immuno_res=requests.post(im_result, data={'order_id': orderid}).json()
+    machine=requests.post(machineAll).json()
+    for m in machine['data']:
+        if m['modality'] == 'IMMUN':
+            n_values.append(m)
+    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+    for s in get_test['laboratory']:
+            if s['status'] == rtype:
+                if s['modality'] == 'IMMUN' or s['modality'] == 'THYRO' or s['modality'] == 'CARDI' or s['modality'] == 'BLGAS' or s['modality'] == 'TUMOR':
+                    imres.append(s)
+
+    return JsonResponse({'data':imres,'n_values':n_values,'result':immuno_res['data']})
+
+@csrf_exempt
 def load_immuno(request):
     stat=request.POST.get('type')
+    
     get_immun=requests.post(getLab_modality,data={'modality':'IMMUN','status':stat}).json()
     get_thyro=requests.post(getLab_modality,data={'modality':'THYRO','status':stat}).json()
     get_cardi=requests.post(getLab_modality,data={'modality':'CARDI','status':stat}).json()
     get_tumor=requests.post(getLab_modality,data={'modality':'TUMOR','status':stat}).json()
-    get_blgas=requests.post(getLab_modality,data={'modality':'TUMOR','status':stat}).json()
+    # get_blgas=requests.post(getLab_modality,data={'modality':'TUMOR','status':stat}).json()
     hdata=[]
     display=[]
     test=0
@@ -725,6 +1089,7 @@ def load_immuno(request):
     encc=''
     ctr=''
     ntest=0
+    # print(get_immun['data'])
   
     for i in get_immun['data']:
         i['procdesc']=ntest
@@ -734,14 +1099,16 @@ def load_immuno(request):
             test=1
             i['procdesc']=test
             i['enccode'] = i['enccode'].replace("/", "-")
-            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
-
+            i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
             i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %Y (%I:%M %p)')
 
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
+            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
+
+            # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+            # i['uomcode']=age['data']
             hdata.append(i)
         else:
             test=test + 1  
@@ -754,14 +1121,14 @@ def load_immuno(request):
             test=1
             i['procdesc']=test
             i['enccode'] = i['enccode'].replace("/", "-")
-            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
+            i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
 
             i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %Y (%I:%M %p)')
 
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
+            # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+            # i['uomcode']=age['data']
             hdata.append(i)
         else:
             test=test + 1 
@@ -773,14 +1140,14 @@ def load_immuno(request):
             test=1
             i['procdesc']=test
             i['enccode'] = i['enccode'].replace("/", "-")
-            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
+            i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
 
             i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %Y (%I:%M %p)')
 
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
+            # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+            # i['uomcode']=age['data']
             hdata.append(i)
         else:
             test=test + 1 
@@ -792,36 +1159,37 @@ def load_immuno(request):
             test=1
             i['procdesc']=test
             i['enccode'] = i['enccode'].replace("/", "-")
-            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
+            i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
 
             i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %Y (%I:%M %p)')
 
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
+            # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+            # i['uomcode']=age['data']
             hdata.append(i)
         else:
             test=test + 1 
-    for i in get_blgas['data']:
-        i['procdesc']=ntest
-        if encc != i['enccode']:
-            encc=i['enccode']
-            cc=cc + 1
-            test=1
-            i['procdesc']=test
-            i['enccode'] = i['enccode'].replace("/", "-")
-            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
 
-            i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %Y (%I:%M %p)')
+    # for i in get_blgas['data']:
+    #     i['procdesc']=ntest
+    #     if encc != i['enccode']:
+    #         encc=i['enccode']
+    #         cc=cc + 1
+    #         test=1
+    #         i['procdesc']=test
+    #         i['enccode'] = i['enccode'].replace("/", "-")
+    #         i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+    #         i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
 
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
-            hdata.append(i)
-        else:
-            test=test + 1 
+    #         i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
+    #         i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %Y (%I:%M %p)')
+
+    #         # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+    #         # i['uomcode']=age['data']
+    #         hdata.append(i)
+    #     else:
+    #         test=test + 1 
     
     # for d in hdata:
     #     ctr=d['control_no']
@@ -859,97 +1227,137 @@ def save_immuno(request):
     hosno=request.POST.get('i_hpercode')
     key=request.POST.get('i_key')
 
-   
-    if action == 'insert':
-        a_immuno=requests.post(su_immuno,data={
-            'enccode':encc,
-            'order_id':orderid,
-            'hpercode':hosno,
-            'date': datetime.datetime.now().date(),
-            'control_no': request.POST.get('i_ctr'),
-            'kit_name':'kit',
-            'troponin_i':request.POST.get('tropinin'),
-            'ck_mb':request.POST.get('ckmb'),
-            'tsh':request.POST.get('tsh'),
-            'ca_125':request.POST.get('ca125'),
-            'ft4':request.POST.get('ft4'),
-            'ft3':request.POST.get('ft3'),
-            't4':request.POST.get('t4'),
-            't3':request.POST.get('t3'),
-            'aso':request.POST.get('aso'),
-            'crp':request.POST.get('crp'),
-            'hscrp':'',
-            'procalcitonin':request.POST.get('procal'),
-            'reheu':request.POST.get('rheu'),
-            'psa':request.POST.get('psa'),
-            'pro_bnp':request.POST.get('probnp'),
-            'cea':request.POST.get('cea'),
-            'note':request.POST.get('notes'),
-            'perform_by':request.session['employee_id'],
-        }).json()
-        if a_immuno['status'] == 'success':
-            try:
-                get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
-                for g in get_test['laboratory']:
-                    if g['modality'] == 'IMMUN' or g['modality'] == 'THYRO' or g['modality'] == 'CARDI' or g['modality'] == 'BLGAS' or g['modality'] == 'TUMOR':
-                        try:
-                            samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
-                            data=samplemodality['status']
-                        except Exception as e:
-                            data='failed update'
+    
 
-                    else:
-                        data='failed modality'
-            except Exception as e:
-                data=e
-        else:
-            data=a_immuno['status']
+    rheu=str(request.POST.get('rheu'))+','+str(request.POST.get('rheu_nv'))
+    aso=str(request.POST.get('aso'))+','+str(request.POST.get('aso_nv'))
+    crp=str(request.POST.get('crp'))+','+str(request.POST.get('crp_nv'))
+    procal=str(request.POST.get('procal'))+','+str(request.POST.get('procal_nv'))
+    tropinin=str(request.POST.get('tropinin'))+','+str(request.POST.get('tropinin_nv'))
+    ckmb=str(request.POST.get('ckmb'))+','+str(request.POST.get('ckmb_nv'))
+    probnp=str(request.POST.get('probnp'))+','+str(request.POST.get('probnp_nv'))
+    psa=str(request.POST.get('psa'))+','+str(request.POST.get('psa_nv'))
+    cea=str(request.POST.get('cea'))+','+str(request.POST.get('cea_nv'))
+    ca125=str(request.POST.get('ca125'))+','+str(request.POST.get('ca125_nv'))
+    tsh=str(request.POST.get('tsh'))+','+str(request.POST.get('tsh_nv'))
+    t3=str(request.POST.get('t3'))+','+str(request.POST.get('t3_nv'))
+    t4=str(request.POST.get('t4'))+','+str(request.POST.get('t4_nv'))
+    ft3=str(request.POST.get('ft3'))+','+str(request.POST.get('ft3_nv'))
+    ft4=str(request.POST.get('ft4'))+','+str(request.POST.get('ft4_nv'))
+
+    ana=str(request.POST.get('ana'))+','+str(request.POST.get('ana_nv'))
+    ca19=str(request.POST.get('ca19'))+','+str(request.POST.get('ca19_nv'))
+
+
+    # print(action)
+    # print(encc)
+    # print(orderid)
+    # print(hosno)
+    # print(request.POST.get('i_ctr'))
+    
+
+    if action == 'insert':
+        try:
+            a_immuno=requests.post(su_immuno,data={
+                'enccode':encc,
+                'order_id':orderid,
+                'hpercode':hosno,
+                'date': datetime.datetime.now().date(),
+                'control_no': request.POST.get('i_ctr'),
+                'kit_name':'kit',
+                'troponin_i':tropinin,
+                'ck_mb':ckmb,
+                'tsh':tsh,
+                'ca_125':ca125,
+                'ft4':ft4,
+                'ft3':ft3,
+                't4':t4,
+                't3':t3,
+                'aso':aso,
+                'crp':crp,
+                'hscrp':'',
+                'procalcitonin':procal,
+                'reheu':rheu,
+                'psa':psa,
+                'pro_bnp':probnp,
+                'cea':cea,
+                'ana':ana,
+                'ca_19_9':ca19,
+                'note':request.POST.get('notes'),
+                'perform_by':request.session['employee_id'],
+            }).json()
+            if a_immuno['status'] == 'success':
+            
+                try:
+                    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+                    for g in get_test['laboratory']:
+                        if g['modality'] == 'IMMUN' or g['modality'] == 'THYRO' or g['modality'] == 'CARDI' or g['modality'] == 'BLGAS' or g['modality'] == 'TUMOR':
+                            try:
+                                samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
+                                data=samplemodality['status']
+                            except Exception as e:
+                                data='failed update'
+
+                        
+                except Exception as e:
+                    data=e
+            else:
+                data=a_immuno
+        except Exception as e:
+            data=e
     elif action == 'verify':
-        u_immuno=requests.post(su_immuno,data={
+
+        try:
+            u_immuno=requests.post(su_immuno,data={
             'enccode':encc,
             'order_id':orderid,
             'hpercode':hosno,
             'date': datetime.datetime.now().date(),
             'control_no': request.POST.get('i_ctr'),
             'kit_name':'kit',
-            'troponin_i':request.POST.get('tropinin'),
-            'ck_mb':request.POST.get('ckmb'),
-            'tsh':request.POST.get('tsh'),
-            'ca_125':request.POST.get('ca125'),
-            'ft4':request.POST.get('ft4'),
-            'ft3':request.POST.get('ft3'),
-            't4':request.POST.get('t4'),
-            't3':request.POST.get('t3'),
-            'aso':request.POST.get('aso'),
-            'crp':request.POST.get('crp'),
+            'troponin_i':tropinin,
+            'ck_mb':ckmb,
+            'tsh':tsh,
+            'ca_125':ca125,
+            'ft4':ft4,
+            'ft3':ft3,
+            't4':t4,
+            't3':t3,
+            'aso':aso,
+            'crp':crp,
             'hscrp':'',
-            'procalcitonin':request.POST.get('procal'),
-            'reheu':request.POST.get('rheu'),
-            'psa':request.POST.get('psa'),
-            'pro_bnp':request.POST.get('probnp'),
-            'cea':request.POST.get('cea'),
+            'procalcitonin':procal,
+            'reheu':rheu,
+            'psa':psa,
+            'pro_bnp':probnp,
+            'cea':cea,
+            'ana':ana,
+            'ca_19_9':ca19,
             'note':request.POST.get('notes'),
             # 'perform_by':request.POST.get('perform_id'),
             'verified_by':request.session['employee_id'],
-        }).json()
-        # up_stat=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':orderid, 'status':'COMPLETED'}).json()
-        if u_immuno['status'] == 'success':
-            try:
-                get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
-               
-                for g in get_test['laboratory']:
-                    if g['modality'] == 'IMMUN' or g['modality'] == 'THYRO' or g['modality'] == 'CARDI' or g['modality'] == 'BLGAS' or g['modality'] == 'TUMOR':
-                        try:
-                            samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'COMPLETED','receive':g['received_specimen']}).json()
-                            data=samplemodality['status']
-                        except Exception as e:
-                            data=e
-                    else:
-                        data=''
-            except Exception as e:
-                data=e
-        else:
-            data='Error Verifying!'
+            }).json()
+      
+            if u_immuno['status'] == 'success':
+                try:
+                    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+                
+                    for g in get_test['laboratory']:
+                        if g['modality'] == 'IMMUN' or g['modality'] == 'THYRO' or g['modality'] == 'CARDI' or g['modality'] == 'BLGAS' or g['modality'] == 'TUMOR':
+                            try:
+                                samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'COMPLETED','receive':g['received_specimen']}).json()
+                                data=samplemodality['status']
+                            except Exception as e:
+                                data=e
+                        
+                except Exception as e:
+                    print(e)    
+                    data=e
+            else:
+                print(u_immuno)
+                data='Error Verifying!'
+        except Exception as e:
+            print(e)
 
     return JsonResponse({'data':data})
 
@@ -957,7 +1365,10 @@ def save_immuno(request):
 def get_immunoResult(request):
     orderid=request.POST.get('orderid')
     immuno_res=requests.post(im_result, data={'order_id': orderid}).json()
-    return JsonResponse({'data':immuno_res['data']})
+    n_values=requests.post(machineAll).json()
+
+
+    return JsonResponse({'data':immuno_res['data'],'n_values':n_values['data']})
 
 @csrf_exempt
 def immuno_result(request,ward,physician,orderid,encc):
@@ -965,11 +1376,232 @@ def immuno_result(request,ward,physician,orderid,encc):
     get_examination = requests.post(get_lab_request, data={'enccode': encc,'order_id':orderid}).json()
     ptx=get_examination['details']
     getres=requests.post(im_result,data={'order_id':orderid}).json()
+    
     for i in getres['data']:
             i['date_verified'] = datetime.datetime.strptime(i['date_verified'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['date_verified']=datetime.datetime.strftime(i['date_verified'], '%b %d, %Y (%I:%M %p)')
+
+            if i['tropinin_i'] == ',':
+                trop=''
+                trop_nv='--------------'
+            else:
+                trop_s=i['tropinin_i'].split(',')
+                trop=trop_s[0]
+                trop_nv=str(trop_s[1]+' - '+trop_s[2])
+                
+
+            if i['ck_mb'] == ',':
+                ckmb=''
+                ckmb_nv='--------------'
+            else:
+                ckmb_s=i['ck_mb'].split(',')
+                ckmb=ckmb_s[0]
+                ckmb_nv=str(ckmb_s[1]+' - '+ckmb_s[2])
+
+            if i['tsh'] == ',':
+                tsh=''
+                tsh_nv='--------------'
+     
+            else:
+                tsh_s=i['tsh'].split(',')
+                tsh=tsh_s[0]
+                tsh_nv=str(tsh_s[1]+' - '+tsh_s[2])
+                
+            
+            if i['ft4'] == ',':
+                ft4=''
+                ft4_nv='--------------'
+
+            else:
+                ft4_s=i['ft4'].split(',')
+                ft4=ft4_s[0]
+                try:
+                    ft4_nv=str(ft4_s[1]+' - '+ft4_s[2])
+                except Exception as e:
+                    ft4_nv=str(ft4_s[1])
+            if i['ft3'] == ',':
+                ft3=''
+                ft3_nv='--------------'
+
+            else:
+                ft3_s=i['ft3'].split(',')
+                ft3=ft3_s[0]
+                ft3_nv=str(ft3_s[1]+' - '+ft3_s[2])
+  
+
+            if i['t4'] == ',':
+                t4=''
+                t4_nv='--------------'
+
+            else:
+                t4_s=i['t4'].split(',')
+                t4=t4_s[0]
+                t4_nv=str(t4_s[1]+' - '+t4_s[2])
+
+
+            if i['t3'] == ',':
+                t3=''
+                t3_nv='--------------'
+
+            else:
+                t3_s=i['t3'].split(',')
+                t3=t3_s[0]
+                t3_nv=str(t3_s[1]+' - '+t3_s[2])
+                
+
+            if i['aso'] == ',':
+                aso=''
+                aso_nv='--------------'
+            else:
+                aso_s=i['aso'].split(',')
+                aso=aso_s[0]
+                aso_nv=str(aso_s[1]+' - '+aso_s[2])
     
-    return render(request,'integrated/laboratory/result_form/immunosero.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'test':getres['data'][0],'ptx':ptx[0],'ward':ward,'doctor':physician})
+
+            if i['crp'] == ',':
+                crp=''
+                crp_nv='--------------'
+         
+            else:
+                crp_s=i['crp'].split(',')
+                crp=crp_s[0]
+                crp_nv=str(crp_s[1]+' - '+crp_s[2])
+                
+
+            if i['procalcitonin'] == ',':
+                procal=''
+                procal_nv='--------------'
+            else:
+                procal_s=i['procalcitonin'].split(',')
+                procal=procal_s[0]
+                procal_nv=str(procal_s[1]+' - '+procal_s[2])
+
+            if i['reheu'] == ',':
+                rheu=''
+                rheu_nv='--------------'
+            else:
+                rheu_s=i['reheu'].split(',')
+                rheu=rheu_s[0]
+                rheu_nv=str(rheu_s[1]+' - '+rheu_s[2])
+       
+
+            if i['psa'] == ',':
+                psa=''
+                psa_nv='--------------'
+  
+            else:
+                psa_s=i['psa'].split(',')
+                psa=psa_s[0]
+                psa_nv=str(psa_s[1]+' - '+psa_s[2])
+                
+
+            if i['pro_bnp'] == ',':
+                probnp=''
+                probnp_nv='--------------'
+
+            else:
+                probnp_s=i['pro_bnp'].split(',')
+                probnp=probnp_s[0]
+                probnp_nv=str(probnp_s[2])
+            
+
+            if i['cea'] == ',':
+                cea=''
+                cea_nv='--------------'
+ 
+            else:
+                cea_s=i['cea'].split(',')
+                cea=cea_s[0]
+                cea_nv=str(cea_s[1]+' - '+cea_s[2])
+                
+            try:
+                if i['ana'] == ',':
+                    ana=''
+                    ana_nv='--------------'
+  
+                else:
+                    ana_s=i['ana'].split(',')
+                    ana=ana_s[0]
+                    ana_nv=str(ana_s[1]+' - '+ana_s[2])
+                 
+            except Exception as e:
+                ana=''
+                ana_nv='-----------'
+
+            try:
+                if i['ca_19_9'] == ',':
+                    ca19=''
+                    ca19_nv='--------------'
+
+                else:
+                    ca19_s=i['ca_19_9'].split(',')
+                    ca19=ca19_s[0]
+                    ca19_nv=str(ca19_s[1]+' - '+ca19_s[2])
+                    
+            except Exception as e:
+                ca19=''
+                ca19_nv='-----------'
+    
+
+
+
+            data={
+                'trop':trop,
+                'trop_nv':trop_nv,
+
+                'ckmb':ckmb,
+                'ckmb_nv':ckmb_nv,
+
+                'tsh':tsh,
+                'tsh_nv':tsh_nv,
+
+                'ft4':ft4,
+                'ft4_nv':ft4_nv,
+
+                'ft3':ft3,
+                'ft3_nv':ft3_nv,
+
+                't4':t4,
+                't4_nv':t4_nv,
+
+                't3':t3,
+                't3_nv':t3_nv,
+
+                'aso':aso,
+                'aso_nv':aso_nv,
+
+                'crp':crp,
+                'crp_nv':crp_nv,
+
+                'procal':procal,
+                'procal_nv':procal_nv,
+
+                'rheu':rheu,
+                'rheu_nv':rheu_nv,
+
+                'psa':psa,
+                'psa_nv':psa_nv,
+
+                'probnp':probnp,
+                'probnp_nv':probnp_nv,
+
+                'cea':cea,
+                'cea_nv':cea_nv,
+
+                'ana':ana,
+                'ana_nv':ana_nv,
+
+                'ca19':ca19,
+                'ca19_nv':ca19_nv,
+
+                'notes':i['note'],
+                'performby':i['perform_by_name'],
+                'verifyby':i['verified_by_name'],
+                'dateverify':i['date_verified'],
+
+            }
+    
+    return render(request,'integrated/laboratory/result_form/immunosero.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'result':data,'test':getres['data'][0],'ptx':ptx[0],'ward':ward,'doctor':physician})
 ######################################### pdf
 
 def makepdf(html, context_dict={}):
@@ -1047,7 +1679,6 @@ def print_c(request,encc,orderid):
         if c['status'] !='CANCELLED':
             tcharge.append(c)
             total=total + c['pchrgup']
-
     user=request.session.get("name")
     return render(request,'integrated/laboratory/print/p_charge.html',{'tests':tcharge,'ptx':ptx,'add':add,'hosno':hosno,'user':user,'ccount':len(tcharge),'total':total})
 
@@ -1187,6 +1818,7 @@ def lab_request_print(request,encc,orderid,ward):
     doctOrder = requests.post(doctorsOrderPatient).json()
     labrequest=doctOrder['data']
     test_data=[]
+    ptx_data=[]
     get_examination = requests.post(get_lab_request, data={'enccode': encc,'order_id':orderid}).json()
     tests=get_examination['laboratory']
     ptx=get_examination['details']
@@ -1194,14 +1826,43 @@ def lab_request_print(request,encc,orderid,ward):
 
     for c in tests:
         ctr=c['control_no']
+        remarks=c['donotes']
         if c['status'] != 'CANCELLED':
             test_data.append(c)
-    doctor=''
-    for d in labrequest:
-        if d['control_no'] == ctr:
-           doctor=d['physician']
-   
-    return render(request, 'integrated/laboratory/print/lab_request.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'test':test_data,'ward':ward,'ptx':ptx,'ctr':ctr,'doctor':doctor})
+
+    for l in labrequest:
+        if l['order_id'] == orderid:
+            date_encode=l['date_encoded']
+            receive_by=l['receiver']
+            r_doctor=l['physician']
+
+    for p in ptx:
+        dd=p['birthdate'].split(' ')
+        
+        pdata={
+            'name':str(p['patlast'])+', '+str(p['patfirst']),
+            'hosno':p['hpercode'],
+            'dob':dd[0],
+            'age':p['patage'],
+            'stat':p['patcstat'],
+            'gender':p['patsex'],
+            'ward':p['wardname'],
+            'encoded':date_encode,
+            'ctr':ctr,
+            'remarks':remarks,
+            'received_by':receive_by,
+            'place':p['patbplace'],
+            
+        }
+    
+    # for d in labrequest:
+    #     if d['control_no'] == ctr:
+           
+    #        doctor=d['physician']
+    
+    # print(ptx)
+
+    return render(request, 'integrated/laboratory/print/request.html',{'page': 'Laboratory', 'user_level': request.session['user_level'],'ptxdata':pdata, 'name': request.session['name'],'test':test_data,'ward':ward,'ptx':ptx,'ctr':ctr,'doctor':r_doctor})
 
 
 
@@ -1212,27 +1873,63 @@ def load_bacti(request):
     onprocess=[]
     toverify=[]
     completed=[]
+    released=[]
     op=[]
-   
+    rapid=[]
     htype=request.POST.get('rtype')
     get_bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':htype}).json()
-    pen_bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':'PENDING'}).json()
-    on_bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':'ONPROCESS'}).json()
-    tovery_bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':'TO VERIFY'}).json()
-    compl_bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':'COMPLETED'}).json()
+
+
+    rpending=requests.post(getLab_modality,data={'modality':'BACTI','status':'PENDING'}).json()
+    for p in rpending['data']:
+        if p['proccode'] == 'LABOR0051':
+            pending.append(p['proccode'])
+    ronprocess=requests.post(getLab_modality,data={'modality':'BACTI','status':'ONPROCESS'}).json()
+    for p in ronprocess['data']:
+        if p['proccode'] == 'LABOR0051':
+            onprocess.append(p['proccode'])
+    rtoverify=requests.post(getLab_modality,data={'modality':'BACTI','status':'TO VERIFY'}).json()
+    for p in rtoverify['data']:
+        if p['proccode'] == 'LABOR0051':
+            toverify.append(p['proccode'])
+    rcompleted=requests.post(getLab_modality,data={'modality':'BACTI','status':'COMPLETED'}).json()
+    for p in rcompleted['data']:
+        if p['proccode'] == 'LABOR0051':
+            completed.append(p['proccode'])
+    rreleased=requests.post(getLab_modality,data={'modality':'BACTI','status':'RELEASED'}).json()
+    for r in rreleased['data']:
+        if r['proccode'] == 'LABOR0051':
+            released.append(r['proccode'])
+           
+
+
     req=[]
     ctr=''
     for i in get_bacti['data']:
-        i['enccode'] = i['enccode'].replace("/", "-")
-        i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-        i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %y (%I:%M %p)')
+        if i['proccode'] == 'LABOR0051':
+            i['enccode'] = i['enccode'].replace("/", "-")
+            i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %y (%I:%M %p)')
 
-        i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
-        i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
+            i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
+            rapid.append(i)
 
-        age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-        i['uomcode']=age['data']
-    return JsonResponse({'data':get_bacti['data'],'pend':len(pen_bacti['data']),'onp':len(on_bacti['data']),'tovery':len(tovery_bacti['data']),'compl':len(compl_bacti['data'])})
+            # if i['status']=='PENDING':
+            #     pending.append(i['proccode'])
+            # if i['status']=='ONPROCESS':
+            #     onprocess.append(i['proccode'])
+            # if i['status']=='TO VERIFY':
+            #     toverify.append(i['proccode'])
+            # if i['status']=='COMPLETED':
+            #     completed.append(i['proccode'])
+            # if i['status']=='RELEASED':
+            #     released.append(i['proccode'])
+
+            # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
+            # i['uomcode']=age['data']
+    return JsonResponse({'data':rapid,'pend':len(pending),'onp':len(onprocess),'tovery':len(toverify),'compl':len(completed),'rel':len(released)})
+    # return JsonResponse({'data':get_bacti['data'],'pend':len(pen_bacti['data']),'onp':len(on_bacti['data']),'tovery':len(tovery_bacti['data']),'compl':len(compl_bacti['data'])})
 
 @csrf_exempt
 def bacti_sentToProcess(request):
@@ -1276,7 +1973,7 @@ def save_rapid(request):
                 'verify_by':'',
                 'approved_by':''
             }).json()
-            print(save_rdt)
+            # print(save_rdt)
             if save_rdt['status'] == 'success':
                 get_test = requests.post(get_lab_request, data={'enccode':encc,'order_id':orderid}).json()
                 for g in get_test['laboratory']:
@@ -1326,17 +2023,38 @@ def get_rapidResult(request):
     data=get_rapid
 
     return JsonResponse({'data':data})
+
+@csrf_exempt
+def result_rapid(request,toecode,orderid,encc,prikey):
+    getPatient=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+    for l in getPatient['laboratory']:
+        if l['prikey'] == prikey:
+            l['datemod'] = datetime.datetime.strptime(l['datemod'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            l['datemod']=datetime.datetime.strftime(l['datemod'], '%b %d, %Y (%I:%M %p)')
+            cdate=l['datemod']
+    get_rapid=requests.post(get_rapid_result,data={'order_id':orderid,'enccode':encc}).json()
+    # for r in get_rapid:
+    #     r['expiry_date'] = datetime.datetime.strptime(r['expiry_date'],"%Y-%m-%dT%H:%M:%S.%fZ")
+    #     r['expiry_date']=datetime.datetime.strftime(r['expiry_date'], '%b %d, %Y (%I:%M %p)')
+
+
+    # print(getPatient)
+    return render(request,'integrated/laboratory/result_form/rapidtest-result.html',{'result':get_rapid['data'][0],'ptx':getPatient['details'][0],'test':getPatient['laboratory'][0],'release_date':cdate})
+
+
+
 ########################################## CHEMISTRY
 @csrf_exempt
 def getlabtest(request):
     chem_test=[]
+    age=requests.post(get_age, data={'enccode':request.POST.get('encc'),'toecode':request.POST.get('toecode')}).json()
     get_test=requests.post(get_lab_request,data={'enccode':request.POST.get('encc'),'order_id':request.POST.get('orderid')}).json()
-   
     for c in get_test['laboratory']:
         if c['status'] != 'CANCELLED':
     
             chem_test.append(c)
-    return JsonResponse({'data':chem_test})
+    
+    return JsonResponse({'data':chem_test,'age':age['data']})
 
 
 def save_chem_result(request):
@@ -1375,6 +2093,10 @@ def save_chem_result(request):
     total_bilirubin=str(request.POST.get('tbilirubin'))+','+str(request.POST.get('tbilirubin_nv'))
     direct_bilirubin=str(request.POST.get('dbilirubin'))+','+str(request.POST.get('dbilirubin_nv'))
     indirect_bilirubin=str(request.POST.get('ibilirubin'))+','+str(request.POST.get('ibilirubin_nv'))
+
+    ggt=str(request.POST.get('ggt'))+','+str(request.POST.get('ggt_nv'))
+    ferritin=str(request.POST.get('ferritin'))+','+str(request.POST.get('ferritin_nv'))
+    cortisol=str(request.POST.get('cortisol'))+','+str(request.POST.get('cortisol_nv'))
 
     
     # hba1c_res=hba1c.split("/")
@@ -1420,25 +2142,30 @@ def save_chem_result(request):
                 'total_bilirubin':total_bilirubin,
                 'direct_bilirubin':direct_bilirubin,
                 'indirect_bilirubin':indirect_bilirubin,
+                'ggt':ggt,
+                'ferritin':ferritin,
+                'cortisol':cortisol,
                 'perform_by':request.session['employee_id']
             }).json()
 
             if chem_res['status'] == 'success':
+                # data='INSERTED'
                 get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
                 for g in get_test['laboratory']:
                     if g['modality'] == 'CHEMI' and g['status'] !='CANCELLED':
                         key=g['prikey']
                         try:
                             samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
-                            data=samplemodality
+                            data=samplemodality['status']
                         except Exception as e:
+                            print('error')
                             data=e
-                    else:
-                       data='bad'
+            else:
+                data=chem_res
             
 
         except Exception as e:
-            data='potaka'
+            data='Error Saving'
             
 
     elif action == 'VERIFY':
@@ -1481,27 +2208,27 @@ def save_chem_result(request):
                 'total_bilirubin':total_bilirubin,
                 'direct_bilirubin':direct_bilirubin,
                 'indirect_bilirubin':indirect_bilirubin,
+                'ggt':ggt,
+                'ferritin':ferritin,
+                'cortisol':cortisol,
                 # 'perfom_by':int('617116'),
                 'verified_by':request.session['employee_id']
                 # 617116
             }).json()
 
             if chem_res['status'] == 'success':
+                # data='VERIFIED'
                 get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
                 for g in get_test['laboratory']:
                     if g['modality'] == 'CHEMI' and g['status'] != 'CANCELLED':
                         key=g['prikey']
                         try:
                             samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':orderid, 'status':'COMPLETED','receive':g['received_specimen']}).json()
-                            data=samplemodality
+                            data=samplemodality['status']
                         except Exception as e:
                             data=e
-                    else:
-                       data='bad'
-            
-
         except Exception as e:
-            data='potaka'
+            data='Error Verifying'
             
     else:
         act=''
@@ -1544,6 +2271,7 @@ def save_occult(request):
             'performBy':request.POST.get('performById'),
             'verifyBy':request.session['employee_id'],
             }).json()
+        #   print(verify_occult)
           if verify_occult['status'] == 'success':
             get_test = requests.post(get_lab_request, data={'enccode':request.POST.get('encc'),'order_id':request.POST.get('orderid')}).json()
             for g in get_test['laboratory']:
@@ -1554,85 +2282,65 @@ def save_occult(request):
             status=e
         
     return JsonResponse({'data':status})
+
 ########################################### SAVE FECALYSIS RESULT
 @csrf_exempt
 def save_fa_result(request):
     ordid=request.POST.get('orderid')
     hosno=request.POST.get('hpercode')
-    action=request.POST.get('action')
+    action=request.POST.get('stype')
     proccode=request.POST.get('proccode')
    
-    if action == 'insert':
-      try:
-          save_fa=requests.post(fecalysisResult, data={
+    if action == 'INSERT':
+        performby=request.session['employee_id']
+        verifyby=''
+        stat='TO VERIFY'
+    elif action == 'VERIFY':
+        performby=request.POST.get('performById')
+        verifyby=request.session['employee_id']
+        stat='COMPLETED'
+    else:
+        performby=''
+        verifyby=''
+
+    try:
+        save_fa=requests.post(fecalysisResult, data={
           'enccode':request.POST.get('encc'),
           'order_id':request.POST.get('orderid'),
           'hpercode':request.POST.get('hpercode'),
           'item':request.POST.get('proccode'),
           'feccolor':request.POST.get('color'),
           'fecon':request.POST.get('consistency'),
-        #   'fecocbld':request.POST.get('occult_blood'),   
-          'fecrbc':request.POST.get('rcb'),
-          'fecwbc':request.POST.get('wbc'),
-          'fecyeast':request.POST.get('yeast_cell'),
-          'fecbac':request.POST.get('bacteria'),
-          'fecfat':request.POST.get('fat_globules'),
-          'fecascaris':request.POST.get('ascaris'),
-          'fechookworm':request.POST.get('hookworm'),
-          'fechisto':request.POST.get('histo'),
-          'feccoli':request.POST.get('coli'),
-          'fectrichuris':request.POST.get('trichuris'),
-          'fecvermi':request.POST.get('vermi'),
-          'feothr':request.POST.get('other'),
-          'fecnote':request.POST.get('note'),
-          'performBy':request.session['employee_id'],
-          }).json()
-          print(save_fa)
-          if save_fa['status'] == 'success':  
-            get_test = requests.post(get_lab_request, data={'enccode':request.POST.get('encc'),'order_id':request.POST.get('orderid')}).json()
-            for g in get_test['laboratory']:
-                if g['prikey'] == request.POST.get('prikey'):
-                    up_stat=requests.post(update_status, data={'key': request.POST.get('prikey'), 'enccode': request.POST.get('encc'),'order_id':request.POST.get('orderid'), 'status':'TO VERIFY','receive':g['received_specimen']}). json()
-                    status=up_stat['status']
-      except Exception as e:
-          status=e
-    elif action == 'verify':
-        try:
-          verify_fa=requests.post(fecalysisResult, data={
-          'enccode':request.POST.get('encc'),
-          'order_id':request.POST.get('orderid'),
-          'hpercode':request.POST.get('hpercode'),
-          'item':proccode,
-          'feccolor':request.POST.get('color'),
-          'fecon':request.POST.get('consistency'),
           'fecocbld':request.POST.get('occult_blood'),   
           'fecrbc':request.POST.get('rcb'),
           'fecwbc':request.POST.get('wbc'),
-          'fecyeast':request.POST.get('yeast_cell'),
+          'fecyeast':request.POST.get('yeast'),
           'fecbac':request.POST.get('bacteria'),
           'fecfat':request.POST.get('fat_globules'),
           'fecascaris':request.POST.get('ascaris'),
           'fechookworm':request.POST.get('hookworm'),
           'fechisto':request.POST.get('histo'),
           'feccoli':request.POST.get('coli'),
-          'fectrichuris':request.POST.get('trichuris'),
+          'fectri':request.POST.get('trichuris'),
           'fecvermi':request.POST.get('vermi'),
           'feothr':request.POST.get('other'),
           'fecnote':request.POST.get('note'),
-          'performBy':request.POST.get('performById'),
-          'verifyBy':request.session['employee_id'],
+          'performBy':performby,
+          'verifyBy':verifyby
           }).json()
-          print(save_fa)
-          if verify_fa['status'] == 'success':
+        if save_fa['status'] == 'success':  
+            # print(save_fa)
             get_test = requests.post(get_lab_request, data={'enccode':request.POST.get('encc'),'order_id':request.POST.get('orderid')}).json()
             for g in get_test['laboratory']:
-                if g['prikey'] == request.POST.get('prikey'):
-                    up_stat=requests.post(update_status, data={'key': request.POST.get('prikey'), 'enccode': request.POST.get('encc'),'order_id':request.POST.get('orderid'), 'status':'COMPLETED','receive':g['received_specimen']}). json()
+                if g['proccode'] == 'LABOR00334' or g['proccode'] == 'LABOR00407':
+                    up_stat=requests.post(update_status, data={'key': g['prikey'], 'enccode': request.POST.get('encc'),'order_id':request.POST.get('orderid'), 'status':stat,'receive':g['received_specimen']}). json()
                     status=up_stat['status']
-        
-        except Exception as e:
-            status='verify Failed'
-
+        else:
+            print(save_fa)
+    except Exception as e:
+        status=e
+        print(e)
+   
     
     return JsonResponse({'data':status})
 #######################################
@@ -1663,7 +2371,7 @@ def view_labrequest(request):
     if rtype == 'unseen':
         seen_update=requests.post(put_orderDetails, data={'order_id':request.POST.get('ordid'),'received_by':lab_user}).json()
     view_req=requests.post(get_lab_request,data={'enccode':request.POST.get('encc'),'order_id':request.POST.get('ordid')}).json()
- 
+    
     for i in view_req['laboratory']:
         chrg_code=i['pcchrgcod']
         i['enccode'] = i['enccode'].replace("/", "-")
@@ -1673,11 +2381,11 @@ def view_labrequest(request):
             i['datemod'] = datetime.datetime.strptime(i['datemod'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['datemod']=datetime.datetime.strftime(i['datemod'], '(%I:%M %p)')
         
-    chk_charge=requests.post(get_charges,data={'code':chrg_code}).json()
-    if len(chk_charge['data']) > 0:
-        chk=1
-    else:
-        chk=0
+    # chk_charge=requests.post(get_charges,data={'code':chrg_code}).json()
+    # if len(chk_charge['data']) > 0:
+    #     chk=1
+    # else:
+    #     chk=0
     status={
         'labtest':view_req['laboratory'],
         'patient':view_req['details'],
@@ -1685,7 +2393,7 @@ def view_labrequest(request):
         # 'test':view_req
     }
 
-    return JsonResponse({'data':status,'charge':chk,'code':chrg_code})
+    return JsonResponse({'data':status,'code':chrg_code})
 
 @csrf_exempt
 def load_accept_req(request):
@@ -1749,7 +2457,8 @@ def save_vefify_ua_result(request):
             'mucus':request.POST.get('vmucus'),
             'bacteria':request.POST.get('vbacteria'),
             'calcium':request.POST.get('vcalcium'),
-            # 'urnvapu':request.POST.get('phosphate'),
+            # not saved
+            'cast':request.POST.get('vphosphate'),
             'ammonium':request.POST.get('vbiurate'),
             'uricAcid':request.POST.get('vuric'),
             'urnvamm':request.POST.get('vbiurate'),
@@ -1757,7 +2466,7 @@ def save_vefify_ua_result(request):
             'coarseGranular':request.POST.get('vcoarse'),
             'hyaline':request.POST.get('vhyaline'),
             'wbcCast':request.POST.get('vcwbc'),
-            'rbcCast':request.POST.get('vrwbc'),
+            'rbcCast':request.POST.get('vcrbc'),
             'others':request.POST.get('vothers'),
             'preg':request.POST.get('vpregnancy'),
             'performBy':request.POST.get('vperformby_id'),
@@ -1771,10 +2480,6 @@ def save_vefify_ua_result(request):
                 
 
         getua=requests.post(get_urinalysis,data={'order_id':request.POST.get('vorderid'),'item':request.POST.get('vproccode')}).json()
-    
-        
-
-    
     
     return JsonResponse({'status':getua['status']})
 
@@ -1850,8 +2555,8 @@ def save_preg_res(request):
 def get_preg_result(request):
    
     getpreg=requests.post(get_urinalysis,data={'order_id':request.POST.get('orderid'),'items':request.POST.get('prikey')}).json()
+    # print(getpreg)
     pdata=getpreg['data']
-    
     for p in pdata:
         if p['proccode'] == 'LABOR00081':
             status={
@@ -1873,6 +2578,25 @@ def save_vpreg_res(request):
 
 @csrf_exempt
 def save_ua_result(request):
+
+    action=request.POST.get('stype')
+    # print(request.POST.get('proccode'))
+    if action == 'INSERT':
+        performby=request.session['employee_id']
+        verifyby=''
+        st='TO VERIFY'
+        ttype='ONPROCESS'
+      
+    elif action == 'VERIFY':
+        performby=request.POST.get('performbyId')
+        verifyby=request.session['employee_id']
+        st='COMPLETED'
+        ttype='TO VERIFY'
+        
+    else:
+        performby=''
+        verifyby=''
+    
     try:
         save_ua=requests.post(adduptdate_urinalysis,data={
             'hpercode':request.POST.get('hpercode'),
@@ -1892,14 +2616,14 @@ def save_ua_result(request):
             'uroblinogen':request.POST.get('urobilinogen'),
             'leukocytes':request.POST.get('leukocytes'),
             'manualChon':request.POST.get('mchon'),
-            'manualProtein':request.POST.get('protein'),
+            'manualProtein':request.POST.get('mlprotein'),
             'wbc':request.POST.get('wbc'),
             'rbc':request.POST.get('rbc'),
             'epithelial':request.POST.get('epithelial'),
             'mucus':request.POST.get('mucus'),
             'bacteria':request.POST.get('bacteria'),
             'calcium':request.POST.get('calcium'),
-            'urnvapu':request.POST.get('phosphate'),
+            'cast':request.POST.get('phosphate'),
             'ammonium':request.POST.get('biurate'),
             'uricAcid':request.POST.get('uric'),
             'urnvamm':request.POST.get('biurate'),
@@ -1909,26 +2633,35 @@ def save_ua_result(request):
             'wbcCast':request.POST.get('cwbc'),
             'rbcCast':request.POST.get('crbc'),
             'others':request.POST.get('others'),
-            # 'preg':request.POST.get('pregnancy'),
-            'performBy':request.session['employee_id'],
-            # 'performBy':'520408',
+            'preg':request.POST.get('pregnancy'),
+            'performBy':performby,
+            'verifyBy':verifyby
             }).json()
         
-        print(save_ua)
-
         if save_ua['status'] == 'success':
             get_test = requests.post(get_lab_request, data={'enccode':request.POST.get('encc'),'order_id':request.POST.get('orderid')}).json()
             for g in get_test['laboratory']:
-                if g['prikey'] == request.POST.get('prikey'):
-                    sentToDone=requests.post(update_status, data={'key': request.POST.get('prikey'), 'enccode': request.POST.get('encc'),'order_id':request.POST.get('orderid'), 'status':'TO VERIFY','receive':g['received_specimen']}).json()
+                if  g['proccode'] == 'LABOR00081' or g['proccode'] == 'LABOR00078' or g['proccode'] == 'LABOR00076' and g['status'] != 'CANCELLED':
+                    sentToVerify=requests.post(update_status, data={'key': g['prikey'], 'enccode': request.POST.get('encc'),'order_id':request.POST.get('orderid'), 'status':st,'receive':g['received_specimen']}).json()
+                    status=sentToVerify['status']
             getua=requests.post(get_urinalysis,data={'order_id':request.POST.get('orderid'),'item':request.POST.get('proccode')}).json()
             status=getua['status']
-       
+            # print(getua)
+           
+        else:
+            status=save_ua
+            
+        # status=save_ua
+        # getua=requests.post(get_urinalysis,data={'order_id':request.POST.get('orderid')}).json()
+        # print(getua)
 
     except Exception as e:
+        print(e)
         status='Unable to Save'
 
-    return JsonResponse({'data':status})    
+    
+
+    return JsonResponse({'data':status,'ttype':ttype})    
 
 ###########################################
 @csrf_exempt
@@ -1936,11 +2669,15 @@ def load_microscopy(request):
     req='MICRO'
     get_micro=requests.post(getLab_modality,data={'modality':req,'status':request.POST.get('rtype')}).json()
     for i in get_micro['data']:
+        # age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
         i['enccode'] = i['enccode'].replace("/", "-")
         i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
         i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
         i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
         i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %Y (%I:%M %p)')
+        i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+        i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
+        # i['uomcode'] = age['data']
         # print(i)
     status={
         'result':get_micro['data'],
@@ -1961,6 +2698,7 @@ def opd_release_result(request):
         opd_rel=requests.post(releasing,data={'date':now(),'type':rtype,'order_id':ordid,'amount':int(amountp),'total_paid':int(tamount),'charge_by':request.session['employee_id'],'proccode':rtest}).json()
         if opd_rel['status'] == 'success':
             get_rel=requests.post(get_released,data={'order_id':ordid}).json()
+            # print(get_rel)
     except Exception as e:
         data=e
     get_test = requests.post(get_lab_request, data={'enccode':request.POST.get('encc'),'order_id':request.POST.get('orderid')}).json()
@@ -1968,6 +2706,7 @@ def opd_release_result(request):
         for d in rtest:
             if g['prikey'] == d:
                     recep_rel_res=requests.post(update_status, data={'key':d, 'enccode': request.POST.get('encc'),'order_id':request.POST.get('orderid'),'receive':g['received_specimen'], 'status':'RELEASED','remarks':'Released'}).json()
+    
     return JsonResponse({'data':recep_rel_res['status']})
 
 ########################################### RECEPTION
@@ -1986,23 +2725,63 @@ def release_result(request):
 @csrf_exempt
 def get_endorsement(resquest):
     endorse=[]
-    doctOrder = requests.post(doctorsOrderPatient).json()
-    labrequest=doctOrder['data'] 
+    get_micro=requests.post(getLab_modality,data={'modality':'MICRO','status':'ENDORSED'}).json()
+    if len(get_micro['data']) > 0:
+        for e in get_micro['data']:
+            endorse.append(e)
+    get_chemi=requests.post(getLab_modality,data={'modality':'CHEMI','status':'ENDORSED'}).json()
+    if len(get_chemi['data']) > 0:
+        for e in get_chemi['data']:
+            endorse.append(e)
+    get_hemat=requests.post(getLab_modality,data={'modality':'HEMAT','status':'ENDORSED'}).json()
+    if len(get_hemat['data']) > 0:
+        for e in get_hemat['data']:
+            endorse.append(e)
+    get_serol=requests.post(getLab_modality,data={'modality':'SEROL','status':'ENDORSED'}).json()
+    if len(get_serol['data']) > 0:
+        for e in get_serol['data']:
+            endorse.append(e)
+    get_bacti=requests.post(getLab_modality,data={'modality':'BACTI','status':'ENDORSED'}).json()
+    if len(get_bacti['data']) > 0:
+        for e in get_bacti['data']:
+            endorse.append(e)
+    get_immuno=requests.post(getLab_modality,data={'modality':'IMMUN','status':'ENDORSED'}).json()
+    if len(get_immuno['data']) > 0:
+        for e in get_immuno['data']:
+            endorse.append(e)
+    get_thyro=requests.post(getLab_modality,data={'modality':'THYRO','status':'ENDORSED'}).json()
+    if len(get_thyro['data']) > 0:
+        for e in get_thyro['data']:
+            endorse.append(e)
+    get_cardi=requests.post(getLab_modality,data={'modality':'CARDI','status':'ENDORSED'}).json()
+    if len(get_cardi['data']) > 0:
+        for e in get_cardi['data']:
+            endorse.append(e)
+    get_blgas=requests.post(getLab_modality,data={'modality':'BLGAS','status':'ENDORSED'}).json()
+    if len(get_blgas['data']) > 0:
+        for e in get_blgas['data']:
+            endorse.append(e)
+    get_tumor=requests.post(getLab_modality,data={'modality':'TUMOR','status':'ENDORSED'}).json()
+    if len(get_tumor['data']) > 0:
+        for e in get_tumor['data']:
+            endorse.append(e)
+    # doctOrder = requests.post(doctorsOrderPatient).json()
+    # labrequest=doctOrder['data'] 
   
-    for l in labrequest:
-        if l['toecode'] != 'OPD':
+    # for l in labrequest:
+    #     if l['toecode'] != 'OPD':
          
-            get_examination = requests.post(get_lab_request, data={'enccode': l['enccode'],'order_id':l['order_id']}).json()
-            test_=get_examination['laboratory']
+    #         get_examination = requests.post(get_lab_request, data={'enccode': l['enccode'],'order_id':l['order_id']}).json()
+    #         test_=get_examination['laboratory']
          
-            for e in test_:
-                if e['status'] =='ENDORSE':
-                    e['uomcode'] =l['patlast']+', '+l['patfirst']
-                    e['orcode']=l['toecode']
-                    e['pcchrgcod']=l['order_id']
-                    e['datemod'] = datetime.datetime.strptime(e['datemod'],"%Y-%m-%dT%H:%M:%S.%fZ")
-                    e['datemod']=datetime.datetime.strftime(e['datemod'], '%b %d, %y (%I:%M %p)')
-                    endorse.append(e)
+    #         for e in test_:
+    #             if e['status'] =='ENDORSE':
+    #                 e['uomcode'] =l['patlast']+', '+l['patfirst']
+    #                 e['orcode']=l['toecode']
+    #                 e['pcchrgcod']=l['order_id']
+    #                 e['datemod'] = datetime.datetime.strptime(e['datemod'],"%Y-%m-%dT%H:%M:%S.%fZ")
+    #                 e['datemod']=datetime.datetime.strftime(e['datemod'], '%b %d, %y (%I:%M %p)')
+    #                 endorse.append(e)
  
     return JsonResponse({'data':endorse})
 
@@ -2046,6 +2825,7 @@ def request_notif(request):
                new.append(l['toecode'])
                get_examination = requests.post(get_lab_request, data={'enccode': l['enccode'],'order_id':l['order_id']}).json()
                test_=get_examination['laboratory']
+            #    print(test_)
                if len(test_) > 0:
                     find_.append(l['toecode'])
                else:
@@ -2079,45 +2859,58 @@ def get_request(request):
     ward=request.POST.get('wd')
     doctOrder = requests.post(doctorsOrderPatient).json()
     labrequest=doctOrder['data']    
+    request=[]
     er=[]
     cc=1
     inp=[]
     result_=[]
     result =[]
     endorse=[]
+    od=''
     for i in labrequest:
-        i['enccode'] = i['enccode'].replace("/", "-")
         ordid=i['order_id']
         enctr=i['enccode']
-        if i['received_datetime'] is not None:
-            i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
-            i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
-        get_examination = requests.post(get_lab_request, data={'enccode': enctr,'order_id':ordid}).json()
-        test_=get_examination['laboratory']
-   
-        for e in test_:
+        
+        if i['toecode'] == 'ADM':
+            inp.append(i['toecode'])
+        
+        if i['toecode'] == 'ER':
+            er.append(i['toecode'])
+
+        if i['toecode'] == ward:
+            request.append(i)
+            # if ordid != od:
+            #     od=i['order_id']
+            #     request.append(i)
+            #     print('not same')
+            #     print(od)
+            # else:
+            #     print('same')
+
+            i['enccode'] = i['enccode'].replace("/", "-")
             
-            
-            if e['status'] == 'ENDORSE':
-                endorse.append(e['status'])
-            
-        if len(test_) > 0:
-            result_.append(i)
-            if i['toecode'] == 'ADM':
-                inp.append(i['toecode'])
-            if i['toecode'] == 'ER':
-                 er.append(i['toecode'])
-            if i['toecode'] == ward:
-                for t in test_:
-                    cc + 1
-                    result.append(t['procdesc'])
-                    cres=len(t)
-                    # no. of test proxy
-            i['released_by']=len(test_)     
-        else:
-            i['released_by'] = 0
+            if i['received_datetime'] is not None:
+                i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
+                i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
+            # get_examination = requests.post(get_lab_request, data={'enccode': enctr,'order_id':ordid}).json()
+            # test_=get_examination['laboratory']
+
+            # if len(test_) > 0:
+            #     request.append(i)
+
+            # for e in test_:
+        
+            #     if e['status'] == 'ENDORSE':
+            #         endorse.append(e['status'])
+                
+            # if len(test_) > 0:
+            #     result_.append(i)
+                
+            #     i['released_by']=len(test_)     
+            # else:
+            #     i['released_by'] = 0
     
-    return JsonResponse({'status':result_,'t_inp':len(inp),'t_er':len(er),'t_endorse':len(endorse)})
+    return JsonResponse({'status':result_,'t_inp':len(inp),'t_er':len(er),'t_endorse':len(endorse),'request':request})
 
 ###########################################
 @csrf_exempt
@@ -2187,7 +2980,7 @@ def recep_update_sample(request):
             }).json()
     
     
-    if modality == 'CHEMI' or modality == 'IMMUN' or modality == 'THYRO' or modality == 'CARDI' or modality == 'TUMOR' or modality == 'SEROL' or modality == 'BACTI' :
+    if modality == 'CHEMI' or modality == 'IMMUN' or modality == 'THYRO' or modality == 'CARDI' or modality == 'BLGAS' or modality == 'TUMOR' or modality == 'SEROL' or modality == 'HEMAT' :
         data='success'
         get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
         for g in get_test['laboratory']:
@@ -2253,6 +3046,83 @@ def lab_microscopy(request):
   
     return render(request, 'integrated/laboratory/microscopy/index.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name']})
 
+
+
+
+# ################## microscopy new update
+
+@csrf_exempt
+def getfa_result(request):
+    orderid=request.POST.get('orderid')
+
+    getfa=requests.post(get_fecalysis, data={'order_id':orderid}).json()
+
+
+    return JsonResponse({'data':getfa,'curr_user':request.session['employee_id']})
+
+@csrf_exempt
+def getua_result(request):
+
+    orderid=request.POST.get('orderid')
+    getua=requests.post(get_urinalysis,data={'order_id':orderid}).json()
+    data=getua['data']
+
+    return JsonResponse({'data':data,'status':getua,'curr_user':request.session['employee_id']})
+
+
+@csrf_exempt
+def micro_test(request):
+    encc=request.POST.get('encc')
+    orderid=request.POST.get('ord')
+    proccode=request.POST.get('procode')
+    test=[]
+    testproc=[]
+    get_examination = requests.post(get_lab_request, data={'enccode': encc,'order_id':orderid}).json()
+
+    for g in get_examination['laboratory']:
+
+        if proccode == 'LABOR00081' or proccode == 'LABOR00078' or proccode == 'LABOR00076':
+            ttype='URINE'
+            if g['proccode'] == 'LABOR00081' or g['proccode'] == 'LABOR00078' or g['proccode'] == 'LABOR00076' and g['status'] != 'CANCELLED':
+                test.append(g['procdesc'])
+                testproc.append(g['proccode'])
+            
+        elif proccode == 'LABOR00407' or proccode == 'LABOR00334':
+            ttype='STOOL'
+            if g['proccode'] == 'LABOR00407' or g['proccode'] == 'LABOR00334' and g['status'] != 'CANCELLED':
+                test.append(g['procdesc'])
+                testproc.append(g['proccode'])
+        else:
+            ttype='Not Recognized'
+            test=[]
+
+    data=test
+    return JsonResponse({'data':data,'type':ttype,'action':'ONPROCESS','testproc':testproc})
+
+@csrf_exempt
+def micro_update_stat(request):
+    action=request.POST.get('micro_action')
+    encc=request.POST.get('micro_encc')
+    orderid=request.POST.get('micro_orderid')
+    ttype=request.POST.get('micro_type')
+
+    get_examination = requests.post(get_lab_request, data={'enccode': encc,'order_id':orderid}).json()
+    for g in get_examination['laboratory']:
+        if ttype == 'URINE':
+            if g['proccode'] == 'LABOR00081' or g['proccode'] == 'LABOR00078' or g['proccode'] == 'LABOR00076' and g['status'] != 'CANCELLED':
+                microtest=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':action,'receive':g['received_specimen']}).json()
+                data=microtest['status']
+
+        elif ttype == 'STOOL':
+            if g['proccode'] == 'LABOR00407' or g['proccode'] == 'LABOR00334' and g['status'] != 'CANCELLED':
+                microtest=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':action,'receive':g['received_specimen']}).json()
+                data=microtest['status']
+
+
+    return JsonResponse({'data':data})
+
+################################## End new Update
+
 @csrf_exempt
 def get_micro(request):
     req_type=request.POST.get('type')
@@ -2287,10 +3157,12 @@ def lab_chemistry(request):
 
 def lab_hematology(request):
 
-    return render(request, 'integrated/laboratory/hematology/index.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name']})
+    return render(request, 'integrated/laboratory/hematology/index2.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name']})
 
 
-
+def load_hemaMachine(request):
+    data='POTAKA'
+    return JsonResponse({'data':data})
 
 
 def lab_opdxt_walkin(request):
@@ -2304,7 +3176,7 @@ def lab_opdxt_opd(request):
     return render(request, 'integrated/laboratory/opd/opd.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'opdrequest':opdrequest})
 
 def lab_reception(request):
-   
+
     return render(request, 'integrated/laboratory/reception/index.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name']})
 
 def lab_rapidtest(request):
@@ -2343,6 +3215,26 @@ def change_kit(request):
     return JsonResponse({'data':data})
 
 @csrf_exempt
+def update_kit(request):
+    kitid=request.POST.get('ukitid')
+    kitname=request.POST.get('ukit_name')
+    lotno=request.POST.get('ulot_no')
+    expiry=request.POST.get('uexpiry_date')
+    modality=request.POST.get('umodality')
+    status=request.POST.get('ustatus')
+    try:
+        upkit=requests.post(su_kit, data={'kit_name':kitname,'kit_id':kitid,'lot_no':lotno,'expiry_date':expiry,'modality':modality,'status':status}).json()
+        data=upkit['status']
+    except Exception as e:
+        data='Err'
+        print(e)
+
+        
+
+    return JsonResponse({'data':data})
+
+
+@csrf_exempt
 def get_kit(request):
     data=[]
     allkits=requests.post(allkit).json()
@@ -2351,7 +3243,7 @@ def get_kit(request):
 
 
 def lab_bacteriology(request):
-  
+    kit=[]
     # gk=requests.post(getkit).json()
     try:
         allkits=requests.post(allkit).json()
@@ -2359,19 +3251,29 @@ def lab_bacteriology(request):
             if k['status'] == 'ACTIVE' and k['modality'] == 'BACTI':
                 k['expiry_date'] = datetime.datetime.strptime(k['expiry_date'],"%Y-%m-%dT%H:%M:%S.%fZ")
                 k['expiry_date']=datetime.datetime.strftime(k['expiry_date'], '%b %d, %Y')
-                ukit=k['kit_name']
-                lotno=k['lot_no']
-                expiry=k['expiry_date']
-            else:
-                ukit=''
-                lotno=''
-                expiry=''
-    except Exception as e:
-            ukit=''
-            lotno=''
-            expiry=''
 
-    return render(request, 'integrated/laboratory/bacteriology/index.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'kit':ukit,'lotno':lotno,'expiry':expiry})
+                kit.append(k)
+            #     ukit=k['kit_name']
+            #     lotno=k['lot_no']
+            #     expiry=k['expiry_date']
+            # else:
+            #     ukit=''
+            #     lotno=''
+                # expiry=''
+        
+    except Exception as e:
+            print(e)
+            # ukit=''
+            # lotno=''
+            # expiry=''
+    if len(kit) == 1:
+        skit=kit
+    else:
+        skit=''
+    
+   
+   
+    return render(request, 'integrated/laboratory/bacteriology/index.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'skit':skit})
 
 
 def unseen_lab_request_details(request, enctr, orderid):
@@ -2520,11 +3422,14 @@ def labres_chem(request,toecode,orderid,encc):
     try:
         chem_result=requests.post(get_chem_result,data={'order_id':orderid,'enccode':encc}).json()
         age=requests.post(get_age, data={'enccode':encc,'toecode':toecode}).json()
+        
         chemres=chem_result['data']
         
         ptx_req=requests.post(get_lab_request, data={'enccode':encc,'order_id':orderid}).json()
       
         for p in ptx_req['laboratory']:
+            # if p['modality'] == 'CHEMI':
+            #     print(str(p['procdesc'])+' - '+str(p['proccode']))
             ctr=p['control_no']
         for c in chemres:
             c['date_verified'] = datetime.datetime.strptime(c['date_verified'],"%Y-%m-%dT%H:%M:%S.%fZ")
@@ -2533,183 +3438,427 @@ def labres_chem(request,toecode,orderid,encc):
 
 
             if c['hba1c'] == ',':
-                hba1c='----------------'
+                hba1c=''
                 hba1c_nv='--------------'
+                hba1c_flag=''
             else:
                 hba1c_s=c['hba1c'].split(',')
                 hba1c=hba1c_s[0]
                 hba1c_nv=str(hba1c_s[1]+' - '+hba1c_s[2])
+                
+                nv=hba1c_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(hba1c) > float(hv[0]):
+                    hba1c_flag='H'
+                elif float(hba1c) < float(nv[0]):
+                    hba1c_flag='L'
+                else:
+                    hba1c_flag='N'
+
 
             if c['glucose_fbs'] == ',':
-                glucose_fbs='----------------'
+                glucose_fbs=''
                 glucose_fbs_nv='--------------'
+                glucose_fbs_flag=''
             else:
                 glucose_fbs_s=c['glucose_fbs'].split(',')
                 glucose_fbs=glucose_fbs_s[0]
                 glucose_fbs_nv=str(glucose_fbs_s[1]+' - '+glucose_fbs_s[2])
 
+                nv=glucose_fbs_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(glucose_fbs) > float(hv[0]):
+                    glucose_fbs_flag='H'
+                elif float(glucose_fbs) < float(nv[0]):
+                    glucose_fbs_flag='L'
+                else:
+                    glucose_fbs_flag='N'
+
             if c['glucose_rbs'] == ',':
-                glucose_rbs='----------------'
+                glucose_rbs=''
                 glucose_rbs_nv='--------------'
+                glucose_rbs_flag=''
             else:
                 glucose_rbs_s=c['glucose_rbs'].split(',')
                 glucose_rbs=glucose_rbs_s[0]
                 glucose_rbs_nv=str(glucose_rbs_s[1]+' - '+glucose_rbs_s[2])
 
+                nv=glucose_rbs_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(glucose_rbs) > float(hv[0]):
+                    glucose_rbs_flag='H'
+                elif float(glucose_rbs) < float(nv[0]):
+                    glucose_rbs_flag='L'
+                else:
+                    glucose_rbs_flag='N'
+
             if c['cholesterol'] == ',':
-                cholesterol='----------------'
+                cholesterol=''
                 cholesterol_nv='--------------'
+                cholesterol_flag=''
             else:
                 cholesterol_s=c['cholesterol'].split(',')
                 cholesterol=cholesterol_s[0]
                 cholesterol_nv=str(cholesterol_s[1]+' - '+cholesterol_s[2])
 
+                nv=cholesterol_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(cholesterol) > float(hv[0]):
+                    cholesterol_flag='H'
+                elif float(cholesterol) < float(nv[0]):
+                    cholesterol_flag='L'
+                else:
+                    cholesterol_flag='N'
+
             if c['triglycerides'] == ',':
-                triglycerides='----------------'
+                triglycerides=''
                 triglycerides_nv='--------------'
+                triglycerides_flag=''
             else:
                 triglycerides_s=c['triglycerides'].split(',')
                 triglycerides=triglycerides_s[0]
                 triglycerides_nv=str(triglycerides_s[1]+' - '+triglycerides_s[2])
+                # triglycerides_flag=''
+                nv=triglycerides_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(triglycerides) > float(hv[0]):
+                    triglycerides_flag='H'
+                elif float(triglycerides) < float(nv[0]):
+                    triglycerides_flag='L'
+                else:
+                    triglycerides_flag='N'
 
             if c['hdl_cholesterol'] == ',':
-                hdl_cholesterol='----------------'
+                hdl_cholesterol=''
                 hdl_cholesterol_nv='--------------'
+                hdl_cholesterol_flag=''
+
             else:
                 hdl_cholesterol_s=c['hdl_cholesterol'].split(',')
                 hdl_cholesterol=hdl_cholesterol_s[0]
                 hdl_cholesterol_nv=str(hdl_cholesterol_s[1]+' - '+hdl_cholesterol_s[2])
+
+                nv=hdl_cholesterol_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(hdl_cholesterol) > float(hv[0]):
+                    hdl_cholesterol_flag='H'
+                elif float(hdl_cholesterol) < float(nv[0]):
+                    hdl_cholesterol_flag='L'
+                else:
+                    hdl_cholesterol_flag='N'
             
             if c['ldl_cholesterol'] == ',':
-                ldl_cholesterol='----------------'
+                ldl_cholesterol=''
                 ldl_cholesterol_nv='--------------'
+                ldl_cholesterol_flag=''
             else:
                 ldl_cholesterol_s=c['ldl_cholesterol'].split(',')
                 ldl_cholesterol=ldl_cholesterol_s[0]
                 ldl_cholesterol_nv=str(ldl_cholesterol_s[1]+' - '+ldl_cholesterol_s[2])
+
+                nv=ldl_cholesterol_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(ldl_cholesterol) > float(hv[0]):
+                    ldl_cholesterol_flag='H'
+                elif float(ldl_cholesterol) < float(nv[0]):
+                    ldl_cholesterol_flag='L'
+                else:
+                    ldl_cholesterol_flag='N'
             
             if c['blood_uric'] == ',':
-                blood_uric='----------------'
+                blood_uric=''
                 blood_uric_nv='--------------'
+                blood_uric_flag=''
             else:
                 blood_uric_s=c['blood_uric'].split(',')
                 blood_uric=blood_uric_s[0]
                 blood_uric_nv=str(blood_uric_s[1]+' - '+blood_uric_s[2])
 
+                nv=blood_uric_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(blood_uric) > float(hv[0]):
+                    blood_uric_flag='H'
+                elif float(blood_uric) < float(nv[0]):
+                    blood_uric_flag='L'
+                else:
+                    blood_uric_flag='N'
+
             if c['blood_urea'] == ',':
-                blood_urea='----------------'
+                blood_urea=''
                 blood_urea_nv='--------------'
+                blood_urea_flag=''
             else:
                 blood_urea_s=c['blood_urea'].split(',')
                 blood_urea=blood_urea_s[0]
                 blood_urea_nv=str(blood_urea_s[1]+' - '+blood_urea_s[2])
 
+                nv=blood_urea_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(blood_urea) > float(hv[0]):
+                    blood_urea_flag='H'
+                elif float(blood_urea) < float(nv[0]):
+                    blood_urea_flag='L'
+                else:
+                    blood_urea_flag='N'
+
             if c['creatinine'] == ',':
-                creatinine='----------------'
+                creatinine=''
                 creatinine_nv='--------------'
+                creatinine_flag=''
             else:
                 creatinine_s=c['creatinine'].split(',')
                 creatinine=creatinine_s[0]
                 creatinine_nv=str(creatinine_s[1]+' - '+creatinine_s[2])
 
+                nv=creatinine_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(creatinine) > float(hv[0]):
+                    creatinine_flag='H'
+                elif float(creatinine) < float(nv[0]):
+                    creatinine_flag='L'
+                else:
+                    creatinine_flag='N'
+
             if c['alt_sgpt'] == ',':
-                alt_sgpt='----------------'
+                alt_sgpt=''
                 alt_sgpt_nv='--------------'
+                alt_sgpt_flag=''
             else:
                 alt_sgpt_s=c['alt_sgpt'].split(',')
                 alt_sgpt=alt_sgpt_s[0]
                 alt_sgpt_nv=str(alt_sgpt_s[1]+' - '+alt_sgpt_s[2])
 
+                nv=alt_sgpt_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(alt_sgpt) > float(hv[0]):
+                    alt_sgpt_flag='H'
+                elif float(alt_sgpt) < float(nv[0]):
+                    alt_sgpt_flag='L'
+                else:
+                    alt_sgpt_flag='N'
+
             if c['ast_sgot'] == ',':
-                ast_sgot='----------------'
+                ast_sgot=''
                 ast_sgot_nv='--------------'
+                ast_sgot_flag=''
             else:
-                ast_sgot_s=c['alt_sgpt'].split(',')
+                ast_sgot_s=c['ast_sgot'].split(',')
                 ast_sgot=ast_sgot_s[0]
                 ast_sgot_nv=str(ast_sgot_s[1]+' - '+ast_sgot_s[2])
 
+                nv=ast_sgot_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(ast_sgot) > float(hv[0]):
+                    ast_sgot_flag='H'
+                elif float(ast_sgot) < float(nv[0]):
+                    ast_sgot_flag='L'
+                else:
+                    ast_sgot_flag='N'
+
             if c['potassium'] == ',':
-                potassium='----------------'
+                potassium=''
                 potassium_nv='--------------'
+                potassium_flag=''
             else:
                 potassium_s=c['potassium'].split(',')
                 potassium=potassium_s[0]
                 potassium_nv=str(potassium_s[1]+' - '+potassium_s[2])
 
+                nv=potassium_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(potassium) > float(hv[0]):
+                    potassium_flag='H'
+                elif float(potassium) < float(nv[0]):
+                    potassium_flag='L'
+                else:
+                    potassium_flag='N'
+
             if c['sodium'] == ',':
-                sodium='----------------'
+                sodium=''
                 sodium_nv='--------------'
+                sodium_flag=''
             else:
                 sodium_s=c['sodium'].split(',')
                 sodium=sodium_s[0]
                 sodium_nv=str(sodium_s[1]+' - '+sodium_s[2])
 
+                nv=sodium_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(sodium) > float(hv[0]):
+                    sodium_flag='H'
+                elif float(sodium) < float(nv[0]):
+                    sodium_flag='L'
+                else:
+                    sodium_flag='N'
+
             if c['chloride'] == ',':
-                chloride='----------------'
+                chloride=''
                 chloride_nv='--------------'
+                chloride_flag=''
             else:
                 chloride_s=c['chloride'].split(',')
                 chloride=chloride_s[0]
                 chloride_nv=str(chloride_s[1]+' - '+chloride_s[2])
 
+                nv=chloride_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(chloride) > float(hv[0]):
+                    chloride_flag='H'
+                elif float(chloride) < float(nv[0]):
+                    chloride_flag='L'
+                else:
+                    chloride_flag='N'
+
             if c['total_calcium'] == ',':
-                total_calcium='----------------'
+                total_calcium=''
                 total_calcium_nv='--------------'
+                total_calcium_flag=''
             else:
                 total_calcium_s=c['total_calcium'].split(',')
                 total_calcium=total_calcium_s[0]
                 total_calcium_nv=str(total_calcium_s[1]+' - '+total_calcium_s[2])
 
+                nv=total_calcium_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(total_calcium) > float(hv[0]):
+                    total_calcium_flag='H'
+                elif float(total_calcium) < float(nv[0]):
+                    total_calcium_flag='L'
+                else:
+                    total_calcium_flag='N'
+
             if c['ionized_calcium'] == ',':
-                ionized_calcium='----------------'
+                ionized_calcium=''
                 ionized_calcium_nv='--------------'
+                ionized_calcium_flag=''
             else:
                 ionized_calcium_s=c['ionized_calcium'].split(',')
                 ionized_calcium=ionized_calcium_s[0]
                 ionized_calcium_nv=str(ionized_calcium_s[1]+' - '+ionized_calcium_s[2])
 
+                nv=ionized_calcium_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(ionized_calcium) > float(hv[0]):
+                    ionized_calcium_flag='H'
+                elif float(ionized_calcium) < float(nv[0]):
+                    ionized_calcium_flag='L'
+                else:
+                    ionized_calcium_flag='N'
+
             if c['magnesium'] == ',':
-                magnesium='----------------'
+                magnesium=''
                 magnesium_nv='--------------'
+                magnesium_flag=''
             else:
                 magnesium_s=c['magnesium'].split(',')
                 magnesium=magnesium_s[0]
                 magnesium_nv=str(magnesium_s[1]+' - '+magnesium_s[2])
 
+                nv=magnesium_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(magnesium) > float(hv[0]):
+                    magnesium_flag='H'
+                elif float(magnesium) < float(nv[0]):
+                    magnesium_flag='L'
+                else:
+                    magnesium_flag='N'
+
             if c['phosphorus'] == ',':
-                phosphorus='----------------'
+                phosphorus=''
                 phosphorus_nv='--------------'
+                phosphorus_flag=''
             else:
                 phosphorus_s=c['phosphorus'].split(',')
                 phosphorus=phosphorus_s[0]
                 phosphorus_nv=str(phosphorus_s[1]+' - '+phosphorus_s[2])
 
+                nv=phosphorus_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(phosphorus) > float(hv[0]):
+                    phosphorus_flag='H'
+                elif float(phosphorus) < float(nv[0]):
+                    phosphorus_flag='L'
+                else:
+                    phosphorus_flag='N'
+
             if c['total_protein'] == ',':
-                total_protein='----------------'
+                total_protein=''
                 total_protein_nv='--------------'
+                total_protein_flag=''
             else:
                 total_protein_s=c['total_protein'].split(',')
                 total_protein=total_protein_s[0]
                 total_protein_nv=str(total_protein_s[1]+' - '+total_protein_s[2])
 
+                nv=total_protein_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(total_protein) > float(hv[0]):
+                    total_protein_flag='H'
+                elif float(total_protein) < float(nv[0]):
+                    total_protein_flag='L'
+                else:
+                    total_protein_flag='N'
+
             if c['albumin'] == ',':
-                albumin='----------------'
+                albumin=''
                 albumin_nv='--------------'
+                albumin_flag=''
             else:
                 albumin_s=c['albumin'].split(',')
                 albumin=albumin_s[0]
                 albumin_nv=str(albumin_s[1]+' - '+albumin_s[2])
 
+                nv=albumin_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(albumin) > float(hv[0]):
+                    albumin_flag='H'
+                elif float(albumin) < float(nv[0]):
+                    albumin_flag='L'
+                else:
+                    albumin_flag='N'
+
             if c['globulin'] == ',':
-                globulin='----------------'
+                globulin=''
                 globulin_nv='--------------'
+                globulin_flag=''
             else:
                 globulin_s=c['globulin'].split(',')
                 globulin=globulin_s[0]
                 globulin_nv=str(globulin_s[1]+' - '+globulin_s[2])
 
+                nv=globulin_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(globulin) > float(hv[0]):
+                    globulin_flag='H'
+                elif float(globulin) < float(nv[0]):
+                    globulin_flag='L'
+                else:
+                    globulin_flag='N'
+
             if c['ag_ration'] == ',':
-                ag_ration='----------------'
+                ag_ration=''
                 ag_ration_nv='--------------'
             else:
                 ag_ration_s=c['ag_ration'].split(',')
@@ -2717,55 +3866,168 @@ def labres_chem(request,toecode,orderid,encc):
                 ag_ration_nv=str(ag_ration_s[1]+' - '+ag_ration_s[2])
 
             if c['alkaline_phospatase'] == ',':
-                alkaline_phospatase='----------------'
+                alkaline_phospatase=''
                 alkaline_phospatase_nv='--------------'
+                alkaline_phospatase_flag=''
             else:
                 alkaline_phospatase_s=c['alkaline_phospatase'].split(',')
                 alkaline_phospatase=alkaline_phospatase_s[0]
                 alkaline_phospatase_nv=str(alkaline_phospatase_s[1]+' - '+alkaline_phospatase_s[2])
 
+                nv=alkaline_phospatase_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(alkaline_phospatase) > float(hv[0]):
+                    alkaline_phospatase_flag='H'
+                elif float(alkaline_phospatase) < float(nv[0]):
+                    alkaline_phospatase_flag='L'
+                else:
+                    alkaline_phospatase_flag='N'
+
             if c['amylase'] == ',':
-                amylase='----------------'
+                amylase=''
                 amylase_nv='--------------'
+                amylase_flag=''
             else:
                 amylase_s=c['amylase'].split(',')
                 amylase=amylase_s[0]
                 amylase_nv=str(amylase_s[1]+' - '+amylase_s[2])
 
+                nv=amylase_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(amylase) > float(hv[0]):
+                    amylase_flag='H'
+                elif float(amylase) < float(nv[0]):
+                    amylase_flag='L'
+                else:
+                    amylase_flag='N'
+
             if c['lipase'] == ',':
-                lipase='----------------'
+                lipase=''
                 lipase_nv='--------------'
+                lipase_flag=''
             else:
                 lipase_s=c['lipase'].split(',')
                 lipase=lipase_s[0]
                 lipase_nv=str(lipase_s[1]+' - '+lipase_s[2])
 
+                nv=lipase_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(lipase) > float(hv[0]):
+                    lipase_flag='H'
+                elif float(lipase) < float(nv[0]):
+                    lipase_flag='L'
+                else:
+                    lipase_flag='N'
+
+            if c['GGT'] == ',':
+                ggt=''
+                ggt_nv='--------------'
+            else:
+                ggt_s=c['GGT'].split(',')
+                ggt=ggt_s[0]
+                ggt_nv=str(ggt_s[1]+' - '+ggt_s[2])
+
             if c['ldh'] == ',':
-                ldh='----------------'
+                ldh=''
                 ldh_nv='--------------'
+                ldh_flag=''
             else:
                 ldh_s=c['ldh'].split(',')
                 ldh=ldh_s[0]
                 ldh_nv=str(ldh_s[1]+' - '+ldh_s[2])
 
+                nv=ldh_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(ldh) > float(hv[0]):
+                    ldh_flag='H'
+                elif float(ldh) < float(nv[0]):
+                    ldh_flag='L'
+                else:
+                    ldh_flag='N'
+
+            if c['Ferritin'] == ',':
+                ferritin=''
+                ferritin_nv='--------------'
+                ferritin_flag=''
+            else:
+                ferritin_s=c['Ferritin'].split(',')
+                ferritin=ferritin_s[0]
+                ferritin_nv=str(ferritin_s[1]+' - '+ferritin_s[2])
+
+                nv=ferritin_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(ferritin) > float(hv[0]):
+                    ferritin_flag='H'
+                elif float(ferritin) < float(nv[0]):
+                    ferritin_flag='L'
+                else:
+                    ferritin_flag='N'
+            
+            if c['Cortisol'] == ',':
+                cortisol=''
+                cortisol_nv='--------------'
+                cortisol_flag=''
+            else:
+                cortisol_s=c['Cortisol'].split(',')
+                cortisol=cortisol_s[0]
+                cortisol_nv=str(cortisol_s[1]+' - '+cortisol_s[2])
+
+                nv=cortisol_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(cortisol) > float(hv[0]):
+                    cortisol_flag='H'
+                elif float(cortisol) < float(nv[0]):
+                    cortisol_flag='L'
+                else:
+                    cortisol_flag='N'
+
+            
             if c['total_bilirubin'] == ',':
-                total_bilirubin='----------------'
+                total_bilirubin=''
                 total_bilirubin_nv='--------------'
+                total_bilirubin_flag=''
             else:
                 total_bilirubin_s=c['total_bilirubin'].split(',')
                 total_bilirubin=total_bilirubin_s[0]
                 total_bilirubin_nv=str(total_bilirubin_s[1]+' - '+total_bilirubin_s[2])
 
+                nv=total_bilirubin_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(total_bilirubin) > float(hv[0]):
+                    total_bilirubin_flag='H'
+                elif float(total_bilirubin) < float(nv[0]):
+                    total_bilirubin_flag='L'
+                else:
+                    total_bilirubin_flag='N'
+
             if c['direct_bilirubin'] == ',':
-                direct_bilirubin='----------------'
+                direct_bilirubin=''
                 direct_bilirubin_nv='--------------'
+                direct_bilirubin_flag=''
             else:
                 direct_bilirubin_s=c['direct_bilirubin'].split(',')
                 direct_bilirubin=direct_bilirubin_s[0]
                 direct_bilirubin_nv=str(direct_bilirubin_s[1]+' - '+direct_bilirubin_s[2])
 
+                nv=direct_bilirubin_s[2].split('-')
+                hval=nv[1].strip()
+                hv=hval.split(' ')
+                if float(direct_bilirubin) > float(hv[0]):
+                    direct_bilirubin_flag='H'
+                elif float(direct_bilirubin) < float(nv[0]):
+                    direct_bilirubin_flag='L'
+                else:
+                    direct_bilirubin_flag='N'
+
             if c['indirect_bilirubin'] == ',':
-                indirect_bilirubin='----------------'
+                indirect_bilirubin=''
                 indirect_bilirubin_nv='--------------'
             else:
                 indirect_bilirubin_s=c['indirect_bilirubin'].split(',')
@@ -2778,62 +4040,130 @@ def labres_chem(request,toecode,orderid,encc):
             data={
                 'hba1c':hba1c,
                 'hba1c_nv':hba1c_nv,
+                'hba1c_flag':hba1c_flag,
+
                 'glucose_fbs':glucose_fbs,
                 'glucose_fbs_nv':glucose_fbs_nv,
+                'glucose_fbs_flag':glucose_fbs_flag,
+
                 'glucose_rbs':glucose_rbs,
                 'glucose_rbs_nv':glucose_rbs_nv,
+                'glucose_rbs_flag':glucose_rbs_flag,
+
                 'cholesterol':cholesterol,
                 'cholesterol_nv':cholesterol_nv,
+                'cholesterol_flag':cholesterol_flag,
+
                 'triglycerides':triglycerides,
                 'triglycerides_nv':triglycerides_nv,
+                'triglycerides_flag':triglycerides_flag,
+
                 'hdl_cholesterol':hdl_cholesterol,
                 'hdl_cholesterol_nv':hdl_cholesterol_nv,
+                'hdl_cholesterol_flag':hdl_cholesterol_flag,
+
                 'ldl_cholesterol':ldl_cholesterol,
                 'ldl_cholesterol_nv':ldl_cholesterol_nv,
+                'ldl_cholesterol_flag':ldl_cholesterol_flag,
+
                 'blood_uric':blood_uric,
                 'blood_uric_nv':blood_uric_nv,
+                'blood_uric_flag':blood_uric_flag,
+
                 'blood_urea':blood_urea,
                 'blood_urea_nv':blood_urea_nv,
+                'blood_urea_flag':blood_urea_flag,
+
                 'creatinine':creatinine,
                 'creatinine_nv':creatinine_nv,
+                'creatinine_flag':creatinine_flag,
+
                 'alt_sgpt':alt_sgpt,
                 'alt_sgpt_nv':alt_sgpt_nv,
+                'alt_sgpt_flag':alt_sgpt_flag,
+
                 'ast_sgot':ast_sgot,
                 'ast_sgot_nv':ast_sgot_nv,
+                'ast_sgot_flag':ast_sgot_flag,
+
                 'potassium':potassium,
                 'potassium_nv':potassium_nv,
+                'potassium_flag':potassium_flag,
+
                 'sodium':sodium,
                 'sodium_nv':sodium_nv,
+                'sodium_flag':sodium_flag,
+
                 'chloride':chloride,
                 'chloride_nv':chloride_nv,
+                'chloride_flag':chloride_flag,
+
                 'total_calcium':total_calcium,
                 'total_calcium_nv':total_calcium_nv,
+                'total_calcium_flag':total_calcium_flag,
+
                 'ionized_calcium':ionized_calcium,
                 'ionized_calcium_nv':ionized_calcium_nv,
+                'ionized_calcium_flag':ionized_calcium_flag,
+
                 'magnesium':magnesium,
                 'magnesium_nv':magnesium_nv,
+                'magnesium_flag':magnesium_flag,
+
                 'phosphorus':phosphorus,
                 'phosphorus_nv':phosphorus_nv,
+                'phosphorus_flag':phosphorus_flag,
+
                 'total_protein':total_protein,
                 'total_protein_nv':total_protein_nv,
+                'total_protein_flag':total_protein_flag,
+
                 'albumin':albumin,
                 'albumin_nv':albumin_nv,
+                'albumin_flag':albumin_flag,
+
                 'globulin':globulin,
                 'globulin_nv':globulin_nv,
+                'globulin_flag':globulin_flag,
+
                 'ag_ration':ag_ration,
                 'ag_ration_nv':ag_ration_nv,
+
                 'alkaline_phospatase':alkaline_phospatase,
                 'alkaline_phospatase_nv':alkaline_phospatase_nv,
+                'alkaline_phospatase_flag':alkaline_phospatase_flag,
+
                 'amylase':amylase,
                 'amylase_nv':amylase_nv,
+                'amylase_flag':amylase_flag,
+
                 'lipase':lipase,
                 'lipase_nv':lipase_nv,
+                'lipase_flag':lipase_flag,
+
+                'ggt':ggt,
+                'ggt_nv':ggt_nv,
+
                 'ldh':ldh,
                 'ldh_nv':ldh_nv,
+                'ldh_flag':ldh_flag,
+
+                'ferritin':ferritin,
+                'ferritin_nv':ferritin_nv,
+                'ferritin_flag':ferritin_flag,
+
+                'cortisol':cortisol,
+                'cortisol_nv':cortisol_nv,
+                'cortisol_flag':cortisol_flag,
+                
                 'total_bilirubin':total_bilirubin,
                 'total_bilirubin_nv':total_bilirubin_nv,
+                'total_bilirubin_flag':total_bilirubin_flag,
+
                 'direct_bilirubin':direct_bilirubin,
                 'direct_bilirubin_nv':direct_bilirubin_nv,
+                'direct_bilirubin_flag':direct_bilirubin_flag,
+
                 'indirect_bilirubin':indirect_bilirubin,
                 'indirect_bilirubin_nv':indirect_bilirubin_nv
 
@@ -2843,11 +4173,11 @@ def labres_chem(request,toecode,orderid,encc):
         if chem_result['status'] == 'success':       
             return render(request,'integrated/laboratory/result_form/chemistry-result.html',{'result':chemres,'res_data':data,'age':age['data'],'ctr':ctr,'ward':ptx_req['toecode']})
         else:
-            return HttpResponseRedirect("/errpage")
-            print('error')
+            # return HttpResponseRedirect("/errpage")
+            print(chem_result)
     except Exception as e:
         print(e)
-        return HttpResponseRedirect("/errpage")
+        # return HttpResponseRedirect("/errpage")
 
 def errpage(html):
     htmldoc = html(string=html, base_url="integrated/laboratory/result_form/404.html")
@@ -2859,18 +4189,451 @@ def labres_hema(request):
 
 def cbc_result(request,ward,physician,orderid,encc):
     ptx_req=requests.post(get_lab_request, data={'enccode':encc,'order_id':orderid}).json()
-    ptx=ptx_req['details'][0]
+    
+    # for c in ptx_req['details']:
+    #     # print(c['birthdate'])
+    #     c['birthdate'] = datetime.datetime.strptime(c['birthdate'],"%d-%m-%y %H:%M:%S.%f")
+    #     c['birthdate']=datetime.datetime.strftime(c['birthdate'], '%b %d, %Y ')
     for p in ptx_req['laboratory']:
             ctr=p['control_no']
     cbc_res=requests.post(get_cbc_result, data={'order_id':orderid}).json()
     result=cbc_res['data']
-
+    result_data=[]
     for c in result:
         c['date_verified'] = datetime.datetime.strptime(c['date_verified'],"%Y-%m-%dT%H:%M:%S.%fZ")
         c['date_verified']=datetime.datetime.strftime(c['date_verified'], '%b %d, %y (%I:%M %p)')
 
+        if c['hemoglobin'] == ',':
+            hemoglobin='-----'
+            hemoglobin_res='-----'
+            hemoglobin_nv='-----'
+            hemoglobin_flag=''
+        else:
+            hemoglobin=c['hemoglobin'].split(',')
+            hemoglobin_res=hemoglobin[0]
+            hemoglobin_nv=hemoglobin[2]
 
-    return render(request,'integrated/laboratory/result_form/cbc_result.html',{'result':result,'patient':ptx,'ctr':ctr,'doctor':physician,'ward':ward})
+            nv=hemoglobin[2].split('-')
+            if float(hemoglobin_res) < float(nv[0]):
+                hemoglobin_flag='L'
+            elif float(hemoglobin_res) > float(nv[1]):
+                hemoglobin_flag='H'
+            else:
+                hemoglobin_flag='N'
+
+        if c['hematocrit'] == ',':
+            hematocrit='-----'
+            hematocrit_res='-----'
+            hematocrit_nv='-----'
+            hematocrit_flag=''
+        else:
+            hematocrit=c['hematocrit'].split(',')
+            hematocrit_res=hematocrit[0]
+            hematocrit_nv=hematocrit[2]
+
+            nv=hematocrit[2].split('-')
+            if float(hematocrit_res) < float(nv[0]):
+                hematocrit_flag='L'
+            elif float(hematocrit_res) > float(nv[1]):
+                hematocrit_flag='H'
+            else:
+                hematocrit_flag='N'
+
+        if c['rbc_count'] == ',':
+            rbc_count='-----'
+            rbc_count_res='-----'
+            rbc_count_nv='-----'
+            rbc_count_flag=''
+        else:
+            rbc_count=c['rbc_count'].split(',')
+            rbc_count_res=rbc_count[0]
+            rbc_count_nv=rbc_count[2]
+
+            nv=rbc_count[2].split('-')
+            if float(rbc_count_res) < float(nv[0]):
+                rbc_count_flag='L'
+            elif float(rbc_count_res) > float(nv[1]):
+                rbc_count_flag='H'
+            else:
+                rbc_count_flag='N'
+
+        if c['mcv'] == ',':
+            mcv='-----'
+            mcv_res='-----'
+            mcv_nv='-----'
+            mcv_flag=''
+        else:
+            mcv=c['mcv'].split(',')
+            mcv_res=mcv[0]
+            mcv_nv=mcv[2]
+           
+            nv=mcv[2].split('-')
+            if float(mcv_res) < float(nv[0]):
+                mcv_flag='L'
+            elif float(mcv_res) > float(nv[1]):
+                mcv_flag='H'
+            else:
+                mcv_flag='N'
+
+        if c['mch'] == ',':
+            mch='-----'
+            mch_res='-----'
+            mch_nv='-----'
+            mch_flag=''
+        else:
+            mch=c['mch'].split(',')
+            mch_res=mch[0]
+            mch_nv=mch[2]
+           
+            nv=mch[2].split('-')
+            if float(mch_res) < float(nv[0]):
+                mch_flag='L'
+            elif float(mch_res) > float(nv[1]):
+                mch_flag='H'
+            else:
+                mch_flag='N'
+
+        if c['mchc'] == ',':
+            mchc='-----'
+            mchc_res='-----'
+            mchc_nv='-----'
+            mchc_flag=''
+        else:
+            mchc=c['mchc'].split(',')
+            mchc_res=mchc[0]
+            mchc_nv=mchc[2]
+           
+            nv=mchc[2].split('-')
+            if float(mchc_res) < float(nv[0]):
+                mchc_flag='L'
+            elif float(mchc_res) > float(nv[1]):
+                mchc_flag='H'
+            else:
+                mchc_flag='N'
+
+        if c['wbc_count'] == ',':
+            wbc_count='-----'
+            wbc_count_res='-----'
+            wbc_count_nv='-----'
+            wbc_count_flag=''
+        else:
+            wbc_count=c['wbc_count'].split(',')
+            wbc_count_res=wbc_count[0]
+            wbc_count_nv=wbc_count[2]
+           
+            nv=wbc_count[2].split('-')
+            if float(wbc_count_res) < float(nv[0]):
+                wbc_count_flag='L'
+            elif float(wbc_count_res) > float(nv[1]):
+                wbc_count_flag='H'
+            else:
+                wbc_count_flag='N'
+
+        if c['neutrophil'] == ',':
+            neutrophil='-----'
+            neutrophil_res='-----'
+            neutrophil_nv='-----'
+            neutrophil_flag=''
+        else:
+            neutrophil=c['neutrophil'].split(',')
+            neutrophil_res=neutrophil[0]
+            neutrophil_nv=neutrophil[2]
+           
+            nv=neutrophil[2].split('-')
+            if float(neutrophil_res) < float(nv[0]):
+                neutrophil_flag='L'
+            elif float(neutrophil_res) > float(nv[1]):
+                neutrophil_flag='H'
+            else:
+                neutrophil_flag='N'
+
+        if c['lymphocytes'] == ',':
+            lymphocytes='-----'
+            lymphocytes_res='-----'
+            lymphocytes_nv='-----'
+            lymphocytes_flag=''
+        else:
+            lymphocytes=c['lymphocytes'].split(',')
+            lymphocytes_res=lymphocytes[0]
+            lymphocytes_nv=lymphocytes[2]
+           
+            nv=lymphocytes[2].split('-')
+            if float(lymphocytes_res) < float(nv[0]):
+                lymphocytes_flag='L'
+            elif float(lymphocytes_res) > float(nv[1]):
+                lymphocytes_flag='H'
+            else:
+                lymphocytes_flag='N'
+
+        if c['monocytes'] == ',':
+            monocytes='-----'
+            monocytes_res='-----'
+            monocytes_nv='-----'
+            monocytes_flag=''
+        else:
+            monocytes=c['monocytes'].split(',')
+            monocytes_res=monocytes[0]
+            monocytes_nv=monocytes[2]
+           
+            nv=monocytes[2].split('-')
+            if float(monocytes_res) < float(nv[0]):
+                monocytes_flag='L'
+            elif float(monocytes_res) > float(nv[1]):
+                monocytes_flag='H'
+            else:
+                monocytes_flag='N'
+
+        if c['eosinophil'] == ',':
+            eosinophil='-----'
+            eosinophil_res='-----'
+            eosinophil_nv='-----'
+            eosinophil_flag=''
+        else:
+            eosinophil=c['eosinophil'].split(',')
+            eosinophil_res=eosinophil[0]
+            eosinophil_nv=eosinophil[2]
+           
+            nv=eosinophil[2].split('-')
+            if float(eosinophil_res) < float(nv[0]):
+                eosinophil_flag='L'
+            elif float(eosinophil_res) > float(nv[1]):
+                eosinophil_flag='H'
+            else:
+                eosinophil_flag='N'
+
+        if c['basophils'] == ',':
+            basophils='-----'
+            basophils_res='-----'
+            basophils_nv='-----'
+            basophils_flag=''
+        else:
+            basophils=c['basophils'].split(',')
+            basophils_res=basophils[0]
+            basophils_nv=basophils[2]
+           
+            nv=basophils[2].split('-')
+            if float(basophils_res) < float(nv[0]):
+                basophils_flag='L'
+            elif float(basophils_res) > float(nv[1]):
+                basophils_flag='H'
+            else:
+                basophils_flag='N'
+
+        if c['platelet_count'] == ',':
+            platelet_count='-----'
+            platelet_count_res='-----'
+            platelet_count_nv='-----'
+            platelet_count_flag=''
+        else:
+            platelet_count=c['platelet_count'].split(',')
+            platelet_count_res=platelet_count[0]
+            platelet_count_nv=platelet_count[2]
+           
+            nv=platelet_count[2].split('-')
+            if float(platelet_count_res) < float(nv[0]):
+                platelet_count_flag='L'
+            elif float(platelet_count_res) > float(nv[1]):
+                platelet_count_flag='H'
+            else:
+                platelet_count_flag='N'
+
+        if c['reticulocytes_count'] == ',':
+            reticulocytes_count='-----'
+            reticulocytes_count_res='-----'
+            reticulocytes_count_nv='-----'
+            reticulocytes_count_flag=''
+        else:
+            reticulocytes_count=c['reticulocytes_count'].split(',')
+            reticulocytes_count_res=reticulocytes_count[0]
+            reticulocytes_count_nv=reticulocytes_count[2]
+           
+            nv=reticulocytes_count[2].split('-')
+            if float(reticulocytes_count_res) < float(nv[0]):
+                reticulocytes_count_flag='L'
+            elif float(reticulocytes_count_res) > float(nv[1]):
+                reticulocytes_count_flag='H'
+            else:
+                reticulocytes_count_flag='N'
+
+        blood_group=c['blood_group']
+        notes=c['note']
+
+        cbc_res={
+            'hemoglobin_res':hemoglobin_res,
+            'hemoglobin_nv':hemoglobin_nv,
+            'hemoglobin_flag':hemoglobin_flag,
+
+            'hematocrit_res':hematocrit_res,
+            'hematocrit_nv':hematocrit_nv,
+            'hematocrit_flag':hematocrit_flag,
+
+            'rbc_count_res':rbc_count_res,
+            'rbc_count_nv':rbc_count_nv,
+            'rbc_count_flag':rbc_count_flag,
+
+            'mcv_res':mcv_res,
+            'mcv_nv':mcv_nv,
+            'mcv_flag':mcv_flag,
+
+            'mch_res':mch_res,
+            'mch_nv':mch_nv,
+            'mch_flag':mch_flag,
+
+            'mchc_res':mchc_res,
+            'mchc_nv':mchc_nv,
+            'mchc_flag':mchc_flag,
+
+            'wbc_count_res':wbc_count_res,
+            'wbc_count_nv':wbc_count_nv,
+            'wbc_count_flag':wbc_count_flag,
+
+            'neutrophil_res':neutrophil_res,
+            'neutrophil_nv':neutrophil_nv,
+            'neutrophil_flag':neutrophil_flag,
+
+            'lymphocytes_res':lymphocytes_res,
+            'lymphocytes_nv':lymphocytes_nv,
+            'lymphocytes_flag':lymphocytes_flag,
+
+            'monocytes_res':monocytes_res,
+            'monocytes_nv':monocytes_nv,
+            'monocytes_flag':monocytes_flag,
+
+            'eosinophil_res':eosinophil_res,
+            'eosinophil_nv':eosinophil_nv,
+            'eosinophil_flag':eosinophil_flag,
+
+            'basophils_res':basophils_res,
+            'basophils_nv':basophils_nv,
+            'basophils_flag':basophils_flag,
+
+            'platelet_count_res':platelet_count_res,
+            'platelet_count_nv':platelet_count_nv,
+            'platelet_count_flag':platelet_count_flag,
+
+            'reticulocytes_count_res':reticulocytes_count_res,
+            'reticulocytes_count_nv':reticulocytes_count_nv,
+            'reticulocytes_count_flag':reticulocytes_count_flag,
+
+            'blood_group':blood_group,
+            'notes':notes,
+
+            'perform_by_name':c['perform_by_name'],
+            'verify_by_name':c['verify_by_name'],
+            'date_verified':c['date_verified'],
+
+        }
+
+        result_data.append(cbc_res)
+
+    # print(result_data)
+    return render(request,'integrated/laboratory/result_form/cbc_result.html',{'result':result_data,'patient':ptx_req['details'][0],'ctr':ctr,'doctor':physician,'ward':ward})
+
+
+@csrf_exempt
+def save_hema(request):
+    cat=request.POST.get('htype')
+    encc=request.POST.get('encc')
+    orderid=request.POST.get('orderid')
+    action=request.POST.get('action')
+
+    hemoglobin=str(request.POST.get('hemoglobin'))+','+str(request.POST.get('hemoglobin_nv'))
+    hematocrit=str(request.POST.get('hematocrit'))+','+str(request.POST.get('hematocrit_nv'))
+    rbc_count=str(request.POST.get('rbc_count'))+','+str(request.POST.get('rbc_count_nv'))
+    mcv=str(request.POST.get('mcv'))+','+str(request.POST.get('mcv_nv'))
+    mch=str(request.POST.get('mch'))+','+str(request.POST.get('mch_nv'))
+    mchc=str(request.POST.get('mchc'))+','+str(request.POST.get('mchc_nv'))
+    wbc_count=str(request.POST.get('wbc_count'))+','+str(request.POST.get('wbc_count_nv'))
+    neutrophil=str(request.POST.get('neutrophil'))+','+str(request.POST.get('neutrophil_nv'))
+    lymphocytes=str(request.POST.get('lymphocytes'))+','+str(request.POST.get('lymphocytes_nv'))
+    monocytes=str(request.POST.get('monocytes'))+','+str(request.POST.get('monocytes_nv'))
+    eosinophil=str(request.POST.get('eosinophil'))+','+str(request.POST.get('eosinophil_nv'))
+    basophils=str(request.POST.get('basophils'))+','+str(request.POST.get('basophils_nv'))
+    platelet_count=str(request.POST.get('platelet_count'))+','+str(request.POST.get('platelet_count_nv'))
+    reticulocytes_count=str(request.POST.get('reticulocytes'))+','+str(request.POST.get('reticulocytes_nv'))
+
+    if cat == 'CBC':
+        if action == 'INSERT':
+            s_cbc=requests.post(save_cbc_result,data={
+            'enccode':encc,
+            'order_id':orderid,
+            'date':datetime.datetime.now().date(),
+            'control_no':request.POST.get('ctr'),
+            'hemoglobin':hemoglobin,
+            'hematocrit':hematocrit,
+            'rbc_count':rbc_count,
+            'mcv':mcv,
+            'mch':mch,
+            'mchc':mchc,
+            'wbc_count':wbc_count,
+            'diff_count':'',
+            'neutrophil':neutrophil,
+            'lymphocytes':lymphocytes,
+            'monocytes':monocytes,
+            'eosinophil':eosinophil,
+            'basophils':basophils,
+            'platelet_count':platelet_count,
+            'blood_group':request.POST.get('bg'),
+            'reticulocytes_count':reticulocytes_count,
+            'note':request.POST.get('notes'),
+            'perform_by':request.session['employee_id'],
+        
+            }).json()
+            if s_cbc['status'] == 'success':
+                get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+                for g in get_test['laboratory']:
+                    if g['modality'] == 'HEMAT' and g['status'] !='CANCELLED':
+                        if g['proccode'] == 'LABOR00406' or g['proccode'] == 'LABOR00408' or g['proccode'] == 'LABOR00022':
+                            try:
+                                samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'TOVERIFY','receive':g['received_specimen']}).json()
+                                data=samplemodality['status']
+                            except Exception as e:
+                                print('error')
+                                data=e
+        
+        elif action == 'VERIFY':
+            s_cbc=requests.post(save_cbc_result,data={
+            'enccode':encc,
+            'order_id':orderid,
+            'date':datetime.datetime.now().date(),
+            'control_no':request.POST.get('ctr'),
+            'hemoglobin':hemoglobin,
+            'hematocrit':hematocrit,
+            'rbc_count':rbc_count,
+            'mcv':mcv,
+            'mch':mch,
+            'mchc':mchc,
+            'wbc_count':wbc_count,
+            'diff_count':'',
+            'neutrophil':neutrophil,
+            'lymphocytes':lymphocytes,
+            'monocytes':monocytes,
+            'eosinophil':eosinophil,
+            'basophils':basophils,
+            'platelet_count':platelet_count,
+            'blood_group':request.POST.get('bg'),
+            'reticulocytes_count':reticulocytes_count,
+            'note':request.POST.get('notes'),
+            'perform_by':request.POST.get('perform_id'),
+            'verified_by':request.session['employee_id'],
+        
+            }).json()
+            if s_cbc['status'] == 'success':
+                get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+                for g in get_test['laboratory']:
+                    if g['modality'] == 'HEMAT' and g['status'] !='CANCELLED':
+                        if g['proccode'] == 'LABOR00406' or g['proccode'] == 'LABOR00408' or g['proccode'] == 'LABOR00022':
+                            try:
+                                samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':orderid, 'status':'COMPLETED','receive':g['received_specimen']}).json()
+                                data=samplemodality['status']
+                            except Exception as e:
+                                print('error')
+                                data=e
+    elif cat == 'COAG':
+        data='No Coag database'
+
+       
+    return JsonResponse({'data':data})
 
 
 
@@ -2883,6 +4646,7 @@ def result_template(request):
     return render(request,'integrated/laboratory/result_form/rapidtest.html')
 
 def main_rapidtest(request):
+    
     return render(request,'integrated/laboratory/main/rapidtest.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name']})
 
 
@@ -2977,9 +4741,44 @@ def result_temp(request):
     return response
 
 
-
-
 def result_Fecalysis(request,encc,orderid,proccode,toecode,ward):
+    get_fa=requests.post(get_fecalysis,data={'order_id':orderid}).json()
+    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+    ptx_age=requests.post(get_age, data={'enccode':encc,'toecode':toecode}).json()
+    for p in get_test['details']:
+        patient=str(p['patlast']+', '+p['patfirst'])
+        gender=p['patsex']
+        hosno=p['hpercode']
+        status=p['patcstat']
+
+    for f in get_test['laboratory']:
+        if f['proccode'] == 'LABOR00407' or f['proccode'] == 'LABOR00334':
+            f['datemod'] = datetime.datetime.strptime(f['datemod'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            f['datemod']=datetime.datetime.strftime(f['datemod'], '%b %d, %Y (%I:%M %p)')
+            data={
+                'result_date':f['datemod'],
+                'ctr_no':f['control_no'],
+                'ward':ward,
+                'patient':patient,
+                'gender':gender,
+                'hosno':hosno,
+                'cstat':status,
+                'age':ptx_age['data'],
+                'result':get_fa['data']
+
+
+            }
+    # print(get_test)
+    return render(request,'integrated/laboratory/result_form/fecalysis-result.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'data':data,'r_data':get_fa['data']})
+
+
+# def result_Fecalysis(request,encc,orderid,proccode,toecode,ward):
+    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+    for f in get_test['laboratory']:
+        if f['proccode'] == 'LABOR00407' or f['proccode'] == 'LABOR00334':
+            f['datemod'] = datetime.datetime.strptime(f['datemod'],"%Y-%m-%dT%H:%M:%S.%fZ")
+            f['datemod']=datetime.datetime.strftime(f['datemod'], '%b %d, %Y (%I:%M %p)')
+            resdate=f['datemod']
     get_fa=requests.post(get_fecalysis,data={'order_id':orderid}).json()
     ptx_age=requests.post(get_age, data={'enccode':encc,'toecode':toecode}).json()
     age=ptx_age['data']
@@ -3159,10 +4958,10 @@ def result_Fecalysis(request,encc,orderid,proccode,toecode,ward):
     p.setLineWidth(0.1)
     p.setFont("Times-Roman", 8, leading=None)
 
-    p.drawString(4.5*inch, 7.2*inch, "Date.:")
-    p.line(345, 7.19*inch, 410, 7.19*inch) #(x1, y1, x2, y2)
+    p.drawString(4.1*inch, 7.2*inch, "Date.:")
+    p.line(325, 7.19*inch, 410, 7.19*inch) #(x1, y1, x2, y2)
     p.setFont("Times-Bold", 9, leading=None)
-    p.drawString(4.8*inch, 7.22*inch, time.strftime("%m-%d-%Y"))
+    p.drawString(4.4*inch, 7.22*inch, resdate)
     p.setFont("Times-Roman", 8, leading=None)
     p.drawString(4.2*inch, 7*inch, "Control No.:")
     p.line(345, 7*inch, 410, 7*inch) #(x1, y1, x2, y2)
@@ -3327,8 +5126,33 @@ def result_Fecalysis(request,encc,orderid,proccode,toecode,ward):
     response.write(pdf)
     return response
 
+def result_Urinalysis(request,encc,orderid,wardname,doctor):
+    getuaresult=requests.post(get_urinalysis,data={'order_id':orderid}).json()
+    ptx_req=requests.post(get_lab_request, data={'enccode':encc,'order_id':orderid}).json()
+    ptx_age=requests.post(get_age, data={'enccode':encc,'toecode':ptx_req['toecode']}).json()
+
+    for t in ptx_req['laboratory']:
+        ctr=t['control_no']
+    
+    for d in ptx_req['details']:
+        gender=d['patsex']
+        cstat=d['patcstat']
+        hosno=d['hpercode']
 
 
+    data={
+        'control_no':ctr,
+        'ward':wardname,
+        'doctor':doctor,
+        'hosno':hosno,
+        'age':ptx_age['data'],
+        'gender':gender,
+        'cstat':cstat,
+        'result':getuaresult['data']
+    }
+    # print(ptx_req['laboratory'])
+    # print(getuaresult)
+    return render(request,'integrated/laboratory/result_form/urinalysis-result.html',{'page': 'Laboratory', 'user_level': request.session['user_level'], 'name': request.session['name'],'data':data})
 ############################### HEMALOLOGY
 @csrf_exempt
 def load_hema(request):
@@ -3339,13 +5163,12 @@ def load_hema(request):
     for i in get_hema['data']:
         cc=cc + 1
         i['enccode'] = i['enccode'].replace("/", "-")
-        i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
-        i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %y (%I:%M %p)')
-        age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-        i['uomcode']=age['data']
-        hdata.append(i)
-    
-    return JsonResponse({'data':hdata})
+        i['received_datetime'] = datetime.datetime.strptime(i['received_datetime'],"%Y-%m-%dT%H:%M:%S.%fZ")
+        i['received_datetime']=datetime.datetime.strftime(i['received_datetime'], '%b %d, %y (%I:%M %p)')
+        
+        i['birthdate'] = datetime.datetime.strptime(i['birthdate'],"%Y-%m-%dT%H:%M:%S.%fZ")
+        i['birthdate']=datetime.datetime.strftime(i['birthdate'], '%b %d, %Y')
+    return JsonResponse({'data':get_hema['data']})
 
 def get_hema_count(request):
     tpending=requests.post(getLab_modality,data={'modality':'HEMAT','status':'PENDING'}).json()
@@ -3356,21 +5179,54 @@ def get_hema_count(request):
 
 @csrf_exempt
 def hema_sentToProcess(request):
-    modality=request.POST.get('modality')
     encc=request.POST.get('encc')
     ord=request.POST.get('orderid')
-    key=request.POST.get('key')
+ 
     get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':ord}).json()
     for g in get_test['laboratory']:
-        if g['prikey'] == key:
+
+        if g['modality'] == 'HEMAT' and g['status'] == 'PENDING':
             try:
-                samplemodality=requests.post(update_status, data={'key':key, 'enccode': encc,'order_id':ord, 'status':'ONPROCESS','receive':g['received_specimen']}).json()
+                samplemodality=requests.post(update_status, data={'key':g['prikey'], 'enccode': encc,'order_id':ord, 'status':'ONPROCESS','receive':g['received_specimen']}).json()
                 data=samplemodality['status']
             except Exception as e:
                 data=e
         else:
             data=''
     return JsonResponse({'data':data}) 
+
+@csrf_exempt
+def hematest(request):
+    encc=request.POST.get('encc')
+    orderid=request.POST.get('orderid')
+    ttype=request.POST.get('ttype')
+    hema=[]
+    n_values=[]
+    normal_val=requests.post(machineAll).json()
+    for n in normal_val['data']:
+        if n['modality'] == 'HEMAT':
+            n_values.append(n)
+
+    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+
+    for h in get_test['laboratory']:
+        if h['modality'] == 'HEMAT' and h['status'] != 'CANCELLED':
+            # print(str(h['proccode'])+' - '+str(h['procdesc']))
+            hema.append(h)
+
+    return JsonResponse({'data':hema,'n_values':n_values})
+
+@csrf_exempt
+def gethematest(request):
+    encc=request.POST.get('encc')
+    orderid=request.POST.get('orderid')
+
+    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+    # for h in get_test['laboratory']:
+        # print(h['proccode']+'-'+h['procdesc'])
+    data=get_test
+    return JsonResponse({'data':data})
+
 
 @csrf_exempt
 def sent_to_process(request):
@@ -3469,8 +5325,24 @@ def save_cbc(request):
 @csrf_exempt
 def getCbcResult(request):
     orderid=request.POST.get('orderid')
+    encc=request.POST.get('encc')
+    cbc_test=[]
     cbc=requests.post(get_cbc_result,data={'order_id':orderid}).json()
-    return JsonResponse({'data':cbc['data']})
+
+    n_values=[]
+    normal_val=requests.post(machineAll).json()
+    for n in normal_val['data']:
+        if n['modality'] == 'HEMAT':
+            n_values.append(n)
+
+    get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
+    for t in get_test['laboratory']:
+        if t['modality'] == 'HEMAT':
+            if t['proccode']=='LABOR00406' or t['proccode'] == 'LABOR00408' or t['proccode'] == 'LABOR00022':
+                cbc_test.append(t)
+
+
+    return JsonResponse({'res_data':cbc['data'],'test_data':cbc_test,'n_values':n_values})
 ################################## CHEMISTRY
 @csrf_exempt
 def chem_get_lastmeal(request):
@@ -3516,9 +5388,7 @@ def chem_completed(request):
             if g['modality'] == 'CHEMI' and g['status'] !='CANCELLED':
                 key=g['prikey']
                 data.append(g['proccode']) 
-                # print(g['proccode'])    
-                # print(g)  
-            
+
     except Exception as e:
         print(e)
         data=[]
@@ -3545,7 +5415,7 @@ def chem_onprocess(request):
                 key=g['prikey']
                 # td.append(g['procdesc'])
                 pdata.append(g['proccode'])   
-                # print(pdata)  
+                # print(g['procdesc']+'-'+g['proccode']+' - '+g['enccode']) 
     
     except Exception as e:
         data=[]
@@ -3588,22 +5458,17 @@ def load_chem_count(request):
 def load_chemi(request):
     
     htype=request.POST.get('type')
-    # print(htype)
     get_chemi=requests.post(getLab_modality,data={'modality':'CHEMI','status':htype}).json()
     req=[]
     ctr=''
     chem_data=[]
     for i in get_chemi['data']:
-        if i['status'] !='CANCELLED':
+        if i['status'] !='CANCELLED' or i['status'] !='ENDORSED':
             i['enccode'] = i['enccode'].replace("/", "-")
             i['dodate'] = datetime.datetime.strptime(i['dodate'],"%Y-%m-%dT%H:%M:%S.%fZ")
             i['dodate']=datetime.datetime.strftime(i['dodate'], '%b %d, %y (%I:%M %p)')
-        
-            age=requests.post(get_age, data={'enccode':i['enccode'],'toecode':i['toecode']}).json()
-            i['uomcode']=age['data']
-            chem_data.append(i)
-    
-    return JsonResponse({'data':chem_data}) 
+
+    return JsonResponse({'data':get_chemi['data']}) 
 
 def upload_hema(request):
 
@@ -3615,3 +5480,10 @@ def csv_upload(request):
     csv_file = request.FILES.get("attendance-file")
     data=csv_file
     return JsonResponse({'data':data})
+
+
+@csrf_exempt
+def coag_hema_result(request):
+
+
+    return render(request,'integrated/laboratory/result_form/coag-result.html')

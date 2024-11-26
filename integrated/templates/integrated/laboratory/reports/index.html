@@ -59,13 +59,10 @@
           <!-- Page Heading -->
          
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-microscope"></i> | MAIN LABORATORY RECEPTION</h1>
+                <h1 class="h3 mb-0 text-gray-800"><i class="fa-solid fa-address-card"></i> | REPORTS</h1>
                 <div class="btn btn-group">
                   <a href="{% url 'laboratory' %}" class="btn btn-primary text-white" type="button"><i class="fa-solid fa-home"></i> Back</a>
-                  <a href="#" class="btn btn-danger text-white torelease_btn" type="button">
-                    <span class="badge bg-danger fs-6 relcount">0</span> 
-                    <div class="spinner-grow spinner-grow-sm reloading m-0" id="r_reload" hidden role="status">
-                  </div>  TO RELEASE</a>
+                 
               </div>
             
             </div>
@@ -134,60 +131,65 @@
                     </div>
                   <!-- </a> -->
                   </div>
-                  <!-- <div class="col-xl-3 col-sm-6 col-12 recep_link"> 
-                    <div class="card res_link">
-                      <a  href="#" style="text-decoration: none;color: grey;">      
-                      <div class="card-content">
-                        <div class="card-body">
-                          <div class="media d-flex">
-                            <div class="align-self-center">
-                           
-                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
-                            </div>
-                            <div class="media-body text-right">
-                              <h3><i class="fa-solid fa-user"></i> 0</h3>
-                              <span class="fw-bolder h5">OPD EXTRACTION</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </a>
-                  </div> -->
 
                <!-- Nav tabs -->
       <!-- /////////////// -->
-      <h1 class="h3 mb-2 text-gray-800"><i class="fa-solid fa-users"></i> | <span id="r_display">ER</span> REQUEST</h1>
+      
       <div class="input-group mb-3">
+       
+        <select class="form-control col-2" id="stest">
+          <option value=""> Select Here</option>
+          <option value="CHEMISTRY"> CHEMISTRY</option>
+          <option value="HEMATHOLOGY"> HEMATHOLOGY</option>
+          <option value="MICROSCOPY"> MICROSCOPY</option>
+          <option value="SEROLOGY"> SEROLOGY</option>
+          <option value="IMMUNOLOGY"> IMMUNOLOGY</option>
+          <option value="BACTERIOLOGY"> BACTERIOLOGY</option>
+        </select>
+        <button class="btn btn-info"><i class="fa fa-download" aria-hidden="true"></i> Export</button>
         <div class="input-group-prepend">
           <span class="input-group-text"><i class="fa fa-search" aria-hidden="true"></i></span>
         </div>
         <input type="text" class="form-control" id="search" placeholder="Search Patient">
+        
     </div>
    
-    <table class="table table-hover table-striped" id="tbl-pending" style="cursor: pointer;">
+    <div class="row" id="result_tbl">
+
+      <!-- <table class="table table-hover table-striped" id="tbl-pending" style="cursor: pointer;">
         <thead>
             <tr>
               <th>#</th>
                 <th>CONTROL NO</th>
-                <th>Request Date/Time</th>
+                <th>Received</th>
+                <th>Released</th>
+                <th>Interval</th>
                 <th>Patient Name</th>
                 <th>Ward</th>
-                <th>Requesting Doctor</th>
-                <th>Received Date/Time</th>
-                <th class="text-center">Action</th>
+                <th>Test</th>
+                <th class="text-center">Status</th>
             </tr>
         </thead>
     
-        <tbody id="request_pending">
+        <tbody id="result_tbl">
           
 
         </tbody>
        
-    </table>
+    </table> -->
 
+    </div>
+    
+
+    <!-- <div class="loader mb-0"></div> -->
+    
+    <!-- <div class="text-center mb-4">
+        <div class="loader mb-0"></div>
+        <div class="txt" style="margin-top: -50px;position: relative;">
+            Getting Data....!
+        </div>
+    </div> -->
  
-    <div class="loader" hidden="true"></div>
     <!-- ////////////////////// -->
   
 
@@ -198,9 +200,9 @@
 
       </div>
       <!-- End of Main Content -->
-      <audio id="sound" >
+      <!-- <audio id="sound" >
         <source src="{% static 'integrated/laboratory/notification.mp3'%}" type="audio/ogg" allow="autoplay">
-       </audio>
+       </audio> -->
   
          
       {% include 'integrated/laboratory/lab_modals/labmodal.html' with page=page %}
@@ -221,8 +223,8 @@
   {% include 'integrated/common/scripts.html' %}
   
   
-  <script src="{% static 'integrated/laboratory/js/reception.js' %}"></script>
-  <script src="{% static 'integrated/laboratory/js/moment.js' %}"></script>
+  <script src="{% static 'integrated/laboratory/js/report.js' %}"></script>
+  <!-- <script src="{% static 'integrated/laboratory/js/moment.js' %}"></script>  -->
   <!-- <script src="{% static 'js/django_template_obfuscator.js' %}"></script> -->
    
  
