@@ -94,36 +94,36 @@
                  <div class="content" style="height: 950px;padding: 0px;margin: 0px;">
                     <h4 class="text-center fw-bolder mb-2" >COAGULATION</h4>
 
-                    <!-- {{test}} -->
+                   
                  
                     <table class="w-100 ptx_data  mb-4">
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">PATIENT:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patlast}}, {{ptx.patfirst}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">RESULT DATE:</td>
-                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ release_date}}</span></td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ result.date_verified}}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">HOSP NO.:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.hpercode}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">CONTROL NO.:</td>
-                            <td class="col-4" style="font-size: 16px;"><span class="fw-bolder text-danger">{{ test.control_no}}</span></td>
+                            <td class="col-4" style="font-size: 16px;"><span class="fw-bolder text-danger">{{ ctr }}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">GENDER:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patsex}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">WARD:</td>
-                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{result.wardname}}</span></td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{ptx.wardname}}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">AGE:</td>
                             <td class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.patage}}</span></td>
                             <td class="fw-bolder col-2" align="right" style="font-size: 12px;">PHYSICIAN:</td>
-                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{result.physician}}</span></td>
+                            <td class="col-4" style="font-size: 14px;"><span class="fw-bolder">{{physician}}</span></td>
                         </tr>
                         <tr>
                             <td class="fw-bolder col-1" align="right" style="font-size: 12px;">DOB:</td>
-                            <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.birthdate}}</span></td>
+                            <td colspan="3" class="col-4" align="left" style="font-size: 14px;"><span class="fw-bolder">{{ptx.birthdate|slice:"8"}}</span></td>
                         </tr>
                     </table>
               
@@ -135,74 +135,74 @@
                         </tr>
                         <tr>
                             <td class="fw-bolder">PROTHROMBIN TIME</td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 11.8 - 15.1 sec </td>
+                            <td align="center">{{result.pt}}</td>
+                            <td align="center"> {{result.pt_nv}} </td>
                         </tr>
                         <tr>
                             <td class="fw-bolder pl-4" style="padding-left: 50px;"> &#9632; <span class="">INR</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 0.37 - 0.45 </td>
+                            <td align="center"> {{result.pt_inr}} </td>
+                            <td align="center"> {{result.pt_inr_nv}}</td>
                         </tr>
                         <tr>
                             <td class="fw-bolder pl-4" style="padding-left: 50px;"> &#9632; <span class="">%</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 4.5-5.5 x 10 12/L </td>
+                            <td align="center"> {{result.pt_per}} </td>
+                            <td align="center"> {{result.pt_per_nv}} </td>
                         </tr>
                         <tr>
                             <td class="fw-bolder" > <span class="">ACTIVE PARTIAL THROMBIN TIME</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 80 - 96 fl </td>
+                            <td align="center"> {{result.aptt}} </td>
+                            <td align="center">{{result.aptt_nv}} </td>
                         </tr>
                         <tr>
                             <td colspan="3">-</td>
                         </tr>
                         <tr>
                             <td class="fw-bolder" > <span class="">FIBRINOGEN</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 32 - 36 g/dl </td>
+                            <td align="center"> {{result.fib}} </td>
+                            <td align="center"> {{result.fib_nv}} </td>
                         </tr>
                         <tr>
                             <td colspan="3">-</td>
                         </tr>
                         <tr>
                             <td class="fw-bolder" > <span class="">D-DIMER</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> --------- </td>
+                            <td align="center"> {{result.dimer}} </td>
+                            <td align="center"> {{result.dimer_nv}} </td>
                         </tr>
                         <tr>
                             <td colspan="3">-</td>
                         </tr>
                         <tr>
                             <td class="fw-bolder" > <span class="">CLOTTING TIME</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 0.04 - 12.0 </td>
+                            <td align="center"> {{result.clotting_time}} </td>
+                            <td align="center">{{result.clotting_time_nv}} </td>
                         </tr>
                         <tr>
                             <td class="fw-bolder" > <span class="">BLEEDING TIME</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 0.15 - 0.45 </td>
+                            <td align="center"> {{result.bleeding_time}} </td>
+                            <td align="center"> {{result.bleeding_time_nv}} </td>
                         </tr>
                         <tr>
                             <td colspan="3">-</td>
                         </tr>
                         <tr>
                             <td class="fw-bolder" > <span class="">ESR</span></td>
-                            <td align="center"> --------- </td>
-                            <td align="center"> 0.05 - 0.07 </td>
+                            <td align="center"> {{result.esr}} </td>
+                            <td align="center">{{result.esr_nv}}</td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td class="fw-bolder pl-4" style="padding-left: 50px;"> &#9632; <span class="">MALE</span></td>
-                            <td align="center"> --------- </td>
+                            <td align="center"> </td>
                             <td align="center"> 0.0 - 0.02 </td>
                         </tr>
                         <tr>
                             <td class="fw-bolder pl-4" style="padding-left: 50px;"> &#9632; <span class="">FEMALE</span></td>
                             <td align="center"> --------- </td>
                             <td align="center"> 150-400 X 10 9/L </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td class="fw-bolder" > <span class="">NOTES</span></td>
-                            <td colspan="2" > --------- </td>
+                            <td colspan="2" > {{result.notes}} </td>
                         </tr>
                     </table>
 
@@ -221,7 +221,7 @@
                             </td>
                             <td style="padding: 0px;">
                                 <p style="margin-bottom: 50px;"></p>
-                                <p class="fw-bolder mb-0">{{result.verified_by}}</p>
+                                <p class="fw-bolder mb-0">{{result.verify_by}}</p>
                                 <p>Lic. No.-------</p>
                             </td>
                             <td>

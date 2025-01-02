@@ -39,11 +39,12 @@ urlpatterns = [
     path('micro_update_stat',laboratory.micro_update_stat,name='micro_update_stat'),
     path('getua_result',laboratory.getua_result,name='getua_result'),
     path('getfa_result',laboratory.getfa_result,name='getfa_result'),
-
-
     ######################## REPORTS
-
-    path('reports',laboratory.reports,name='reports'),
+    path('export_to_excel',laboratory.export_to_excel,name='export_to_excel'),
+    path('lab_reports',laboratory.lab_reports,name='lab_reports'),
+    path('lab_reports_test',laboratory.lab_reports_test,name='lab_reports_test'),
+    path('get_report_count',laboratory.get_report_count,name='get_report_count'),
+    ######################### END REPORT
     path('load_request',laboratory.load_request,name='load_request'),
   
 
@@ -155,6 +156,7 @@ urlpatterns = [
     path('labres_chem/<str:toecode>/<str:orderid>/<str:encc>',laboratory.labres_chem,name='labres_chem'),
     path('labres_hema',laboratory.labres_hema,name='labres_hema'),
     path('laboratory/result/cbc/<str:ward>/<str:physician>/<str:orderid>/<str:encc>',laboratory.cbc_result,name='cbc_result'),
+    path('laboratory/result/coagulation/<str:ward>/<str:physician>/<str:orderid>/<str:encc>',laboratory.coag_result,name='coag_result'),
     path('laboratory/result/immuno/<str:ward>/<str:physician>/<str:orderid>/<str:encc>',laboratory.immuno_result,name='immuno_result'),
     path('laboratory/result/serology/<str:ward>/<str:physician>/<str:orderid>/<str:encc>',laboratory.serology_result,name='serology_result'),
     path('laboratory/result/microbiology/<str:ward>/<str:physician>/<str:orderid>/<str:encc>',laboratory.bacteriology_result,name='bacteriology_result'),
@@ -186,6 +188,7 @@ urlpatterns = [
      path('get_hema_count',laboratory.get_hema_count,name='get_hema_count'),
      path('save_cbc',laboratory.save_cbc,name='save_cbc'),
      path('getCbcResult',laboratory.getCbcResult,name='getCbcResult'),
+     path('getCoagResult',laboratory.getCoagResult,name='getCoagResult'),
 
     #################### MICROBIOLOGY
     path('lab_microbiology',laboratory.lab_microbiology,name='lab_microbiology'),
@@ -225,8 +228,9 @@ urlpatterns = [
     path('lab_kit',laboratory.lab_kit,name='lab_kit'),
     path('load_kit',laboratory.load_kit,name='load_kit'),
     path('update_kit',laboratory.update_kit,name='update_kit'),
-    
 
+
+    #################################################################
     path('<str:enctr>/patientlabcharges', main.patient_laboratory_charges, name='patientlabcharges'),
     path('addLabCharges', main.addLabCharges, name='addLabCharges'),
     path('delLabCharges', main.delLabCharges, name='delLabCharges'),

@@ -70,9 +70,9 @@
             <div class="row">
               <div class="container-fluid row">
                 
-                  <div class="col-xl-4 col-sm-6 col-12 recep_link"> 
+                  <div class="col-xl-2 col-sm-6 col-12 recep_link"> 
                     <div class="card recep_btn " id="er"  ward="ER" >
-                      <a  href="#"   style="text-decoration: none;color: grey;">      
+                      <a  href="{% url 'lab_reports_test' %}"   style="text-decoration: none;color: grey;">      
                       <div class="card-content">
                         <div class="card-body">
                           <div class="media d-flex">
@@ -82,7 +82,7 @@
                             </div>
                             <div class="media-body text-right">
                               <h3><i class="fa-solid fa-user"></i> <span class="er_qty">0</span></h3>
-                              <span class="fw-bolder h5">ER REQUEST</span>
+                              <span class="fw-bolder h5">TEST COUNT</span>
                             </div>
                           </div>
                         </div>
@@ -90,20 +90,20 @@
                     </div>
                   </a>
                   </div>
-                  <div class="col-xl-4 col-sm-6 col-12 recep_link">  
-                    <div class="card recep_btn" id="inpatient" ward="ADM" >
-                      <a  href="#"    style="text-decoration: none;color: grey;">      
+
+                  <div class="col-xl-2 col-sm-6 col-12 recep_link"> 
+                    <div class="card recep_btn " id="er"  ward="ER" >
+                      <a  href="{% url 'lab_reports_test' %}"   style="text-decoration: none;color: grey;">      
                       <div class="card-content">
                         <div class="card-body">
                           <div class="media d-flex">
                             <div class="align-self-center">
                               <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
-                              <!-- <i class='fas fa-calendar-alt'></i> -->
-                              <i class="fas fa-id-card-alt font-large-2 primary float-left" aria-hidden="true"></i>
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
                             </div>
                             <div class="media-body text-right">
-                              <h3><i class="fa-solid fa-user"></i> <span class="inp_qty">0</span></h3>
-                              <span class="fw-bolder h5">IN-PATIENT REQUEST</span>
+                              <h3><i class="fa-solid fa-user"></i> <span class="er_qty">0</span></h3>
+                              <span class="fw-bolder h5">TEST COUNT</span>
                             </div>
                           </div>
                         </div>
@@ -111,24 +111,90 @@
                     </div>
                   </a>
                   </div>
-                  <div class="col-xl-4 col-sm-6 col-12 recep_link"> 
-                    <div class="card res_link  bg-dark" id="endorsement_view">
-                      <!-- <a  href="{% url 'lab_opd' %}" style="text-decoration: none;color: rgb(253, 250, 250);">       -->
-                      <div class="card-content ">
-                        <div class="card-body text-white">
-                          <div class="media d-flex ">
+
+                  <div class="col-xl-2 col-sm-6 col-12 recep_link"> 
+                    <div class="card recep_btn " id="er"  ward="ER" >
+                      <a  href="{% url 'lab_reports_test' %}"   style="text-decoration: none;color: grey;">      
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
                             <div class="align-self-center">
-                              <i class="fa fa-calendar-check font-large-2 text-white float-left" aria-hidden="true"></i>
-                              
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
                             </div>
                             <div class="media-body text-right">
-                              <h3><i class="fa-solid fa-user"></i> <span id="t_endorsement" class="badge badge-danger endorse_qty" id="endorse_qty"> 0 </span></h3>
-                              <span class="spinner-grow spinner-grow-lg reloading m-0" id="e_reload" hidden  role="status"></span> <span class="fw-bolder h5">ENDORSEMENT</span>
+                              <h3><i class="fa-solid fa-user"></i> <span class="er_qty">0</span></h3>
+                              <span class="fw-bolder h5">TEST COUNT</span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                  </a>
+                  </div>
+                  <div class="col-xl-2 col-sm-6 col-12 recep_link"> 
+                    <div class="card recep_btn " id="er"  ward="ER" >
+                      <a  href="{% url 'lab_reports_test' %}"   style="text-decoration: none;color: grey;">      
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span class="er_qty">0</span></h3>
+                              <span class="fw-bolder h5">TEST COUNT</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  </div>
+                  <div class="col-xl-2 col-sm-6 col-12 recep_link"> 
+                    <div class="card recep_btn " id="er"  ward="ER" >
+                      <a  href="{% url 'lab_reports_test' %}"   style="text-decoration: none;color: grey;">      
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span class="er_qty">0</span></h3>
+                              <span class="fw-bolder h5">TEST COUNT</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  </div>
+
+                  <div class="col-xl-2 col-sm-6 col-12 recep_link"> 
+                    <div class="card recep_btn " id="er"  ward="ER" >
+                      <a  href="{% url 'lab_reports_test' %}"   style="text-decoration: none;color: grey;">      
+                      <div class="card-content">
+                        <div class="card-body">
+                          <div class="media d-flex">
+                            <div class="align-self-center">
+                              <!-- <i class="icon-users primary font-large-2 float-left"></i> -->
+                              <i class="fa fa-syringe font-large-2 primary float-left" aria-hidden="true"></i>
+                            </div>
+                            <div class="media-body text-right">
+                              <h3><i class="fa-solid fa-user"></i> <span class="er_qty">0</span></h3>
+                              <span class="fw-bolder h5">TEST COUNT</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                  </div>
+
+                  
                   <!-- </a> -->
                   </div>
 

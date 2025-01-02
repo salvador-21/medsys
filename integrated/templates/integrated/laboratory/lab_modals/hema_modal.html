@@ -92,7 +92,8 @@
             <td colspan="2"> REQUESTED: <span class=" fw-bolder h_received">07/21/1990</span></td>
           </tr>
           <tr>
-            <td colspan="3"> CONTROL NO.: <span class="fs-6 text-danger fw-bolder h_ctr">OP23-000001</span></td>
+            <td > CONTROL NO.: <span class="fs-6 text-danger fw-bolder h_ctr">OP23-000001</span></td>
+            <td > AGE.: <span class="fs-6 text-danger fw-bolder h_age">0</span></td>
           </tr>
         </table>
         <h4 class="text-center fw-bolder bg-dark text-white">-- HEMATOLOGY RESULT DETAILS--</h4>
@@ -203,7 +204,8 @@
               <tr class="clotting" hidden><td class="fw-bolder text-center">CLOTTING TIME </td><td><input type="text" step="any" class="form-control" id="clotting_time" name="clotting_time" placeholder="CLOTTING TIME" ></td><td><select class="form-control " style="width:100%" id="clotting_time_nv" name="clotting_time_nv"  ><option value="">Please choose</option></select></td></tr>
               <tr class="bleeding" hidden><td class="fw-bolder text-center">BLEEDING TIME </td><td><input type="text" step="any" class="form-control" id="bleeding_time" name="bleeding_time" placeholder="BLEEDING TIME" ></td><td><select class="form-control " style="width:100%" id="bleeding_time_nv" name="bleeding_time_nv"  ><option value="">Please choose</option></select></td></tr>
               <tr class="esr" hidden><td class="fw-bolder text-center">ESR</td><td><input type="text" step="any" class="form-control" id="esr" name="esr" placeholder="ESR" ></td><td><select class="form-control " style="width:100%" id="esr_nv" name="esr_nv"  ><option value="">Please choose</option></select></td>
-              <!-- ////////////// -->
+            <!-- ////////////// -->
+
           </tbody>
          </table>
          <input class="form-control w-100 notes mb-4" id="notes" name="notes" placeholder="Notes">
@@ -215,6 +217,7 @@
             <input type="text" class="form-control w-100" id="perform" name="perform" readonly >
             </div>
             <input type="hidden" class="form-control w-100" id="perform_id" name="perform_id" readonly >
+            <input type="hidden" class="form-control w-100" id="date_perform" name="date_perform" readonly >
          </div>
          <input type="hidden"  class="form-control" id="action" name="action"  >
          <input type="hidden"  class="form-control"  id="htype" name="htype">
