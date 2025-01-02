@@ -3084,6 +3084,7 @@ def recep_update_sample(request):
             }).json()
     
     
+    
     if modality == 'CHEMI' or modality == 'IMMUN' or modality == 'THYRO' or modality == 'CARDI' or modality == 'BLGAS' or modality == 'TUMOR' or modality == 'SEROL' or modality == 'HEMAT' :
         data='success'
         get_test=requests.post(get_lab_request,data={'enccode':encc,'order_id':orderid}).json()
